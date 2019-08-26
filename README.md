@@ -23,7 +23,7 @@ areareloader.command.list - Gives access to the /ar list command
 areareloader.command.hook - Gives access to the /ar hook command
 areareloader.command.admin - Gives access to all commands
 
-![Core Icon](https://imgur.com/a/Ig58Vgp.png)
+![Core Icon](https://imgur.com/a/Ig58Vgp.jpg)
 The main configuration file where you will be able to edit your own language settings is named as "config.yml".
 The config is very easy to understand as it is composed by regular language strings, hoever, the plugin brings some variables and new configuration settings that affect the plugin.
 
