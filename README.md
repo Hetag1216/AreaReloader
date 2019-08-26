@@ -45,12 +45,12 @@ The main configuration file where you will be able to edit your own language set
 The config is very easy to understand as it is composed by regular language strings, hoever, the plugin brings some variables and new configuration settings that affect the plugin.
 
 *Guide to debugging*: 
-If you're experiencing any issues while creating or loading an area, please set the "debug" option to true, then run again the command you had trouble with and paste the logs on a pastebin file and ask for support in the discussion section of this thread *(!FOR SPIGOT PAGE!)*!
-You can also open an issue in the "Issue" section here on github;
+Open a new issue in the [Issues category](https://github.com/Hetag1216/AreaReloader/issues)
 When opening a new issue please specify:
-- Spigot's version
-- WorldEdit's version
-- Where/when you met the issue (specify which commands threw an error)
+- Turn the plugin's debugging option on;
+- Spigot's version - /version;
+- WorldEdit's version;
+- Where/when you met the issue by specifying the command which threw an error and specify where the operations stop, debugging will show every operation ran when executing commands.
 - Paste console's error logs
 
 The debug logs will be printed to the player who runs the command.
