@@ -6,23 +6,37 @@ An easy to use Spigot plugin to roll back areas at the stage they were saved!
 ![Core Icon](https://cdn.discordapp.com/attachments/595194807932944385/614124252387606565/ARCommands.png)
 
 /ar - Shows plugin's help lines
-/ar help <Command> - Shows general help or specific help when a command is spefied
+
+/ar help <Command> - Shows general help or specific help when a command is specified
+  
 /ar version - Shows the current plugin's version
+
 /ar create <AreaName> - Creates a new copy of the selected area
+  
 /ar load <AreaName> - Loads an existing area
+  
 /ar delete <AreaName> - Deletes an existing area
+  
 /ar list - Lists all existing areas
+
 /ar hook - Shows a help interface for the plugin's hooks and dependencies
 
 ![Core Icon](https://cdn.discordapp.com/attachments/595194807932944385/614124189229514772/ARPermissions.png)
 
 areareloader.command.help - Gives access to the /ar help command
+
 areareloader.command.version - Gives access to the /ar version command
+
 areareloader.command.create - Gives access to the /ar create command
+
 areareloader.command.load - Gives access to the /ar load command
+
 areareloader.command.delete - Gives access to the /ar delete command
+
 areareloader.command.list - Gives access to the /ar list command
+
 areareloader.command.hook - Gives access to the /ar hook command
+
 areareloader.command.admin - Gives access to all commands
 
 ![Core Icon](https://i.imgur.com/v2uHY9wh.png)
