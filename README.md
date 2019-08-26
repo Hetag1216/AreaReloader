@@ -3,7 +3,7 @@
 
 An easy to use Spigot plugin to roll back areas at the stage they were saved!
 
-![Core Icon](https://cdn.discordapp.com/attachments/595194807932944385/614124189229514772/ARPermissions.png)
+![Core Icon](https://cdn.discordapp.com/attachments/595194807932944385/614124252387606565/ARCommands.png)
 /ar - Shows plugin's help lines
 /ar help <Command> - Shows general help or specific help when a command is spefied
 /ar version - Shows the current plugin's version
@@ -13,7 +13,7 @@ An easy to use Spigot plugin to roll back areas at the stage they were saved!
 /ar list - Lists all existing areas
 /ar hook - Shows a help interface for the plugin's hooks and dependencies
 
-![Core Icon](https://www.spigotmc.org/attachments/arpermissions-png.450472/.png)
+![Core Icon](https://cdn.discordapp.com/attachments/595194807932944385/614124189229514772/ARPermissions.png)
 areareloader.command.help - Gives access to the /ar help command
 areareloader.command.version - Gives access to the /ar version command
 areareloader.command.create - Gives access to the /ar create command
@@ -23,7 +23,7 @@ areareloader.command.list - Gives access to the /ar list command
 areareloader.command.hook - Gives access to the /ar hook command
 areareloader.command.admin - Gives access to all commands
 
-![Core Icon](https://www.spigotmc.org/attachments/arconf-png.450471/.png)
+![Core Icon](https://www.spigotmc.org/attachments/arconf-png.450471/)
 The main configuration file where you will be able to edit your own language settings is named as "config.yml".
 The config is very easy to understand as it is composed by regular language strings, hoever, the plugin brings some variables and new configuration settings that affect the plugin.
 
