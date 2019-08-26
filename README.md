@@ -3,7 +3,7 @@
 
 An easy to use Spigot plugin to roll back areas at the stage they were saved!
 
-![Core Icon](https://www.spigotmc.org/attachments/arcommands-png.450470.png)
+![Core Icon](https://cdn.discordapp.com/attachments/595194807932944385/614124189229514772/ARPermissions.png)
 /ar - Shows plugin's help lines
 /ar help <Command> - Shows general help or specific help when a command is spefied
 /ar version - Shows the current plugin's version
