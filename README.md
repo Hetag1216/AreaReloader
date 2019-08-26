@@ -1,3 +1,39 @@
 # AreaReloader
 ![Core Icon](https://media.discordapp.net/attachments/595194807932944385/614115793382146058/AR.png)
+
 An easy to use Spigot plugin to roll back areas at the stage they were saved!
+
+![Core Icon](https://www.spigotmc.org/attachments/arcommands-png.450470/.png)
+/ar - Shows plugin's help lines
+/ar help <Command> - Shows general help or specific help when a command is spefied
+/ar version - Shows the current plugin's version
+/ar create <AreaName> - Creates a new copy of the selected area
+/ar load <AreaName> - Loads an existing area
+/ar delete <AreaName> - Deletes an existing area
+/ar list - Lists all existing areas
+/ar hook - Shows a help interface for the plugin's hooks and dependencies
+
+![Core Icon](https://www.spigotmc.org/attachments/arpermissions-png.450472/.png)
+areareloader.command.help - Gives access to the /ar help command
+areareloader.command.version - Gives access to the /ar version command
+areareloader.command.create - Gives access to the /ar create command
+areareloader.command.load - Gives access to the /ar load command
+areareloader.command.delete - Gives access to the /ar delete command
+areareloader.command.list - Gives access to the /ar list command
+areareloader.command.hook - Gives access to the /ar hook command
+areareloader.command.admin - Gives access to all commands
+
+![Core Icon](https://www.spigotmc.org/attachments/arconf-png.450471/.png)
+The main configuration file where you will be able to edit your own language settings is named as "config.yml".
+The config is very easy to understand as it is composed by regular language strings, hoever, the plugin brings some variables and new configuration settings that affect the plugin.
+
+Guide to debugging: If you're experiencing any issues while creating or loading an area, please set the "debug" option to true, then run again the command you had trouble with and paste the logs on a pastebin file and ask for support in the discussion section of this thread!
+The debug logs will be printed to the player who runs the command.
+Default value: false (turn 'false' to true and then restart the server to enable the debugging or any config changes)
+
+Area Interval: This is the amount of time set in milliseconds that decides the delay between each section loading whenever an area is being loaded.
+I recommend keeping this value as the default one as a higher or lower value could affect your server's performance in bad or good, depending on the server's resources and tasks that are currently running at the moment of the area's load, so choose a wise value whenever changing this value.
+Default value: 200
+(0.2 seconds)
+
+
