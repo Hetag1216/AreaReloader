@@ -42,7 +42,7 @@ areareloader.command.admin - Gives access to all commands
 ![Core Icon](https://i.imgur.com/v2uHY9wh.png)
 
 The main configuration file where you will be able to edit your own language settings is named as "config.yml".
-The config is very easy to understand as it is composed by regular language strings, hoever, the plugin brings some variables and new configuration settings that affect the plugin.
+The config is very easy to understand as it is composed by regular language strings, however, the plugin brings some variables and new configuration settings that affect the plugin.
 
 *Guide to debugging*: 
 Open a new issue in the [Issues category](https://github.com/Hetag1216/AreaReloader/issues)
