@@ -1,0 +1,22 @@
+name: AreaReloader
+main: com.hetag.areareloader.AreaReloader
+version: 1.0
+api-vetsion: 1.13.2
+authors: ['_Hetag1216_']
+depend: ['WorldEdit']
+commands:
+  ar:
+    usage: /<command>
+    description: AR main command.
+permissions:
+  areareloader.command.admin: 
+    default: op
+    description: Access to all commands.
+    children:
+      areareloader.command.list: true
+      areareloader.command.create: true
+      areareloader.command.load: true
+      areareloader.command.delete: true
+      areareloader.command.hook: true
+      areareloader.command.help: true
+      areareloader.command.version: true
