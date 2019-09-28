@@ -14,13 +14,18 @@
 			<id>sk89q-repo</id>
 			<url>http://maven.sk89q.com/repo/</url>
 		</repository>
+		<!-- FAWE repository -->
+		<repository>
+			<id>fawe-repo</id>
+			<url>https://ci.athion.net/job/FastAsyncWorldEdit-Breaking/ws/mvn</url>
+		</repository>
 		<!-- Spigot Repo -->
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 		</repository>
 	</repositories>
-	
+
 	<!-- DEPENDENCIES -->
 	<dependencies>
 		<!-- Spigot API -->
@@ -29,6 +34,12 @@
 			<artifactId>spigot-api</artifactId>
 			<version>1.13.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
+		</dependency>
+		<!-- FAWE API -->
+		<dependency>
+			<groupId>com.boydti</groupId>
+			<artifactId>fawe-api</artifactId>
+			<version>latest</version>
 		</dependency>
 		<!-- WorldEdit / WorldGuard -->
 		<dependency>
@@ -56,7 +67,7 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-	
+
 	<build>
 		<finalName>AreaReloader</finalName>
 		<plugins>

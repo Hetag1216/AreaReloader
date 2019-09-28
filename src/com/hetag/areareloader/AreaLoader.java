@@ -9,7 +9,6 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.hetag.areareloader.configuration.Manager;
 import com.sk89q.worldedit.WorldEditException;
@@ -52,11 +51,10 @@ public class AreaLoader {
 
 	private void progress() throws FileNotFoundException, WorldEditException, IOException {
 		this.chunks += 1;
-		if (!AreaMethods.loadSchematicArea((Player) sender, this.area,
+		if (!AreaMethods.loadSchematicArea(sender, this.area,
 				AreaMethods.getFileName(this.area, this.x, this.z), this.location.getWorld(),
 				this.location.clone().add(this.x * this.size, 0.0D, this.z * this.size))) {
-			AreaReloader.log
-					.warning("Failed to reset section '" + AreaMethods.getFileName(this.area, this.x, this.z) + "'!");
+			AreaReloader.log.warning("Failed to reset section '" + AreaMethods.getFileName(this.area, this.x, this.z) + "'!");
 		} else {
 			this.z += 1;
 		}
@@ -79,10 +77,7 @@ public class AreaLoader {
 		List<Integer> completed = new ArrayList<Integer>();
 		for (AreaLoader al : areas) {
 			if (al.completed) {
-				// AreaReloader.log.info("Finished loading arena '" + al.area + "'. '" + al.x +
-				// "_" + al.z + "' areas out of a total '" + al.maxX + "_" + al.maxZ + "'
-				// loaded.");
-				if ((al.sender != null) && ((al.sender instanceof Player)) && (((Player) al.sender).isOnline())) {
+				if ((al.sender != null)) {
 					al.sender.sendMessage(prefix() + onLoadSuccess().replaceAll("%area%", al.area));
 				}
 				completed.add(Integer.valueOf(areas.indexOf(al)));
@@ -97,10 +92,8 @@ public class AreaLoader {
 					e.printStackTrace();
 				}
 				double percentage = al.chunks * 100.0D / al.maxChunks;
-				if ((Math.round(percentage) % 25L == 0L) && (Math.round(percentage) % 100L != 0L) && (al.sender != null)
-						&& ((al.sender instanceof Player)) && (((Player) al.sender).isOnline())) {
-					al.sender.sendMessage(prefix() + "Loading area '" + ChatColor.AQUA + al.area + ChatColor.DARK_AQUA
-							+ "' " + ChatColor.AQUA + percentage + "%" + ChatColor.DARK_AQUA + ".");
+				if ((Math.round(percentage) % 25L == 0L) && (Math.round(percentage) % 100L != 0L) && (al.sender != null)) {
+					al.sender.sendMessage(prefix() + "Loading area '" + ChatColor.AQUA + al.area + ChatColor.DARK_AQUA + "' " + ChatColor.AQUA + percentage + "%" + ChatColor.DARK_AQUA + ".");
 				}
 			}
 		}
@@ -116,18 +109,15 @@ public class AreaLoader {
 				AreaLoader.progressAll();
 			}
 		};
-		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0L,
-				delay / 1000 * 20);
+		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0L, delay / 1000 * 20);
 	}
 
 	private static String prefix() {
-		return ChatColor.translateAlternateColorCodes('&',
-				AreaReloader.plugin.getConfig().getString("Settings.Language.ChatPrefix"));
+		return ChatColor.translateAlternateColorCodes('&', AreaReloader.plugin.getConfig().getString("Settings.Language.ChatPrefix"));
 	}
 
 	private static String onLoadSuccess() {
-		return ChatColor.translateAlternateColorCodes('&',
-				AreaReloader.plugin.getConfig().getString("Commands.Load.onLoadSuccess"));
+		return ChatColor.translateAlternateColorCodes('&', AreaReloader.plugin.getConfig().getString("Commands.Load.onLoadSuccess"));
 	}
 
 	/**

@@ -9,6 +9,7 @@ import java.io.IOException;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.EditSession;
@@ -107,7 +108,7 @@ public class AreaMethods {
 		return Integer.valueOf(size);
 	}
 
-	public static boolean loadSchematicArea(Player p, String area, String schemFile, World world, Location location)
+	public static boolean loadSchematicArea(CommandSender p, String area, String schemFile, World world, Location location)
 			throws WorldEditException, FileNotFoundException, IOException {
 
 		File file = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area
@@ -188,12 +189,10 @@ public class AreaMethods {
 			for (int x = min.getBlockX(); x <= max.getBlockX(); x += size) {
 				int curZ = 0;
 				for (int z = min.getBlockZ(); z <= max.getBlockZ(); z += size) {
-					EditSession es = WorldEdit.getInstance().getEditSessionFactory().getEditSession(sel.getWorld(),
-							Integer.MAX_VALUE);
+					EditSession es = WorldEdit.getInstance().getEditSessionFactory().getEditSession(sel.getWorld(), Integer.MAX_VALUE);
 
 					Location pt1 = new Location(player.getWorld(), x, 0.0D, z);
-					Location pt2 = new Location(player.getWorld(), x + getMaxInt(x, max.getBlockX(), size).intValue(),
-							player.getWorld().getMaxHeight(), z + getMaxInt(z, max.getBlockZ(), size).intValue());
+					Location pt2 = new Location(player.getWorld(), x + getMaxInt(x, max.getBlockX(), size).intValue(), player.getWorld().getMaxHeight(), z + getMaxInt(z, max.getBlockZ(), size).intValue());
 
 					BlockVector3 bvmin = BukkitAdapter.asBlockVector(pt1);
 					BlockVector3 bvmax = BukkitAdapter.asBlockVector(pt2);
