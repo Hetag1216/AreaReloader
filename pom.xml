@@ -14,11 +14,6 @@
 			<id>sk89q-repo</id>
 			<url>http://maven.sk89q.com/repo/</url>
 		</repository>
-		<!-- FAWE repository -->
-		<repository>
-			<id>fawe-repo</id>
-			<url>https://ci.athion.net/job/FastAsyncWorldEdit-Breaking/ws/mvn</url>
-		</repository>
 		<!-- Spigot Repo -->
 		<repository>
 			<id>spigot-repo</id>
@@ -35,13 +30,7 @@
 			<version>1.13.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- FAWE API -->
-		<dependency>
-			<groupId>com.boydti</groupId>
-			<artifactId>fawe-api</artifactId>
-			<version>latest</version>
-		</dependency>
-		<!-- WorldEdit / WorldGuard -->
+		<!-- WorldEdit -->
 		<dependency>
 			<groupId>com.sk89q.worldedit</groupId>
 			<artifactId>worldedit-core</artifactId>
@@ -49,20 +38,8 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.sk89q.worldguard</groupId>
-			<artifactId>worldguard-core</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>com.sk89q.worldedit</groupId>
 			<artifactId>worldedit-bukkit</artifactId>
-			<version>7.0.0-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.sk89q.worldguard</groupId>
-			<artifactId>worldguard-legacy</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>

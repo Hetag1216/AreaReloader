@@ -38,8 +38,7 @@ public class Manager {
 		config.addDefault("Commands.Create.Description", "&7Creates a new area.");
 		config.addDefault("Commands.Create.OnSuccess", "Succesfully created new area named: &b%area%&3.");
 		config.addDefault("Commands.Create.OnFailure", "Failed to create new area named: &b%area%&3.");
-		config.addDefault("Commands.Create.AlreadyExists",
-				"An area with the name &b%area%&3 already exists, please choose a different name!");
+		config.addDefault("Commands.Create.AlreadyExists", "An area with the name &b%area%&3 already exists, please choose a different name!");
 
 		config.addDefault("Commands.List.Description", "&7Lists all existing areas.");
 		config.addDefault("Commands.List.NoAreasFound", "No areas were found.");
@@ -54,6 +53,10 @@ public class Manager {
 		config.addDefault("Commands.Load.onInvalidArea", "&b%area% &3does not exist.");
 
 		config.addDefault("Commands.Version.Description", "&7Shows information about the plugin.");
+		
+		config.addDefault("Commands.Info.Description", "&7Shows information about the specified existing area.");
+		
+		config.addDefault("Commands.Reload.Description", "&7Reloads AreaReloader's configuration file.");
 
 		config.addDefault("Commands.Hook.Description", "&7Shows an interface for the plugin's dependencies.");
 		config.options().copyDefaults(true);

@@ -191,7 +191,7 @@ public class AreaMethods {
 				for (int z = min.getBlockZ(); z <= max.getBlockZ(); z += size) {
 					EditSession es = WorldEdit.getInstance().getEditSessionFactory().getEditSession(sel.getWorld(), Integer.MAX_VALUE);
 
-					Location pt1 = new Location(player.getWorld(), x, 0.0D, z);
+					Location pt1 = new Location(player.getWorld(), x, 0, z);
 					Location pt2 = new Location(player.getWorld(), x + getMaxInt(x, max.getBlockX(), size).intValue(), player.getWorld().getMaxHeight(), z + getMaxInt(z, max.getBlockZ(), size).intValue());
 
 					BlockVector3 bvmin = BukkitAdapter.asBlockVector(pt1);
@@ -205,8 +205,7 @@ public class AreaMethods {
 					if (AreaReloader.debug) {
 						player.sendMessage(debugPrefix() + "Succesfully copied the selected clipboard to system.");
 					}
-					File file = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator
-							+ area + File.separator + getFileName(area, curX, curZ) + ".schematic");
+					File file = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area + File.separator + getFileName(area, curX, curZ) + ".schematic");
 					if (file.exists()) {
 						file.delete();
 					}
@@ -220,8 +219,7 @@ public class AreaMethods {
 							e.printStackTrace();
 						}
 					}
-					try (ClipboardWriter writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC
-							.getWriter(new FileOutputStream(file))) {
+					try (ClipboardWriter writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(new FileOutputStream(file))) {
 						writer.write(cc);
 						if (AreaReloader.debug) {
 							player.sendMessage(debugPrefix() + "Clipboard succesfully saved to file.");
@@ -237,6 +235,7 @@ public class AreaMethods {
 			}
 			maxX--;
 			maxZ--;
+			
 			AreaReloader.areas.getConfig().set("Areas." + area + ".Size.X", Integer.valueOf(maxX));
 			AreaReloader.areas.getConfig().set("Areas." + area + ".Size.Z", Integer.valueOf(maxZ));
 			AreaReloader.areas.getConfig().set("Areas." + area + ".Size.Chunk", Integer.valueOf(size));
@@ -245,13 +244,28 @@ public class AreaMethods {
 		}
 		return false;
 	}
+	
+	public static String getXCoord(String area) {
+		return AreaReloader.areas.getConfig().getString("Areas." + area + ".X");
+	}
+	
+	public static String getYCoord(String area) {
+		return AreaReloader.areas.getConfig().getString("Areas." + area + ".Y");
+	}
+	
+	public static String getZCoord(String area) {
+		return AreaReloader.areas.getConfig().getString("Areas." + area + ".Z");
+	}
+	
+	public static String getAreaInWorld(String area) {
+		return AreaReloader.areas.getConfig().getString("Areas." + area + ".World");
+	}
 
-	public static void reload() {
+	public static void reloadConfig() {
 		AreaReloader.plugin.reloadConfig();
 	}
 
 	public static String debugPrefix() {
-		return ChatColor.translateAlternateColorCodes('&',
-				AreaReloader.plugin.getConfig().getString("Settings.Debug.Prefix"));
+		return ChatColor.translateAlternateColorCodes('&', AreaReloader.plugin.getConfig().getString("Settings.Debug.Prefix"));
 	}
 }

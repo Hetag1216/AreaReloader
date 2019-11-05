@@ -22,7 +22,7 @@ public class AreaLoader {
 	private int x;
 	private int z;
 	private int size;
-	private int chunks;
+	public int chunks;
 	private int maxChunks;
 	private Location location;
 	private boolean completed = false;
@@ -38,7 +38,7 @@ public class AreaLoader {
 		this.setMaxX(x);
 		this.maxZ = z;
 		this.size = size;
-		this.chunks = 0;
+		chunks = 0;
 		x++;
 		z++;
 		this.maxChunks = (x * z);
@@ -50,22 +50,20 @@ public class AreaLoader {
 	}
 
 	private void progress() throws FileNotFoundException, WorldEditException, IOException {
-		this.chunks += 1;
-		if (!AreaMethods.loadSchematicArea(sender, this.area,
-				AreaMethods.getFileName(this.area, this.x, this.z), this.location.getWorld(),
-				this.location.clone().add(this.x * this.size, 0.0D, this.z * this.size))) {
-			AreaReloader.log.warning("Failed to reset section '" + AreaMethods.getFileName(this.area, this.x, this.z) + "'!");
+		chunks += 1;
+		if (!AreaMethods.loadSchematicArea(sender, area, AreaMethods.getFileName(area, x, z), location.getWorld(), location.clone().add(x * this.size, 0.0D, z * this.size))) {
+			AreaReloader.log.warning("Failed to reset section '" + AreaMethods.getFileName(area, x, z) + "'!");
 		} else {
-			this.z += 1;
+			z += 1;
 		}
-		if (this.chunks == this.maxChunks) {
-			this.z -= 1;
+		if (chunks == this.maxChunks) {
+			z -= 1;
 			complete();
 			return;
 		}
-		if (this.z > this.maxZ) {
-			this.z = 0;
-			this.x += 1;
+		if (z > this.maxZ) {
+			z = 0;
+			x += 1;
 		}
 	}
 
@@ -126,12 +124,40 @@ public class AreaLoader {
 	public int getMaxX() {
 		return maxX;
 	}
+	
+	/**
+	 * 
+	 * @return the maxZ
+	 */
+	public int getMaxZ() {
+		return maxZ;
+	}
+	
+	/**
+	 * 
+	 * @return the original X point
+	 */
+	public int getX() {
+		return x;
+	}
+	
+	/**
+	 * 
+	 * @return the original Z point
+	 */
+	public int getZ() {
+		return z;
+	}
 
 	/**
 	 * @param maxX
-	 *            the maxX to set
+	 * the maxX to set
 	 */
 	public void setMaxX(int maxX) {
 		this.maxX = maxX;
+	}
+	
+	public void setMaxZ(int maxZ) {
+		this.maxZ = maxZ;
 	}
 }

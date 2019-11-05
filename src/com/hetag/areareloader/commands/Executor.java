@@ -32,6 +32,8 @@ public class Executor {
 		new LoadCommand();
 		new VersionCommand();
 		new HookCommand();
+		new InfoCommand();
+		new ConfigReloadCommand();
 		help = Manager.getConfig().getStringList("Commands.HelpLines");
 
 		CommandExecutor exe = new CommandExecutor() {

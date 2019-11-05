@@ -8,9 +8,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import com.hetag.areareloader.AreaReloader;
 
 public class Config {
-	AreaReloader plugin;
-	private File file;
-	public FileConfiguration config;
+	private final AreaReloader plugin;
+	private final File file;
+	private final FileConfiguration config;
 
 	public Config(File file) {
 		this.plugin = AreaReloader.plugin;
