@@ -21,6 +21,10 @@ An easy to use Spigot plugin to roll back areas at the stage they were saved!
 
 /ar hook - Shows a help interface for the plugin's hooks and dependencies
 
+/ar info - Shows information about a specific existing area
+
+/ar reloader - Reloads AreaReloader's configuration file
+
 ![Core Icon](https://cdn.discordapp.com/attachments/595194807932944385/614124189229514772/ARPermissions.png)
 
 areareloader.command.help - Gives access to the /ar help command
@@ -36,6 +40,10 @@ areareloader.command.delete - Gives access to the /ar delete command
 areareloader.command.list - Gives access to the /ar list command
 
 areareloader.command.hook - Gives access to the /ar hook command
+
+areareloader.command.info - Gives access to the /ar info command
+
+areareloader.command.reload - Gives access to the /ar reload command
 
 areareloader.command.admin - Gives access to all commands
 
