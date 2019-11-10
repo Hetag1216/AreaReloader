@@ -23,7 +23,7 @@ An easy to use Spigot plugin to roll back areas at the stage they were saved!
 
 /ar info - Shows information about a specific existing area
 
-/ar reloader - Reloads AreaReloader's configuration file
+/ar reload - Reloads AreaReloader's configuration file
 
 ![Core Icon](https://cdn.discordapp.com/attachments/595194807932944385/614124189229514772/ARPermissions.png)
 
