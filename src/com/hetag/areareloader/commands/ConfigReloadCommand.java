@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import com.hetag.areareloader.AreaMethods;
 import com.hetag.areareloader.configuration.Manager;
 
 import net.md_5.bungee.api.ChatColor;
@@ -21,7 +20,7 @@ public class ConfigReloadCommand extends ARCommand {
 		if (!hasPermission(sender) || !correctLength(sender, 0, 0, 1)) {
 			return;
 		}
-		AreaMethods.reloadConfig();
+		Manager.defaultConfig.reloadConfig();
 		sender.sendMessage(prefix + ChatColor.GREEN + "Succesfully reloaded the config!");
 		
 	}

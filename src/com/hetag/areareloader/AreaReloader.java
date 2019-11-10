@@ -24,7 +24,6 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	public void onEnable() {
 		plugin = this;
 		log = getLogger();
-		debug = Manager.getConfig().getBoolean("Settings.Debug.Enabled");
 
 		log.info("-=-=-=-= AreaReloader " + plugin.getDescription().getVersion() + " =-=-=-=-");
 		PluginManager pm = Bukkit.getPluginManager();
@@ -35,8 +34,9 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		}
 		try {
 			AreaMethods.performSetup();
-			new Manager(this);
+			new Manager();
 			areas = new Config(new File("areas.yml"));
+			debug = Manager.getConfig().getBoolean("Settings.Debug.Enabled");
 			log.info("Configurations succesfully registered!");
 		} catch (Exception e) {
 			e.printStackTrace();

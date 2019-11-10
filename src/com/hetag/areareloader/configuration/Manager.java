@@ -1,22 +1,23 @@
 package com.hetag.areareloader.configuration;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import com.hetag.areareloader.AreaReloader;
 import com.hetag.areareloader.commands.Executor;
 
 public class Manager {
-	AreaReloader plugin;
+	public static Config defaultConfig;
 
-	public Manager(AreaReloader plugin) {
-		plugin = this.plugin;
-		load();
+	public Manager() {
+		defaultConfig = new Config(new File("config.yml"));
+		loadConfig(ConfigType.DEFAULT);
 	}
 
-	private void load() {
-		FileConfiguration config = AreaReloader.plugin.getConfig();
+	private void loadConfig(ConfigType type) {
+		if (type == ConfigType.DEFAULT) {
+		FileConfiguration config = defaultConfig.getConfig();
 
 		config.addDefault("Settings.Language.ChatPrefix", "&8[&bAreaReloader&8]&3 ");
 		config.addDefault("Settings.Language.NoPermission", "You don't own sufficent permissions to run this command!");
@@ -59,11 +60,11 @@ public class Manager {
 		config.addDefault("Commands.Reload.Description", "&7Reloads AreaReloader's configuration file.");
 
 		config.addDefault("Commands.Hook.Description", "&7Shows an interface for the plugin's dependencies.");
-		config.options().copyDefaults(true);
-		AreaReloader.plugin.saveConfig();
+		defaultConfig.saveConfig();
+		}
 	}
 
-	public static FileConfiguration getConfig() {
-		return AreaReloader.plugin.getConfig();
-	}
+	  public static FileConfiguration getConfig() {
+	    return defaultConfig.getConfig();
+	  }
 }

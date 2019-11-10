@@ -18,14 +18,16 @@ public class LoadCommand extends ARCommand {
 	static String path = "Commands.Load.Description";
 
 	public LoadCommand() {
-		super("load", "/ar load <name>",
-				ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString(path)),
-				new String[] { "load" });
+		super("load", "/ar load <name>", ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString(path)), new String[] { "load" });
 	}
 
 	@Override
 	public void execute(CommandSender sender, List<String> args) {
 		if (!hasPermission(sender) || !correctLength(sender, 0, 0, 1)) {
+			return;
+		}
+		if (args.size() <= 0) {
+			sender.sendMessage(this.getProperUsage());
 			return;
 		}
 		String area = args.get(0);
@@ -34,8 +36,7 @@ public class LoadCommand extends ARCommand {
 			int x = AreaReloader.areas.getConfig().getInt("Areas." + args.get(0) + ".X");
 			int z = AreaReloader.areas.getConfig().getInt("Areas." + args.get(0) + ".Z");
 			Location location = new Location(world, x, 0.0D, z);
-			new AreaLoader(area, AreaMethods.getAreaMaxX(area).intValue(), AreaMethods.getAreaMaxZ(area).intValue(),
-					AreaMethods.getAreaChunk(area).intValue(), location, sender);
+			new AreaLoader(area, AreaMethods.getAreaMaxX(area).intValue(), AreaMethods.getAreaMaxZ(area).intValue(), AreaMethods.getAreaChunk(area).intValue(), location, sender);
 			sender.sendMessage(prefix + onPrepare().replaceAll("%area%", area));
 		} else {
 			sender.sendMessage(prefix + onInvalid().replaceAll("%area%", area));
@@ -47,7 +48,6 @@ public class LoadCommand extends ARCommand {
 	}
 
 	private String onInvalid() {
-		return ChatColor.translateAlternateColorCodes('&',
-				Manager.getConfig().getString("Commands.Load.onInvalidArea"));
+		return ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Commands.Load.onInvalidArea"));
 	}
 }

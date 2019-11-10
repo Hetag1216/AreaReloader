@@ -1,6 +1,6 @@
 name: AreaReloader
 main: com.hetag.areareloader.AreaReloader
-version: 1.0
+version: 1.1
 api-vetsion: 1.13.2
 authors: ['_Hetag1216_']
 depend: ['WorldEdit']
@@ -20,3 +20,5 @@ permissions:
       areareloader.command.hook: true
       areareloader.command.help: true
       areareloader.command.version: true
+      areareloader.command.reload: true
+      areareloader.command.info: true

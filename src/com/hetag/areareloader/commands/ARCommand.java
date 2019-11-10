@@ -29,12 +29,9 @@ public abstract class ARCommand implements SubCommand {
 		this.properUse = properUse;
 		this.description = description;
 		this.aliases = aliases;
-		this.noPermissionMessage = ChatColor.translateAlternateColorCodes('&',
-				Manager.getConfig().getString("Settings.Language.NoPermission"));
-		this.mustBePlayerMessage = ChatColor.translateAlternateColorCodes('&',
-				Manager.getConfig().getString("Settings.Language.MustBePlayer"));
-		this.prefix = ChatColor.translateAlternateColorCodes('&',
-				Manager.getConfig().getString("Settings.Language.ChatPrefix"));
+		this.noPermissionMessage = ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Settings.Language.NoPermission"));
+		this.mustBePlayerMessage = ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Settings.Language.MustBePlayer"));
+		this.prefix = ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Settings.Language.ChatPrefix"));
 		instances.put(name, this);
 	}
 
@@ -128,8 +125,7 @@ public abstract class ARCommand implements SubCommand {
 	 * @return the proper usage of the command
 	 */
 	protected String getProperUsage() {
-		return prefix + ChatColor.translateAlternateColorCodes('&',
-				Manager.getConfig().getString("Commands.Help.ProperUsage")) + getProperUse();
+		return prefix + ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Commands.Help.ProperUsage")) + getProperUse();
 	}
 
 	protected List<String> getPage(List<String> entries, String title, int page, boolean sort) {

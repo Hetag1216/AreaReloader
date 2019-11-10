@@ -26,6 +26,6 @@ public class VersionCommand extends ARCommand {
 		sender.sendMessage(prefix);
 		sender.sendMessage(ChatColor.DARK_AQUA + "Version: " + ChatColor.AQUA + AreaReloader.plugin.getDescription().getVersion());
 		sender.sendMessage(ChatColor.DARK_AQUA + "Author: " + ChatColor.AQUA + AreaReloader.plugin.getDescription().getAuthors().toString().replace("[", "").toString().replace("]", ""));
-		sender.sendMessage(ChatColor.DARK_AQUA + "Compatible Minecraft Version(s): " + ChatColor.AQUA + "1.13.2");
+		sender.sendMessage(ChatColor.DARK_AQUA + "Compatible Minecraft Version(s): " + ChatColor.AQUA + "1.13 - 1.13.1 - 1.13.2");
 	}
 }

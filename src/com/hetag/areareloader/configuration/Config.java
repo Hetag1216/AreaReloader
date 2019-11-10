@@ -19,7 +19,7 @@ public class Config {
 		reloadConfig();
 	}
 
-	public void createConfig() {
+	public void create() {
 		if (!this.file.getParentFile().exists()) {
 			try {
 				this.file.getParentFile().mkdir();
@@ -45,7 +45,7 @@ public class Config {
 	}
 
 	public void reloadConfig() {
-		createConfig();
+		create();
 		try {
 			this.config.load(this.file);
 		} catch (Exception e) {
