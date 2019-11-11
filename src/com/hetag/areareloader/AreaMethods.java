@@ -111,8 +111,7 @@ public class AreaMethods {
 	public static boolean loadSchematicArea(CommandSender p, String area, String schemFile, World world, Location location)
 			throws WorldEditException, FileNotFoundException, IOException {
 
-		File file = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area
-				+ File.separator + schemFile + ".schematic");
+		File file = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area + File.separator + schemFile + ".schematic");
 		if (!file.exists()) {
 			return false;
 		}

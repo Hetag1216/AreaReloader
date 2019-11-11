@@ -8,7 +8,9 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import com.hetag.areareloader.configuration.Manager;
 import com.sk89q.worldedit.WorldEditException;
@@ -53,22 +55,30 @@ public class AreaLoader {
 		chunks += 1;
 		if (!AreaMethods.loadSchematicArea(sender, area, AreaMethods.getFileName(area, x, z), location.getWorld(), location.clone().add(x * this.size, 0.0D, z * this.size))) {
 			AreaReloader.log.warning("Failed to reset section '" + AreaMethods.getFileName(area, x, z) + "'!");
+			if (sender instanceof Player) {
+				Player player = (Player) sender;
+				player.getWorld().playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1F, 0.5F);
+			}
 		} else {
 			z += 1;
+		}
+		if (z > this.maxZ) {
+			z = 0;
+			x += 1;
 		}
 		if (chunks == this.maxChunks) {
 			z -= 1;
 			complete();
 			return;
 		}
-		if (z > this.maxZ) {
-			z = 0;
-			x += 1;
-		}
 	}
 
 	private void complete() {
 		this.completed = true;
+		if (sender instanceof Player) {
+			Player player = (Player) sender;
+			player.getWorld().playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5F, 0.3F);
+		}
 	}
 
 	private static void progressAll() {
