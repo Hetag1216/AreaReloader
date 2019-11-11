@@ -12,12 +12,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.hetag.areareloader.commands.Executor;
 import com.hetag.areareloader.configuration.Config;
 import com.hetag.areareloader.configuration.Manager;
+import com.hetag.areareloader.reflection.AreaProtocol;
+import com.hetag.areareloader.reflection.V1_13.Protocol_1_13;
+import com.hetag.areareloader.reflection.V1_14.Protocol_1_14;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 public class AreaReloader extends JavaPlugin implements Listener {
 	public static AreaReloader plugin;
 	public static Logger log;
 	public WorldEditPlugin wep;
+	private AreaProtocol ap;
 	public static Config areas;
 	public static boolean debug;
 
@@ -48,6 +52,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		checkProtocol();
 		AreaLoader.manage();
 		getServer().getPluginManager().registerEvents(new AreaListener(this), this);
 		log.info("Succesfully enabled AreaReloader!");
@@ -56,6 +61,28 @@ public class AreaReloader extends JavaPlugin implements Listener {
 
 	public void onDisable() {
 		log.info("Succesfully disabled AreaReloader!");
+	}
+	
+	public void checkProtocol() {
+	        String version = Bukkit.getServer().getClass().getPackage().getName();
+	        String formmatedVersion = version.substring(version.lastIndexOf(".") + 1);
+
+	        switch (formmatedVersion) {
+	            case "v1_13_R2":
+	            case "v1_13_R1":
+	                ap = new Protocol_1_13();
+	                break;
+	            case "v1_14_R1":
+	            default:
+	                ap = new Protocol_1_14();
+	                break;
+	        }
+
+	        log.info("Using protocol: " + ap.getClass().getName());
+	    }
+
+	    public AreaProtocol getProtocol() {
+	        return ap;
 	}
 
 	public String getStatus() {

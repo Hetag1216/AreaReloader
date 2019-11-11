@@ -8,6 +8,7 @@
 	<version>1.1</version>
 	<packaging>jar</packaging>
 	<name>AreaReloader</name>
+
 	<repositories>
 		<!-- WorldGuard and WorldEdit Repo -->
 		<repository>
