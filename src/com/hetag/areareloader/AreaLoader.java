@@ -12,12 +12,10 @@ import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.hetag.areareloader.configuration.Manager;
 import com.sk89q.worldedit.WorldEditException;
 
 public class AreaLoader {
 	public static List<AreaLoader> areas = new ArrayList<AreaLoader>();
-	private static long delay;
 	private String area;
 	private int maxX;
 	private int maxZ;
@@ -35,7 +33,6 @@ public class AreaLoader {
 		if (areas.contains(area)) {
 			return;
 		}
-		delay = Manager.getConfig().getLong("Settings.AreaLoading.Interval");
 		this.area = area;
 		this.setMaxX(x);
 		this.maxZ = z;
@@ -111,16 +108,16 @@ public class AreaLoader {
 		}
 	}
 
-	public static void manage() {
+	public static void manageLoading() {
 		Runnable br = new Runnable() {
 			public void run() {
 				AreaLoader.progressAll();
 			}
 		};
-		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0L, delay / 1000 * 20);
+		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0L, AreaReloader.interval / 1000 * 20);
 	}
 
-	private static String prefix() {
+	public static String prefix() {
 		return ChatColor.translateAlternateColorCodes('&', AreaReloader.plugin.getConfig().getString("Settings.Language.ChatPrefix"));
 	}
 

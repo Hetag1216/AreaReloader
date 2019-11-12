@@ -31,8 +31,9 @@ public class InfoCommand extends ARCommand {
 			sender.sendMessage(ChatColor.DARK_GRAY + "«" + ChatColor.AQUA + area + ChatColor.DARK_GRAY + "»");
 			sender.sendMessage(ChatColor.DARK_AQUA + "World" + ChatColor.DARK_GRAY + " » " + ChatColor.AQUA + AreaMethods.getAreaInWorld(area));
 			sender.sendMessage(ChatColor.DARK_AQUA + "Location X" + ChatColor.DARK_GRAY + " » " + ChatColor.AQUA + AreaMethods.getXCoord(area));
-			//sender.sendMessage(ChatColor.DARK_AQUA + "Location Y" + ChatColor.DARK_GRAY + " » " + ChatColor.AQUA + AreaMethods.getYCoord(area));
 			sender.sendMessage(ChatColor.DARK_AQUA + "Location Z" + ChatColor.DARK_GRAY + " » " + ChatColor.AQUA + AreaMethods.getZCoord(area));
+			sender.sendMessage(ChatColor.DARK_AQUA + "Auto Reloading" + ChatColor.DARK_AQUA + " » " + ChatColor.AQUA + AreaReloader.areas.getConfig().getBoolean("Areas." + area + ".AutoReload.Enabled"));
+			sender.sendMessage(ChatColor.DARK_AQUA + "Auto Reloading Time " + ChatColor.DARK_AQUA + " » " + ChatColor.AQUA + AreaReloader.areas.getConfig().getLong("Areas." + area + ".AutoReload.Time"));
 			return;
 		}
 	}

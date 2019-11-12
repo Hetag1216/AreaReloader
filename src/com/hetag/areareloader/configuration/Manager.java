@@ -22,9 +22,13 @@ public class Manager {
 		config.addDefault("Settings.Language.ChatPrefix", "&8[&bAreaReloader&8]&3 ");
 		config.addDefault("Settings.Language.NoPermission", "You don't own sufficent permissions to run this command!");
 		config.addDefault("Settings.Language.MustBePlayer", "You must be a player to use this command!");
+		
 		config.addDefault("Settings.Debug.Enabled", false);
 		config.addDefault("Settings.Debug.Prefix", "&8[&bAR&7-&bDebug&8]&b ");
 		config.addDefault("Settings.AreaLoading.Interval", "200");
+		
+		config.addDefault("Settings.AutoReload.Checker", true);
+		config.addDefault("Settings.AutoReload.NotifyWhenReloading", true);
 
 		ArrayList<String> helpLines = new ArrayList<>();
 		Executor.help = helpLines;
