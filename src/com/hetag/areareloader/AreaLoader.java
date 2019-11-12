@@ -31,12 +31,12 @@ public class AreaLoader {
 	private CommandSender sender;
 
 	@SuppressWarnings("unlikely-arg-type")
-	public AreaLoader(String arena, int x, int z, int size, Location location, CommandSender sender) {
-		if (areas.contains(arena)) {
+	public AreaLoader(String area, int x, int z, int size, Location location, CommandSender sender) {
+		if (areas.contains(area)) {
 			return;
 		}
 		delay = Manager.getConfig().getLong("Settings.AreaLoading.Interval");
-		this.area = arena;
+		this.area = area;
 		this.setMaxX(x);
 		this.maxZ = z;
 		this.size = size;

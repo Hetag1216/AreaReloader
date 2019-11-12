@@ -238,6 +238,8 @@ public class AreaMethods {
 			AreaReloader.areas.getConfig().set("Areas." + area + ".Size.X", Integer.valueOf(maxX));
 			AreaReloader.areas.getConfig().set("Areas." + area + ".Size.Z", Integer.valueOf(maxZ));
 			AreaReloader.areas.getConfig().set("Areas." + area + ".Size.Chunk", Integer.valueOf(size));
+			AreaReloader.areas.getConfig().set("Areas." + area + ".AutoReload.Enabled", true);
+			AreaReloader.areas.getConfig().set("Areas." + area + ".AutoReload.Time", 20);
 			AreaReloader.areas.saveConfig();
 			return true;
 		}
