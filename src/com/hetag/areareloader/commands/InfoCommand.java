@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 
 import com.hetag.areareloader.AreaMethods;
 import com.hetag.areareloader.AreaReloader;
+import com.hetag.areareloader.AreaScheduler;
 import com.hetag.areareloader.configuration.Manager;
 
 import net.md_5.bungee.api.ChatColor;
@@ -34,6 +35,7 @@ public class InfoCommand extends ARCommand {
 			sender.sendMessage(ChatColor.DARK_AQUA + "Location Z" + ChatColor.DARK_GRAY + " » " + ChatColor.AQUA + AreaMethods.getZCoord(area));
 			sender.sendMessage(ChatColor.DARK_AQUA + "Auto Reloading" + ChatColor.DARK_AQUA + " » " + ChatColor.AQUA + AreaReloader.areas.getConfig().getBoolean("Areas." + area + ".AutoReload.Enabled"));
 			sender.sendMessage(ChatColor.DARK_AQUA + "Auto Reloading Time " + ChatColor.DARK_AQUA + " » " + ChatColor.AQUA + AreaReloader.areas.getConfig().getLong("Areas." + area + ".AutoReload.Time"));
+			sender.sendMessage(ChatColor.DARK_AQUA + "Time Left " + ChatColor.DARK_AQUA + " » " + ChatColor.AQUA + AreaScheduler.getRemainingTime(area));
 			return;
 		}
 	}
