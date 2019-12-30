@@ -104,7 +104,9 @@ public class AreaLoader {
 		}
 		for (Iterator<Integer> iterator = completed.iterator(); iterator.hasNext();) {
 			int id = ((Integer) iterator.next()).intValue();
+			if (areas.contains(id)) {
 			areas.remove(id);
+			}
 		}
 	}
 
