@@ -67,6 +67,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		 */
 		if (checker) {
 			try {
+				AreaScheduler.checkForAreas();
 				AreaScheduler.manageReloading();
 				log.info("Correctly checking for areas auto reloading!");
 			}
