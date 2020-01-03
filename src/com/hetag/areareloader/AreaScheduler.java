@@ -22,19 +22,23 @@ public class AreaScheduler {
 	private long reset;
 	private long delay;
 
+	@SuppressWarnings("unlikely-arg-type")
 	public AreaScheduler(String area, long delay) {
+		if (areas.contains(area)) {
+			return;
+		}
 		this.area = area;
 		this.delay = delay;
 		this.reset = System.currentTimeMillis();
 		notifyOnReload = Manager.getConfig().getBoolean("Settings.AutoReload.NotifyWhenReloading");
 		areas.add(this);
-		AreaReloader.log.info("Automatically reloading area: " + area);
 	}
 
 	public static void checkForAreas() {
 		if (config.contains("Areas")) {
 			for (String keys : config.getConfigurationSection("Areas").getKeys(false)) {
-				if (config.contains("Areas." + keys + ".AutoReload.Enabled") && config.getBoolean("Areas." + keys + ".AutoReload.Enabled") == true) {
+				if (config.contains("Areas." + keys + ".AutoReload.Enabled")
+						&& config.getBoolean("Areas." + keys + ".AutoReload.Enabled") == true) {
 					long resetTime = config.getLong("Areas." + keys + ".AutoReload.Time");
 					new AreaScheduler(keys, resetTime);
 				}
@@ -52,15 +56,6 @@ public class AreaScheduler {
 		}
 		new AreaScheduler(arena, delay);
 	}
-
-	/*public static void removeArea(String arena) {
-		for (AreaScheduler s : areas) {
-			if (s.getArea().equalsIgnoreCase(arena)) {
-				areas.remove(s);
-				return;
-			}
-		}
-	}*/
 
 	public static long getRemainingTime(String area) {
 		for (AreaScheduler scheduler : areas) {
@@ -94,24 +89,32 @@ public class AreaScheduler {
 	public void setLastReset(long reset) {
 		this.reset = reset;
 	}
-	
+
 	public static void progress() {
 		for (AreaScheduler scheduler : areas) {
 			if (System.currentTimeMillis() >= scheduler.getDelay() + scheduler.getLastReset()) {
 				World world = Bukkit.getServer().getWorld(config.getString("Areas." + scheduler.getArea() + ".World"));
-				int x = config.getInt("Areas." + scheduler.getArea() + ".X");
-				int z = config.getInt("Areas." + scheduler.getArea() + ".Z");
+				int x = AreaMethods.getAreaX(scheduler.getArea());
+				int z = AreaMethods.getAreaZ(scheduler.getArea());
+				int size = AreaMethods.getAreaChunk(scheduler.getArea());
+				int maxX = AreaMethods.getAreaMaxX(scheduler.getArea());
+				int maxZ = AreaMethods.getAreaMaxZ(scheduler.getArea());
 				Location location = new Location(world, x, 0, z);
-				new AreaLoader(scheduler.getArea(), AreaMethods.getAreaMaxX(scheduler.getArea()).intValue(), 0, AreaMethods.getAreaMaxZ(scheduler.getArea()).intValue(), location, null);
-				if (notifyOnReload) {
-					for (Player ops : Bukkit.getServer().getOnlinePlayers()) {
-						if (ops.isOp()) {
-							ops.sendMessage(AreaLoader.prefix() + "Automatically reloading area: " + ChatColor.AQUA + scheduler.getArea() + ChatColor.DARK_AQUA + ".");
-							ops.getWorld().playSound(ops.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 0.5F, 0.3F);
+				if (!AreaReloader.isDeleted.contains(scheduler.getArea())) {
+					new AreaLoader(scheduler.getArea(), maxX, maxZ, size, location, null);
+				        
+							AreaReloader.log.info("Automatically reloading area: " + scheduler.getArea());
+					if (notifyOnReload) {
+						for (Player ops : Bukkit.getServer().getOnlinePlayers()) {
+							if (ops.isOp()) {
+								ops.sendMessage(AreaLoader.prefix() + "Automatically reloading area: " + ChatColor.AQUA
+										+ scheduler.getArea() + ChatColor.DARK_AQUA + ".");
+								ops.getWorld().playSound(ops.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1F, 0.3F);
+							}
 						}
 					}
+					scheduler.setLastReset(System.currentTimeMillis());
 				}
-				scheduler.setLastReset(System.currentTimeMillis());
 			}
 		}
 	}
@@ -122,7 +125,8 @@ public class AreaScheduler {
 				progress();
 			}
 		};
-		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0, AreaReloader.interval / 1000 * 20);
+		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0,
+				AreaReloader.interval / 1000 * 20);
 	}
 
 }

@@ -47,22 +47,6 @@ public class AreaMethods {
 		}
 	}
 
-	public static String getFileName(String file, int x, int z) {
-		return file + "_" + x + "_" + z;
-	}
-
-	public static Integer getAreaMaxX(String area) {
-		return Integer.valueOf(AreaReloader.areas.getConfig().getInt("Areas." + area + ".Size.X"));
-	}
-
-	public static Integer getAreaMaxZ(String area) {
-		return Integer.valueOf(AreaReloader.areas.getConfig().getInt("Areas." + area + ".Size.Z"));
-	}
-
-	public static Integer getAreaChunk(String area) {
-		return Integer.valueOf(AreaReloader.areas.getConfig().getInt("Areas." + area + ".Size.Chunk"));
-	}
-
 	public static void deleteArea(String area) {
 		AreaReloader.areas.getConfig().set("Areas." + area, null);
 		AreaReloader.areas.saveConfig();
@@ -78,6 +62,7 @@ public class AreaMethods {
 				}
 			}
 			dir.delete();
+			AreaReloader.isDeleted.add(area);
 		}
 	}
 
@@ -108,20 +93,21 @@ public class AreaMethods {
 		return Integer.valueOf(size);
 	}
 
-	public static boolean loadSchematicArea(CommandSender p, String area, String schemFile, World world, Location location)
-			throws WorldEditException, FileNotFoundException, IOException {
+	public static boolean loadSchematicArea(CommandSender p, String area, String schemFile, World world, Location location) throws WorldEditException, FileNotFoundException, IOException {
 
 		File file = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area + File.separator + schemFile + ".schematic");
 		if (!file.exists()) {
 			return false;
 		}
 		if (AreaReloader.debug) {
+			if (p != null)
 			p.sendMessage(debugPrefix() + "Schematic file found!");
 		}
 
 		ClipboardFormat format = ClipboardFormats.findByFile(file);
 
 		if (AreaReloader.debug) {
+			if (p != null)
 			p.sendMessage(debugPrefix() + "Schematic format found.");
 		}
 
@@ -129,13 +115,14 @@ public class AreaMethods {
 			Clipboard clipboard = reader.read();
 
 			if (AreaReloader.debug) {
+				if (p != null)
 				p.sendMessage(debugPrefix() + "Reading schematic.");
 			}
 
-			try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory()
-					.getEditSession(BukkitAdapter.adapt(world), Integer.MAX_VALUE)) {
+			try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(BukkitAdapter.adapt(world), Integer.MAX_VALUE)) {
 
 				if (AreaReloader.debug) {
+					if (p != null)
 					p.sendMessage(debugPrefix() + "Initializing editSession.");
 				}
 
@@ -144,12 +131,14 @@ public class AreaMethods {
 						.ignoreAirBlocks(false).build();
 
 				if (AreaReloader.debug) {
+					if (p != null)
 					p.sendMessage(debugPrefix() + "Ran building operations.");
 				}
 
 				Operations.complete(operation);
 
 				if (AreaReloader.debug) {
+					if (p != null)
 					p.sendMessage(debugPrefix() + "Operations succesfully completed!");
 				}
 			}
@@ -260,6 +249,30 @@ public class AreaMethods {
 	
 	public static String getAreaInWorld(String area) {
 		return AreaReloader.areas.getConfig().getString("Areas." + area + ".World");
+	}
+	
+	public static String getFileName(String file, int x, int z) {
+		return file + "_" + x + "_" + z;
+	}
+
+	public static Integer getAreaMaxX(String area) {
+		return Integer.valueOf(AreaReloader.areas.getConfig().getInt("Areas." + area + ".Size.X"));
+	}
+
+	public static Integer getAreaMaxZ(String area) {
+		return Integer.valueOf(AreaReloader.areas.getConfig().getInt("Areas." + area + ".Size.Z"));
+	}
+	
+	public static Integer getAreaX(String area) {
+		return Integer.valueOf(AreaReloader.areas.getConfig().getInt("Areas." + area + ".X"));
+	}
+	
+	public static Integer getAreaZ(String area) {
+		return Integer.valueOf(AreaReloader.areas.getConfig().getInt("Areas." + area + ".Z"));
+	}
+
+	public static Integer getAreaChunk(String area) {
+		return Integer.valueOf(AreaReloader.areas.getConfig().getInt("Areas." + area + ".Size.Chunk"));
 	}
 
 	public static void reloadConfig() {

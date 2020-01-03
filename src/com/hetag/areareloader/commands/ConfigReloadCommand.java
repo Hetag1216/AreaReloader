@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
+import com.hetag.areareloader.AreaReloader;
+import com.hetag.areareloader.AreaScheduler;
 import com.hetag.areareloader.configuration.Manager;
 
 import net.md_5.bungee.api.ChatColor;
@@ -21,6 +23,11 @@ public class ConfigReloadCommand extends ARCommand {
 			return;
 		}
 		Manager.defaultConfig.reloadConfig();
+		AreaReloader.areas.reloadConfig();
+		if (AreaReloader.checker) {
+			AreaScheduler.checkForAreas();
+			new AreaScheduler(null, System.currentTimeMillis());
+		}
 		sender.sendMessage(prefix + ChatColor.GREEN + "Succesfully reloaded the config!");
 		
 	}

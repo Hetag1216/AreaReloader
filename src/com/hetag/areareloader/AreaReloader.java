@@ -1,6 +1,7 @@
 package com.hetag.areareloader;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -26,6 +27,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	public static boolean debug;
 	public static long interval;
 	public static boolean checker;
+	public static ArrayList<String> isDeleted = new ArrayList<>();
 
 	public void onEnable() {
 		plugin = this;
@@ -59,7 +61,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			e.printStackTrace();
 		}
 		
-		AreaLoader.manageLoading();
+		AreaLoader.manage();
 		
 		/**
 		 * Whether or not to check and enable/disable the auto reloading function.
@@ -69,11 +71,13 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			try {
 				AreaScheduler.checkForAreas();
 				AreaScheduler.manageReloading();
-				log.info("Correctly checking for areas auto reloading!");
+				log.info("Checker for areas to auto reload is enabled!");
 			}
 			catch (Exception e) {
 				e.printStackTrace();
 			}
+		} else {
+			log.info("Checker for areas to auto reload is disabled!");
 		}
 		
 		getServer().getPluginManager().registerEvents(new AreaListener(this), this);
@@ -83,6 +87,9 @@ public class AreaReloader extends JavaPlugin implements Listener {
 
 	public void onDisable() {
 		log.info("Succesfully disabled AreaReloader!");
+		if (!isDeleted.isEmpty()) {
+			isDeleted.clear();
+		}
 	}
 
 	public void checkProtocol() {

@@ -12,10 +12,11 @@ import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.hetag.areareloader.configuration.Manager;
 import com.sk89q.worldedit.WorldEditException;
-
 public class AreaLoader {
 	public static List<AreaLoader> areas = new ArrayList<AreaLoader>();
+	private static long delay;
 	private String area;
 	private int maxX;
 	private int maxZ;
@@ -33,6 +34,7 @@ public class AreaLoader {
 		if (areas.contains(area)) {
 			return;
 		}
+		delay = Manager.getConfig().getLong("Settings.AreaLoading.Interval");
 		this.area = area;
 		this.setMaxX(x);
 		this.maxZ = z;
@@ -49,14 +51,15 @@ public class AreaLoader {
 	}
 
 	private void progress() throws FileNotFoundException, WorldEditException, IOException {
-		chunks += 1;
-		if (!AreaMethods.loadSchematicArea(sender, area, AreaMethods.getFileName(area, x, z), location.getWorld(), location.clone().add(x * this.size, 0.0D, z * this.size))) {
+		if (!AreaMethods.loadSchematicArea(sender, area, AreaMethods.getFileName(area, x, z), location.getWorld(), location.clone().add(x * size, 0.0D, z * size))) {
 			AreaReloader.log.warning("Failed to reset section '" + AreaMethods.getFileName(area, x, z) + "'!");
 			if (sender instanceof Player) {
 				Player player = (Player) sender;
 				player.getWorld().playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1F, 0.5F);
 			}
+			return;
 		} else {
+			chunks += 1;
 			z += 1;
 		}
 		if (z > this.maxZ) {
@@ -88,7 +91,9 @@ public class AreaLoader {
 				completed.add(Integer.valueOf(areas.indexOf(al)));
 			} else {
 				try {
+					if (!AreaReloader.isDeleted.contains(al.area)) {
 					al.progress();
+					}
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (WorldEditException e) {
@@ -104,19 +109,17 @@ public class AreaLoader {
 		}
 		for (Iterator<Integer> iterator = completed.iterator(); iterator.hasNext();) {
 			int id = ((Integer) iterator.next()).intValue();
-			if (areas.contains(id)) {
 			areas.remove(id);
-			}
 		}
 	}
 
-	public static void manageLoading() {
+	public static void manage() {
 		Runnable br = new Runnable() {
 			public void run() {
 				AreaLoader.progressAll();
 			}
 		};
-		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0L, AreaReloader.interval / 1000 * 20);
+		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0L, delay / 1000 * 20);
 	}
 
 	public static String prefix() {
