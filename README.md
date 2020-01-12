@@ -52,19 +52,28 @@ areareloader.command.admin - Gives access to all commands
 The main configuration file where you will be able to edit your own language settings is named as "config.yml".
 The config is very easy to understand as it is composed by regular language strings, however, the plugin brings some variables and new configuration settings that affect the plugin.
 
+~~------------------------------------------------------------------------------------------------------------------------------------~~
+
 *Guide to debugging*: 
 Open a new issue in the [Issues category](https://github.com/Hetag1216/AreaReloader/issues)
 When opening a new issue please specify:
-- Turn the plugin's debugging option on;
 - Spigot's version - /version;
 - WorldEdit's version;
 - Where/when you met the issue by specifying the command which threw an error and specify where the operations stop, debugging will show every operation ran when executing commands.
-- Paste console's error logs
+- Paste console's error logs (if there are any)
 
-The debug logs will be printed to the player who runs the command.
+The debug logs will be printed to the command sender.
 Default value: false (turn 'false' to true and then restart the server to enable the debugging or any config changes)
+
+~~------------------------------------------------------------------------------------------------------------------------------------~~
 
 Area Interval: This is the amount of time set in milliseconds that decides the delay between each section loading whenever an area is being loaded.
 I recommend keeping this value as the default one as a higher or lower value could affect your server's performance in bad or good, depending on the server's resources and tasks that are currently running at the moment of the area's load, so choose a wise value whenever changing this value.
 Default value: 200
 (0.2 seconds)
+
+~~------------------------------------------------------------------------------------------------------------------------------------~~
+
+AreaScheduler: This function has been implemented in version 1.3.
+With this brand new function, you will be able to automatically reload areas after x amount of time which can be set for each existing area in the areas.yml config.
+In order to use this function the global checker must be true (set true by default) and the AutoReload function under "Areas" in the areas.yml configuration file must be enabled for each area that has to automatically restore.
