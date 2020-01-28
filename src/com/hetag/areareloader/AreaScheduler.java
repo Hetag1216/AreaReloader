@@ -97,8 +97,8 @@ public class AreaScheduler {
 				int x = AreaMethods.getAreaX(scheduler.getArea());
 				int z = AreaMethods.getAreaZ(scheduler.getArea());
 				int size = AreaMethods.getAreaChunk(scheduler.getArea());
-				int maxX = AreaMethods.getAreaMaxX(scheduler.getArea());
-				int maxZ = AreaMethods.getAreaMaxZ(scheduler.getArea());
+				int maxX = AreaMethods.getAreaSizeX(scheduler.getArea());
+				int maxZ = AreaMethods.getAreaSizeZ(scheduler.getArea());
 				Location location = new Location(world, x, 0, z);
 				if (!AreaReloader.isDeleted.contains(scheduler.getArea())) {
 					new AreaLoader(scheduler.getArea(), maxX, maxZ, size, location, null);

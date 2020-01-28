@@ -171,8 +171,10 @@ public class AreaMethods {
 			BlockVector3 max = sel.getMaximumPoint();
 
 			AreaReloader.areas.getConfig().set("Areas." + area + ".World", sel.getWorld().getName());
-			AreaReloader.areas.getConfig().set("Areas." + area + ".X", Integer.valueOf(min.getBlockX()));
-			AreaReloader.areas.getConfig().set("Areas." + area + ".Z", Integer.valueOf(min.getBlockZ()));
+			AreaReloader.areas.getConfig().set("Areas." + area + ".X", min.getBlockX());
+			AreaReloader.areas.getConfig().set("Areas." + area + ".Z", min.getBlockZ());
+			AreaReloader.areas.getConfig().set("Areas." + area + ".Maximum.Z", max.getBlockZ());
+			AreaReloader.areas.getConfig().set("Areas." + area + ".Maximum.X", max.getBlockX());
 			AreaReloader.areas.saveConfig();
 			for (int x = min.getBlockX(); x <= max.getBlockX(); x += size) {
 				int curZ = 0;
@@ -224,9 +226,9 @@ public class AreaMethods {
 			maxX--;
 			maxZ--;
 			
-			AreaReloader.areas.getConfig().set("Areas." + area + ".Size.X", Integer.valueOf(maxX));
-			AreaReloader.areas.getConfig().set("Areas." + area + ".Size.Z", Integer.valueOf(maxZ));
-			AreaReloader.areas.getConfig().set("Areas." + area + ".Size.Chunk", Integer.valueOf(size));
+			AreaReloader.areas.getConfig().set("Areas." + area + ".Size.X", maxX);
+			AreaReloader.areas.getConfig().set("Areas." + area + ".Size.Z", maxZ);
+			AreaReloader.areas.getConfig().set("Areas." + area + ".Size.Chunk", size);
 			AreaReloader.areas.getConfig().set("Areas." + area + ".AutoReload.Enabled", false);
 			AreaReloader.areas.getConfig().set("Areas." + area + ".AutoReload.Time", 200000);
 			AreaReloader.areas.saveConfig();
@@ -237,10 +239,6 @@ public class AreaMethods {
 	
 	public static String getXCoord(String area) {
 		return AreaReloader.areas.getConfig().getString("Areas." + area + ".X");
-	}
-	
-	public static String getYCoord(String area) {
-		return AreaReloader.areas.getConfig().getString("Areas." + area + ".Y");
 	}
 	
 	public static String getZCoord(String area) {
@@ -255,24 +253,32 @@ public class AreaMethods {
 		return file + "_" + x + "_" + z;
 	}
 
-	public static Integer getAreaMaxX(String area) {
-		return Integer.valueOf(AreaReloader.areas.getConfig().getInt("Areas." + area + ".Size.X"));
+	public static Integer getAreaSizeX(String area) {
+		return AreaReloader.areas.getConfig().getInt("Areas." + area + ".Size.X");
 	}
 
+	public static Integer getAreaSizeZ(String area) {
+		return AreaReloader.areas.getConfig().getInt("Areas." + area + ".Size.Z");
+	}
+	
+	public static Integer getAreaMaxX(String area) {
+		return AreaReloader.areas.getConfig().getInt("Areas." + area + ".Maximum.X");
+	}
+	
 	public static Integer getAreaMaxZ(String area) {
-		return Integer.valueOf(AreaReloader.areas.getConfig().getInt("Areas." + area + ".Size.Z"));
+		return AreaReloader.areas.getConfig().getInt("Areas." + area + ".Maximum.Z");
 	}
 	
 	public static Integer getAreaX(String area) {
-		return Integer.valueOf(AreaReloader.areas.getConfig().getInt("Areas." + area + ".X"));
+		return AreaReloader.areas.getConfig().getInt("Areas." + area + ".X");
 	}
 	
 	public static Integer getAreaZ(String area) {
-		return Integer.valueOf(AreaReloader.areas.getConfig().getInt("Areas." + area + ".Z"));
+		return AreaReloader.areas.getConfig().getInt("Areas." + area + ".Z");
 	}
 
 	public static Integer getAreaChunk(String area) {
-		return Integer.valueOf(AreaReloader.areas.getConfig().getInt("Areas." + area + ".Size.Chunk"));
+		return AreaReloader.areas.getConfig().getInt("Areas." + area + ".Size.Chunk");
 	}
 
 	public static void reloadConfig() {

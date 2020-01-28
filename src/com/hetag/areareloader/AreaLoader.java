@@ -36,7 +36,7 @@ public class AreaLoader {
 		}
 		delay = Manager.getConfig().getLong("Settings.AreaLoading.Interval");
 		this.area = area;
-		this.setMaxX(x);
+		this.maxX = x;
 		this.maxZ = z;
 		this.size = size;
 		chunks = 0;
@@ -88,7 +88,7 @@ public class AreaLoader {
 				if ((al.sender != null)) {
 					al.sender.sendMessage(prefix() + onLoadSuccess().replaceAll("%area%", al.area));
 				}
-				completed.add(Integer.valueOf(areas.indexOf(al)));
+				completed.add(areas.indexOf(al));
 			} else {
 				try {
 					if (!AreaReloader.isDeleted.contains(al.area)) {

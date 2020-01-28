@@ -45,6 +45,10 @@ public class Manager {
 		config.addDefault("Commands.Create.OnFailure", "Failed to create new area named: &b%area%&3.");
 		config.addDefault("Commands.Create.AlreadyExists", "An area with the name &b%area%&3 already exists, please choose a different name!");
 
+		config.addDefault("Commands.Display.Description", "&7Displays particles around created areas.");
+		config.addDefault("Commands.Display.onDisplay", "Displaying particles for area: &b%area%&3.");
+		config.addDefault("Commands.Display.onDisplayRemove", "Removed particles display for area: &b%area%&3.");
+		
 		config.addDefault("Commands.List.Description", "&7Lists all existing areas.");
 		config.addDefault("Commands.List.NoAreasFound", "No areas were found.");
 
