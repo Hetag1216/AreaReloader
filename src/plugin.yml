@@ -22,3 +22,4 @@ permissions:
       areareloader.command.version: true
       areareloader.command.reload: true
       areareloader.command.info: true
+      areareloader.command.display: true
