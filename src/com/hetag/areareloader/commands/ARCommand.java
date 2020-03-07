@@ -114,7 +114,7 @@ public abstract class ARCommand implements SubCommand {
 	 * @return
 	 */
 	protected String getPermission(String pex) {
-		String permission = ChatColor.DARK_AQUA + "areareloader.command";
+		String permission = ChatColor.DARK_AQUA + "areareloader.command.";
 		String perm = "- " + permission + ChatColor.AQUA + pex;
 		return perm;
 	}
