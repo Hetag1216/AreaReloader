@@ -1,4 +1,4 @@
-package com.hetag.areareloader.reflection.V1_14;
+package com.hetag.areareloader.reflection.V1_15;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 import com.hetag.areareloader.reflection.AreaProtocol;
 
-public class Protocol_1_14 implements AreaProtocol {
+public class Protocol_1_15 implements AreaProtocol {
 
 	private static Class<?> dustOptions;
 	private static Constructor<?> dustConstructor;
