@@ -33,6 +33,7 @@ public class Executor {
 		new VersionCommand();
 		new HookCommand();
 		new InfoCommand();
+		new DisplayCommand();
 		new ConfigReloadCommand();
 		help = Manager.getConfig().getStringList("Commands.HelpLines");
 

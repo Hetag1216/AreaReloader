@@ -47,7 +47,7 @@ public class LoadCommand extends ARCommand {
 		return ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Commands.Load.onPrepare"));
 	}
 
-	private String onInvalid() {
+	public static String onInvalid() {
 		return ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Commands.Load.onInvalidArea"));
 	}
 }
