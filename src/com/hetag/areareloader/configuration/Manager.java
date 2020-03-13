@@ -54,7 +54,7 @@ public class Manager {
 
 		config.addDefault("Commands.Delete.Description", "&7Deletes an existing area.");
 		config.addDefault("Commands.Delete.OnDelete", "&b%area%&3 was succesfully deleted.");
-		config.addDefault("Commands.Delete.InvalidArea", "&b%area&3 does not exist!");
+		config.addDefault("Commands.Delete.InvalidArea", "&b%area%&3 does not exist!");
 
 		config.addDefault("Commands.Load.Description", "&7Loads an existing area.");
 		config.addDefault("Commands.Load.onPrepare", "Preparing area loading for area: &b%area%&3.");
@@ -66,6 +66,8 @@ public class Manager {
 		config.addDefault("Commands.Info.Description", "&7Shows information about the specified existing area.");
 		
 		config.addDefault("Commands.Reload.Description", "&7Reloads AreaReloader's configuration file.");
+		config.addDefault("Commands.Reload.OnReload", "&aConfigurations were succesfully reloaded!");
+		config.addDefault("Commands.Reload.OnFail", "&cAn error occurred while reloading configurations, printing stack trace.");
 
 		config.addDefault("Commands.Hook.Description", "&7Shows an interface for the plugin's dependencies.");
 		defaultConfig.saveConfig();
