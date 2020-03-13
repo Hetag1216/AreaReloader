@@ -12,6 +12,9 @@ import com.hetag.areareloader.reflection.AreaProtocol;
 
 public class Protocol_1_15 implements AreaProtocol {
 
+    private static Class<?> dustOptions;
+    private static Constructor<?> dustConstructor;
+
     @Override
     public void playRedstoneParticle(Player player, Location location, Color color) {
         if(dustConstructor == null) {
