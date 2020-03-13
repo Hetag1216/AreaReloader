@@ -79,3 +79,7 @@ Default value: 200
 AreaScheduler: This function has been implemented in version 1.3.
 With this brand new function, you will be able to automatically reload areas after x amount of time which can be set for each existing area in the areas.yml config.
 In order to use this function the global checker must be true (set true by default) and the AutoReload function under "Areas" in the areas.yml configuration file must be enabled for each area that has to automatically restore.
+
+Join now the discord for live support and live updates on the projects!
+![Core Icon](https://cdn.discordapp.com/attachments/595364073147728025/687819024457007140/discord_header.png)
+https://discord.gg/yqs9UJs
