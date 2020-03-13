@@ -23,7 +23,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	public static AreaReloader plugin;
 	public static Logger log;
 	public WorldEditPlugin wep;
-	private AreaProtocol ap;
+	public static AreaProtocol ap;
 	public static Config areas;
 	public static boolean debug;
 	public static long interval;
@@ -107,20 +107,26 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			break;
 		case "v1_14_R1":
 			ap = new Protocol_1_14();
+
 		case "v1_15_R1":
 			ap = new Protocol_1_15();
-			if (ap.equals(new Protocol_1_13())) {
-				log.info("Using protocol for 1.13 versions compatibility!");
-			} else if (ap.equals(new Protocol_1_14())) {
-				log.info("Using protocol for 1.14 versions compatibility!");
-			} else if (ap.equals(new Protocol_1_15())) {
-				log.info("Using protocol for 1.15 versions compatibility!");
-			}
+			break;
+		}
+		if (ap.equals(new Protocol_1_13())) {
+			log.info("Using protocol for 1.13 versions compatibility!");
+		} else if (ap.equals(new Protocol_1_14())) {
+			log.info("Using protocol for 1.14 versions compatibility!");
+		} else if (ap.equals(new Protocol_1_15())) {
+			log.info("Using protocol for 1.15 versions compatibility!");
 		}
 	}
 
-	public AreaProtocol getProtocol() {
+	public static AreaProtocol getProtocol() {
 		return ap;
+	}
+	
+	public static AreaReloader getInstance() {
+		return plugin;
 	}
 
 	public String getStatus() {

@@ -57,6 +57,18 @@ public abstract class ARCommand implements SubCommand {
 			sender.sendMessage(ChatColor.GRAY + this.description);
 		}
 	}
+	protected static String formatColors(String string) {
+		return ChatColor.translateAlternateColorCodes('&', string);
+	}
+	
+	protected void sendMessage(CommandSender sender, String message, boolean prefix) {
+		if (prefix) {
+			sender.sendMessage(formatColors(this.prefix + message));
+		} else {
+			sender.sendMessage(formatColors(message));
+		}
+		return;
+	}
 
 	protected boolean hasPermission(CommandSender sender) {
 		if (sender.hasPermission("areareloader.command." + this.name)) {

@@ -1,4 +1,5 @@
 package com.hetag.areareloader.commands;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,14 +53,14 @@ public class DisplayCommand extends ARCommand {
 			br = new BukkitRunnable() {
 				public void run() {
 					Location corner1 = new Location(player.getWorld(), AreaMethods.getAreaX(area), 1, AreaMethods.getAreaZ(area));
-					Location corner2 = new Location(player.getWorld(), AreaMethods.getAreaMaxX(area), player.getWorld().getMaxHeight(), AreaMethods.getAreaMaxZ(area));
+					Location corner2 = new Location(player.getWorld(), AreaMethods.getAreaMaxX(area), player.getWorld().getMaxHeight() / 2, AreaMethods.getAreaMaxZ(area));
 					for (Location finalLoc : getHollowCube(corner1, corner2, 0.25)) {
 						ParticleEffect.FLAME.display(finalLoc, 1, 0.05F, 0.05F, 0.05F, 0.05F);
 						ParticleEffect.FLAME.display(finalLoc, 1);
 					}
 				}
 			};
-			br.runTaskTimerAsynchronously(AreaReloader.plugin, 1, 12);
+			br.runTaskTimerAsynchronously(AreaReloader.plugin, 1, 40);
 		}
 	}
 	
@@ -97,7 +98,6 @@ public class DisplayCommand extends ARCommand {
 				}
 			}
 		}
-
 		return result;
 	}
 }

@@ -28,7 +28,12 @@ public class ListCommand extends ARCommand {
 		if (cs != null) {
 			sender.sendMessage(prefix + ChatColor.AQUA + "Areas:");
 			for (String areaName : cs.getKeys(false)) {
-				sender.sendMessage(ChatColor.DARK_AQUA + areaName + ChatColor.DARK_GRAY + " (" + "" + ChatColor.DARK_AQUA + "X: " + ChatColor.AQUA + AreaMethods.getXCoord(areaName) + ChatColor.GRAY + " - " + ChatColor.DARK_AQUA + "Z: " + ChatColor.AQUA + AreaMethods.getZCoord(areaName) + ChatColor.DARK_GRAY + ")");
+				sender.sendMessage(ChatColor.DARK_AQUA + areaName + ChatColor.DARK_GRAY + " (" + ""
+						+ ChatColor.DARK_AQUA + "X: " + ChatColor.AQUA + AreaMethods.getAreaX(areaName) + ChatColor.GRAY
+						+ " - " + ChatColor.DARK_AQUA + "Z: " + ChatColor.AQUA + AreaMethods.getAreaZ(areaName)
+						+ ChatColor.DARK_GRAY + " | " + ChatColor.DARK_AQUA + "X: " + ChatColor.AQUA
+						+ AreaMethods.getAreaMaxX(areaName) + ChatColor.GRAY + " - " + ChatColor.DARK_AQUA + "Z: " + ChatColor.AQUA + AreaMethods.getAreaMaxZ(areaName)
+						+ ChatColor.DARK_GRAY + ")");
 			}
 		} else {
 			sender.sendMessage(prefix + notFound());

@@ -27,15 +27,22 @@ public class InfoCommand extends ARCommand {
 			sender.sendMessage(getProperUsage());
 		}
 		String area = args.get(0);
+		String display = null;
+		if (DisplayCommand.display.contains(area)) {
+			display = ChatColor.AQUA + "true";
+		} else {
+			display = ChatColor.AQUA + "false";
+		}
 		if (AreaReloader.areas.getConfig().contains("Areas." + area)) {
 			sender.sendMessage(prefix);
-			sender.sendMessage(ChatColor.DARK_GRAY + "«" + ChatColor.AQUA + area + ChatColor.DARK_GRAY + "»");
-			sender.sendMessage(ChatColor.DARK_AQUA + "World" + ChatColor.DARK_GRAY + " » " + ChatColor.AQUA + AreaMethods.getAreaInWorld(area));
-			sender.sendMessage(ChatColor.DARK_AQUA + "Location X" + ChatColor.DARK_GRAY + " » " + ChatColor.AQUA + AreaMethods.getXCoord(area));
-			sender.sendMessage(ChatColor.DARK_AQUA + "Location Z" + ChatColor.DARK_GRAY + " » " + ChatColor.AQUA + AreaMethods.getZCoord(area));
-			sender.sendMessage(ChatColor.DARK_AQUA + "Auto Reloading" + ChatColor.DARK_AQUA + " » " + ChatColor.AQUA + AreaReloader.areas.getConfig().getBoolean("Areas." + area + ".AutoReload.Enabled"));
-			sender.sendMessage(ChatColor.DARK_AQUA + "Auto Reloading Time " + ChatColor.DARK_AQUA + " » " + ChatColor.AQUA + AreaReloader.areas.getConfig().getLong("Areas." + area + ".AutoReload.Time"));
-			sender.sendMessage(ChatColor.DARK_AQUA + "Time Left " + ChatColor.DARK_AQUA + " » " + ChatColor.AQUA + AreaScheduler.getRemainingTime(area));
+			sender.sendMessage(ChatColor.DARK_GRAY + "Â«" + ChatColor.AQUA + area + ChatColor.DARK_GRAY + "Â»");
+			sender.sendMessage(ChatColor.DARK_AQUA + "World" + ChatColor.DARK_GRAY + " Â» " + ChatColor.AQUA + AreaMethods.getAreaInWorld(area));
+			sender.sendMessage(ChatColor.DARK_AQUA + "Location X" + ChatColor.DARK_GRAY + " Â» " + ChatColor.AQUA + AreaMethods.getAreaX(area) + ChatColor.GRAY + " | " + ChatColor.AQUA + AreaMethods.getAreaMaxX(area));
+			sender.sendMessage(ChatColor.DARK_AQUA + "Location Z" + ChatColor.DARK_GRAY + " Â» " + ChatColor.AQUA + AreaMethods.getAreaZ(area) + ChatColor.GRAY + " | " + ChatColor.AQUA + AreaMethods.getAreaMaxZ(area));
+			sender.sendMessage(ChatColor.DARK_AQUA + "Auto Reloading" + ChatColor.DARK_AQUA + " Â» " + ChatColor.AQUA + AreaReloader.areas.getConfig().getBoolean("Areas." + area + ".AutoReload.Enabled"));
+			sender.sendMessage(ChatColor.DARK_AQUA + "Auto Reloading Time " + ChatColor.DARK_AQUA + " Â» " + ChatColor.AQUA + AreaReloader.areas.getConfig().getLong("Areas." + area + ".AutoReload.Time"));
+			sender.sendMessage(ChatColor.DARK_AQUA + "Time Left " + ChatColor.DARK_AQUA + " Â» " + ChatColor.AQUA + AreaScheduler.getRemainingTime(area));
+			sender.sendMessage(ChatColor.DARK_AQUA + "Is being displayed " + ChatColor.DARK_AQUA + " Â» " + display);
 			return;
 		}
 	}
