@@ -147,7 +147,13 @@ public class AreaMethods {
 	}
 
 	public static boolean createNewArea(Player player, String area, int size) throws WorldEditException {
-		File dir = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area);
+            if(AreaReloader.isDeleted.contains(area)){
+                AreaReloader.isDeleted.remove(area);
+                if(AreaReloader.debug){
+                    player.sendMessage(debugPrefix()+"Updating selected area.");
+                }
+            }
+            File dir = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area);
 		if (dir.exists()) {
 			File[] files = dir.listFiles();
 			if ((files != null) && (files.length != 0)) {
