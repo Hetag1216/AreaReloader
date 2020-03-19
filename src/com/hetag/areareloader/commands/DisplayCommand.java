@@ -19,16 +19,22 @@ import net.md_5.bungee.api.ChatColor;
 public class DisplayCommand extends ARCommand {
 
 	public static ArrayList<String> display = new ArrayList<String>();
+	public long pDelay;
 	public BukkitRunnable br;
 	static String path = "Commands.Display.Description";
 
 	public DisplayCommand() {
 		super("display", "/ar display <area>", ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString(path)), new String[] { "display" });
+		pDelay = Manager.getConfig().getLong("Commands.Display.ParticleDelay");
 	}
 
 	@Override
 	public void execute(CommandSender sender, List<String> args) {
 		if (!hasPermission(sender) || !correctLength(sender, 0, 0, 1) && isPlayer(sender)) {
+			return;
+		}
+		if (args.size() == 0) {
+			sendMessage(sender, getProperUsage(), false);
 			return;
 		}
 		String area = args.get(0);
@@ -60,7 +66,7 @@ public class DisplayCommand extends ARCommand {
 					}
 				}
 			};
-			br.runTaskTimerAsynchronously(AreaReloader.plugin, 1, 40);
+			br.runTaskTimerAsynchronously(AreaReloader.plugin, 0, pDelay * 20 / 1000);
 		}
 	}
 	
