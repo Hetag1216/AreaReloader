@@ -13,8 +13,7 @@ public class HookCommand extends ARCommand {
 	static String path = "Commands.Hook.Description";
 
 	public HookCommand() {
-		super("hook", "/ar hook", ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString(path)),
-				new String[] { "hook", "hooks" });
+		super("hook", "/ar hook", formatColors(Manager.getConfig().getString(path)), new String[] { "hook", "hooks" });
 	}
 
 	@Override
@@ -26,8 +25,7 @@ public class HookCommand extends ARCommand {
 		sender.sendMessage(ChatColor.GRAY + "- " + ChatColor.AQUA + "WorldEdit");
 		sender.sendMessage(AreaReloader.plugin.getStatus());
 		if (AreaReloader.plugin.wep != null) {
-			sender.sendMessage(ChatColor.DARK_AQUA + "Version: " + ChatColor.AQUA
-					+ AreaReloader.plugin.wep.getDescription().getVersion());
+			sender.sendMessage(ChatColor.DARK_AQUA + "Version: " + ChatColor.AQUA + AreaReloader.plugin.wep.getDescription().getVersion());
 		}
 		sender.sendMessage(ChatColor.DARK_AQUA + "-=-=-=-= -=- =-=-=-=-");
 	}

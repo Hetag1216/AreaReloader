@@ -15,7 +15,7 @@ public class InfoCommand extends ARCommand {
 	static String path = "Commands.Info.Description";
 	
 	public InfoCommand() {
-		super("info", "/ar info <area>",  ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString(path)), new String[] {"info"});
+		super("info", "/ar info <area>",  formatColors(Manager.getConfig().getString(path)), new String[] {"info"});
 	}
 
 	@Override
@@ -24,7 +24,8 @@ public class InfoCommand extends ARCommand {
 			return;
 		}
 		if (args.size() == 0) {
-			sender.sendMessage(getProperUsage());
+			sendMessage(sender, getProperUsage(), false);
+			return;
 		}
 		String area = args.get(0);
 		String display = null;
@@ -44,6 +45,8 @@ public class InfoCommand extends ARCommand {
 			sender.sendMessage(ChatColor.DARK_AQUA + "Time Left " + ChatColor.DARK_AQUA + " » " + ChatColor.AQUA + AreaScheduler.getRemainingTime(area));
 			sender.sendMessage(ChatColor.DARK_AQUA + "Is being displayed " + ChatColor.DARK_AQUA + " » " + display);
 			return;
+		} else {
+			sendMessage(sender, LoadCommand.onInvalid().replaceAll("%area%", area), true);
 		}
 	}
 }

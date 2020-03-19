@@ -10,15 +10,11 @@ import com.hetag.areareloader.AreaReloader;
 import com.hetag.areareloader.configuration.Manager;
 import com.sk89q.worldedit.WorldEditException;
 
-import net.md_5.bungee.api.ChatColor;
-
 public class CreateCommand extends ARCommand {
 	static String path = "Commands.Create.Description";
 
 	public CreateCommand() {
-		super("create", "/ar create <name>",
-				ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString(path)),
-				new String[] { "create" });
+		super("create", "/ar create <name>", formatColors(Manager.getConfig().getString(path)), new String[] { "create" });
 	}
 
 	@Override
@@ -27,18 +23,19 @@ public class CreateCommand extends ARCommand {
 			return;
 		}
 		if (args.size() == 0) {
-			sender.sendMessage(getProperUsage());
+			sendMessage(sender, getProperUsage(), false);
 		}
 		if (args.size() == 1) {
+			String area = args.get(0);
 			if (AreaReloader.areas.getConfig().contains("Areas." + args.get(0))) {
-				sender.sendMessage(prefix + onCreateExists().replaceAll("%area%", args.get(0)));
+				sendMessage(sender, onCreateExists().replaceAll("%area%", area), true);
 				return;
 			}
 			try {
 				if (AreaMethods.createNewArea((Player) sender, args.get(0), 16)) {
-					sender.sendMessage(prefix + onCreateSuccess().replaceAll("%area%", args.get(0)));
+					sendMessage(sender, onCreateSuccess().replaceAll("%area%", area), true);
 				} else {
-					sender.sendMessage(prefix + onCreateFail().replaceAll("%area%", args.get(0)));
+					sendMessage(sender, onCreateFail().replaceAll("%area%", area), true);
 				}
 			} catch (WorldEditException e) {
 				e.printStackTrace();
@@ -50,16 +47,15 @@ public class CreateCommand extends ARCommand {
 	}
 
 	private String onCreateExists() {
-		return ChatColor.translateAlternateColorCodes('&',
-				Manager.getConfig().getString("Commands.Create.AlreadyExists"));
+		return formatColors(Manager.getConfig().getString("Commands.Create.AlreadyExists"));
 	}
 
 	private String onCreateSuccess() {
-		return ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Commands.Create.OnSuccess"));
+		return formatColors(Manager.getConfig().getString("Commands.Create.OnSuccess"));
 	}
 
 	private String onCreateFail() {
-		return ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Commands.Create.OnFailure"));
+		return formatColors(Manager.getConfig().getString("Commands.Create.OnFailure"));
 	}
 
 }

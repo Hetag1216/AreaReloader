@@ -12,13 +12,11 @@ import com.hetag.areareloader.AreaMethods;
 import com.hetag.areareloader.AreaReloader;
 import com.hetag.areareloader.configuration.Manager;
 
-import net.md_5.bungee.api.ChatColor;
-
 public class LoadCommand extends ARCommand {
 	static String path = "Commands.Load.Description";
 
 	public LoadCommand() {
-		super("load", "/ar load <name>", ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString(path)), new String[] { "load" });
+		super("load", "/ar load <name>", formatColors(Manager.getConfig().getString(path)), new String[] { "load" });
 	}
 
 	@Override
@@ -44,10 +42,10 @@ public class LoadCommand extends ARCommand {
 	}
 
 	private String onPrepare() {
-		return ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Commands.Load.onPrepare"));
+		return formatColors(Manager.getConfig().getString("Commands.Load.onPrepare"));
 	}
 
 	public static String onInvalid() {
-		return ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Commands.Load.onInvalidArea"));
+		return formatColors(Manager.getConfig().getString("Commands.Load.onInvalidArea"));
 	}
 }

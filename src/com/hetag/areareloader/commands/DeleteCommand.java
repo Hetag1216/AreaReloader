@@ -2,7 +2,6 @@ package com.hetag.areareloader.commands;
 
 import java.util.List;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import com.hetag.areareloader.AreaMethods;
@@ -13,9 +12,7 @@ public class DeleteCommand extends ARCommand {
 	static String path = "Commands.Delete.Description";
 
 	public DeleteCommand() {
-		super("delete", "/ar delete <name>",
-				ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString(path)),
-				new String[] { "delete" });
+		super("delete", "/ar delete <name>", formatColors(Manager.getConfig().getString(path)), new String[] { "delete" });
 	}
 
 	@Override
@@ -23,24 +20,26 @@ public class DeleteCommand extends ARCommand {
 		if (!hasPermission(sender) || !correctLength(sender, 0, 0, 1)) {
 			return;
 		}
+		if (args.size() == 0) {
+			sendMessage(sender, getProperUsage(), false);
+			return;
+		}
 		String area = args.get(0);
-		if (AreaReloader.areas.getConfig().contains("Areas." + args.get(0))) {
-			sender.sendMessage(prefix + onDelete().replaceAll("%area%", args.get(0)));
+		if (AreaReloader.areas.getConfig().contains("Areas." + area)) {
+			sendMessage(sender, onDelete().replaceAll("%area%", area), true);
 			AreaMethods.deleteArea(area);
 			return;
 		}
-		sender.sendMessage(prefix + onInvalidArea().replaceAll("%area%", args.get(0)));
+		sendMessage(sender, onInvalidArea().replaceAll("%area%", area), true);
 
 	}
 
 	private String onDelete() {
-		return ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Commands.Delete.OnDelete"));
+		return formatColors(Manager.getConfig().getString("Commands.Delete.OnDelete"));
 	}
 
 	private String onInvalidArea() {
-		return ChatColor.translateAlternateColorCodes('&',
-				Manager.getConfig().getString("Commands.Delete.InvalidArea"));
-
+		return formatColors(Manager.getConfig().getString("Commands.Delete.InvalidArea"));
 	}
 
 }
