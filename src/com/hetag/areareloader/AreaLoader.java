@@ -101,8 +101,8 @@ public class AreaLoader {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				double percentage = al.chunks * 100.0D / al.maxChunks;
-				if ((Math.round(percentage) % 25L == 0L) && (Math.round(percentage) % 100L != 0L) && (al.sender != null)) {
+				int percentage = (int) (al.chunks * 100.0D / al.maxChunks);
+				if ((Math.round(percentage) % 1L == 0L) && (Math.round(percentage) % 100L != 0L) && (al.sender != null)) {
 					al.sender.sendMessage(prefix() + "Loading area '" + ChatColor.AQUA + al.area + ChatColor.DARK_AQUA + "' " + ChatColor.AQUA + percentage + "%" + ChatColor.DARK_AQUA + ".");
 				}
 			}
