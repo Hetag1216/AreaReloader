@@ -12,8 +12,7 @@ public class ConfigReloadCommand extends ARCommand {
 	static String path = "Commands.Reload.Description";
 
 	public ConfigReloadCommand() {
-		super("reload", "/ar reload", formatColors(Manager.getConfig().getString(path)),
-				new String[] { "reload" });
+		super("reload", "/ar reload", formatColors(Manager.getConfig().getString(path)), new String[] { "reload" });
 	}
 
 	@Override
@@ -26,7 +25,7 @@ public class ConfigReloadCommand extends ARCommand {
 			AreaReloader.areas.reloadConfig();
 			if (AreaReloader.checker) {
 				AreaScheduler.checkForAreas();
-				new AreaScheduler(null, System.currentTimeMillis());
+				AreaScheduler.manageReloading();
 			}
 			sendMessage(sender, onReload(), true);
 		} catch (Exception e) {
