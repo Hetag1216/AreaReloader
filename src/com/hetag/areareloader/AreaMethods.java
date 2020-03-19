@@ -94,21 +94,20 @@ public class AreaMethods {
 	}
 
 	public static boolean loadSchematicArea(CommandSender p, String area, String schemFile, World world, Location location) throws WorldEditException, FileNotFoundException, IOException {
-
 		File file = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area + File.separator + schemFile + ".schematic");
 		if (!file.exists()) {
 			return false;
 		}
 		if (AreaReloader.debug) {
 			if (p != null)
-			p.sendMessage(debugPrefix() + "Schematic file found!");
+			sendDebugMessage(p, "Schematic file found");
 		}
 
 		ClipboardFormat format = ClipboardFormats.findByFile(file);
 
 		if (AreaReloader.debug) {
 			if (p != null)
-			p.sendMessage(debugPrefix() + "Schematic format found.");
+			sendDebugMessage(p, "Schematic format found.");
 		}
 
 		try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
@@ -116,14 +115,14 @@ public class AreaMethods {
 
 			if (AreaReloader.debug) {
 				if (p != null)
-				p.sendMessage(debugPrefix() + "Reading schematic.");
+				sendDebugMessage(p, "Reading schematic.");
 			}
 
 			try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(BukkitAdapter.adapt(world), Integer.MAX_VALUE)) {
 
 				if (AreaReloader.debug) {
 					if (p != null)
-					p.sendMessage(debugPrefix() + "Initializing editSession.");
+					sendDebugMessage(p, "Initializing edit session.");
 				}
 
 				Operation operation = new ClipboardHolder(clipboard).createPaste(editSession)
@@ -132,14 +131,14 @@ public class AreaMethods {
 
 				if (AreaReloader.debug) {
 					if (p != null)
-					p.sendMessage(debugPrefix() + "Ran building operations.");
+					sendDebugMessage(p, "Ran building operations.");
 				}
 
 				Operations.complete(operation);
 
 				if (AreaReloader.debug) {
 					if (p != null)
-					p.sendMessage(debugPrefix() + "Operations succesfully completed!");
+					sendDebugMessage(p, "Operations succesfully completed!");
 				}
 			}
 		}
@@ -147,12 +146,12 @@ public class AreaMethods {
 	}
 
 	public static boolean createNewArea(Player player, String area, int size) throws WorldEditException {
-            if(AreaReloader.isDeleted.contains(area)){
-                AreaReloader.isDeleted.remove(area);
-                if(AreaReloader.debug){
-                    player.sendMessage(debugPrefix()+"Updating selected area.");
-                }
-            }
+		if (AreaReloader.isDeleted.contains(area)) {
+			AreaReloader.isDeleted.remove(area);
+			if (AreaReloader.debug) {
+				sendDebugMessage(player, "Updating selected area.");
+			}
+		}
             File dir = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area);
 		if (dir.exists()) {
 			File[] files = dir.listFiles();
@@ -199,7 +198,7 @@ public class AreaMethods {
 					clipCopy.setCopyingEntities(true);
 					Operations.complete(clipCopy);
 					if (AreaReloader.debug) {
-						player.sendMessage(debugPrefix() + "Succesfully copied the selected clipboard to system.");
+						sendDebugMessage(player, "Succesfully copied the selected clipboard to system.");
 					}
 					File file = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area + File.separator + getFileName(area, curX, curZ) + ".schematic");
 					if (file.exists()) {
@@ -218,7 +217,7 @@ public class AreaMethods {
 					try (ClipboardWriter writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(new FileOutputStream(file))) {
 						writer.write(cc);
 						if (AreaReloader.debug) {
-							player.sendMessage(debugPrefix() + "Clipboard succesfully saved to file.");
+							sendDebugMessage(player, "Clipboard succesfully saved to file.");
 						}
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -289,6 +288,22 @@ public class AreaMethods {
 
 	public static void reloadConfig() {
 		AreaReloader.plugin.reloadConfig();
+	}
+	
+	public static void sendDebugMessage(Player player, String string) {
+		player.sendMessage(debugPrefix() + string);
+	}
+
+	public static void sendDebugMessage(CommandSender sender, String string) {
+		sender.sendMessage(debugPrefix() + string);
+	}
+	
+	public static void updateAreas() {
+		if (AreaReloader.isDeleted.isEmpty()) {
+			return;
+		} else {
+			AreaReloader.isDeleted.clear();
+		}
 	}
 
 	public static String debugPrefix() {
