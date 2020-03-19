@@ -88,9 +88,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 
 	public void onDisable() {
 		log.info("Succesfully disabled AreaReloader!");
-		if (!isDeleted.isEmpty()) {
-			isDeleted.clear();
-		}
+		AreaMethods.updateAreas();
 	}
 
 	public void checkProtocol() {
@@ -107,7 +105,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			break;
 		case "v1_14_R1":
 			ap = new Protocol_1_14();
-
+			break;
 		case "v1_15_R1":
 			ap = new Protocol_1_15();
 			break;
