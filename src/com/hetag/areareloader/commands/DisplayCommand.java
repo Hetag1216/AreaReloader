@@ -3,10 +3,10 @@ package com.hetag.areareloader.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.hetag.areareloader.AreaMethods;
@@ -22,10 +22,13 @@ public class DisplayCommand extends ARCommand {
 	public long pDelay;
 	public BukkitRunnable br;
 	static String path = "Commands.Display.Description";
+	private int minY, maxY;
 
 	public DisplayCommand() {
 		super("display", "/ar display <area>", ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString(path)), new String[] { "display" });
 		pDelay = Manager.getConfig().getLong("Commands.Display.ParticleDelay");
+		minY = Manager.getConfig().getInt("Commands.Display.MinimumY");
+		maxY = Manager.getConfig().getInt("Commands.Display.MaximumY");
 	}
 
 	@Override
@@ -38,8 +41,7 @@ public class DisplayCommand extends ARCommand {
 			return;
 		}
 		String area = args.get(0);
-		Player player = (Player) sender;
-		if (AreaReloader.areas.getConfig().contains("Areas." + args.get(0))) {
+		if (AreaReloader.areas.getConfig().contains("Areas." + area)) {
 			if (display.contains(area)) {
 				display.remove(area);
 				sender.sendMessage(prefix + onDisplayRemove().replaceAll("%area%", area));
@@ -55,11 +57,12 @@ public class DisplayCommand extends ARCommand {
 		} else {
 			sender.sendMessage(prefix + LoadCommand.onInvalid().replaceAll("%area%", area));
 		}
+		
 		if (display.contains(area)) {
 			br = new BukkitRunnable() {
 				public void run() {
-					Location corner1 = new Location(player.getWorld(), AreaMethods.getAreaX(area), 1, AreaMethods.getAreaZ(area));
-					Location corner2 = new Location(player.getWorld(), AreaMethods.getAreaMaxX(area), player.getWorld().getMaxHeight() / 2, AreaMethods.getAreaMaxZ(area));
+					Location corner1 = new Location(Bukkit.getWorld(AreaMethods.getAreaInWorld(area)), AreaMethods.getAreaX(area), minY, AreaMethods.getAreaZ(area));
+					Location corner2 = new Location(Bukkit.getWorld(AreaMethods.getAreaInWorld(area)), AreaMethods.getAreaMaxX(area), maxY, AreaMethods.getAreaMaxZ(area));
 					for (Location finalLoc : getHollowCube(corner1, corner2, 0.25)) {
 						ParticleEffect.FLAME.display(finalLoc, 1, 0.05F, 0.05F, 0.05F, 0.05F);
 						ParticleEffect.FLAME.display(finalLoc, 1);
@@ -71,11 +74,11 @@ public class DisplayCommand extends ARCommand {
 	}
 	
 	public static String onDisplay() {
-		return ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Commands.Display.onDisplay"));
+		return formatColors(Manager.getConfig().getString("Commands.Display.onDisplay"));
 	}
 	
 	public static String onDisplayRemove() {
-		return ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Commands.Display.onDisplayRemove"));
+		return formatColors(Manager.getConfig().getString("Commands.Display.onDisplayRemove"));
 	}
 
 	public List<Location> getHollowCube(Location corner1, Location corner2, double point) {
