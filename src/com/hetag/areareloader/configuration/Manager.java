@@ -26,6 +26,7 @@ public class Manager {
 		config.addDefault("Settings.Debug.Enabled", false);
 		config.addDefault("Settings.Debug.Prefix", "&8[&bAR&7-&bDebug&8]&b ");
 		config.addDefault("Settings.AreaLoading.Interval", "200");
+		config.addDefault("Settings.AreaLoading.IgnoreAirBlocks", true);
 		
 		config.addDefault("Settings.AutoReload.Checker", true);
 		config.addDefault("Settings.AutoReload.NotifyWhenReloading", true);
@@ -44,11 +45,14 @@ public class Manager {
 		config.addDefault("Commands.Create.OnSuccess", "Succesfully created new area named: &b%area%&3.");
 		config.addDefault("Commands.Create.OnFailure", "Failed to create new area named: &b%area%&3.");
 		config.addDefault("Commands.Create.AlreadyExists", "An area with the name &b%area%&3 already exists, please choose a different name!");
-
+		config.addDefault("Commands.Create.EntitiesValue", "You must select a value: &btrue&7/&bfalse");
+		
 		config.addDefault("Commands.Display.Description", "&7Displays particles around created areas.");
 		config.addDefault("Commands.Display.onDisplay", "Displaying particles for area: &b%area%&3.");
 		config.addDefault("Commands.Display.onDisplayRemove", "Removed particles display for area: &b%area%&3.");
 		config.addDefault("Commands.Display.ParticleDelay", 3000);
+		config.addDefault("Commands.Display.MinimumY", 1);
+		config.addDefault("Commands.Display.MaximumY", 128);
 		
 		config.addDefault("Commands.List.Description", "&7Lists all existing areas.");
 		config.addDefault("Commands.List.NoAreasFound", "No areas were found.");
