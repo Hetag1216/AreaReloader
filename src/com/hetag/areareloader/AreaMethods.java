@@ -12,6 +12,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.hetag.areareloader.configuration.Manager;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.WorldEdit;
@@ -35,6 +36,7 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 
 public class AreaMethods {
 	static AreaReloader plugin;
+	public static boolean ignoreAirBlocks = Manager.getConfig().getBoolean("Settings.AreaLoading.IgnoreAirBlocks");
 
 	public static void performSetup() {
 		File areas = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas");
@@ -127,7 +129,7 @@ public class AreaMethods {
 
 				Operation operation = new ClipboardHolder(clipboard).createPaste(editSession)
 						.to(BlockVector3.at(location.getBlockX(), location.getBlockY(), location.getBlockZ()))
-						.ignoreAirBlocks(false).build();
+						.ignoreAirBlocks(ignoreAirBlocks).build();
 
 				if (AreaReloader.debug) {
 					if (p != null)
@@ -145,7 +147,7 @@ public class AreaMethods {
 		return true;
 	}
 
-	public static boolean createNewArea(Player player, String area, int size) throws WorldEditException {
+	public static boolean createNewArea(Player player, String area, int size, boolean copyEntities) throws WorldEditException {
 		if (AreaReloader.isDeleted.contains(area)) {
 			AreaReloader.isDeleted.remove(area);
 			if (AreaReloader.debug) {
@@ -176,6 +178,7 @@ public class AreaMethods {
 			BlockVector3 max = sel.getMaximumPoint();
 
 			AreaReloader.areas.getConfig().set("Areas." + area + ".World", sel.getWorld().getName());
+			AreaReloader.areas.getConfig().set("Areas." + area + ".IgnoresEntities", copyEntities);
 			AreaReloader.areas.getConfig().set("Areas." + area + ".X", min.getBlockX());
 			AreaReloader.areas.getConfig().set("Areas." + area + ".Z", min.getBlockZ());
 			AreaReloader.areas.getConfig().set("Areas." + area + ".Maximum.Z", max.getBlockZ());
@@ -195,7 +198,7 @@ public class AreaMethods {
 
 					BlockArrayClipboard cc = new BlockArrayClipboard(region);
 					ForwardExtentCopy clipCopy = new ForwardExtentCopy(es, region, cc, region.getMinimumPoint());
-					clipCopy.setCopyingEntities(true);
+					clipCopy.setCopyingEntities(copyEntities);
 					Operations.complete(clipCopy);
 					if (AreaReloader.debug) {
 						sendDebugMessage(player, "Succesfully copied the selected clipboard to system.");
