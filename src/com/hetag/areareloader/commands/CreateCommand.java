@@ -14,7 +14,7 @@ public class CreateCommand extends ARCommand {
 	static String path = "Commands.Create.Description";
 
 	public CreateCommand() {
-		super("create", "/ar create <name>", formatColors(Manager.getConfig().getString(path)), new String[] { "create" });
+		super("create", "/ar create <name> <copyEntities: true|false>", formatColors(Manager.getConfig().getString(path)), new String[] { "create" });
 	}
 
 	@Override
@@ -25,14 +25,24 @@ public class CreateCommand extends ARCommand {
 		if (args.size() == 0) {
 			sendMessage(sender, getProperUsage(), false);
 		}
-		if (args.size() == 1) {
+		if (args.size() == 2) {
 			String area = args.get(0);
+			boolean skipEntities = false;
 			if (AreaReloader.areas.getConfig().contains("Areas." + args.get(0))) {
 				sendMessage(sender, onCreateExists().replaceAll("%area%", area), true);
 				return;
 			}
+			String skipEnts = args.get(1);
+			if (skipEnts.equalsIgnoreCase("true")) {
+				skipEntities = true;
+			} else if (skipEnts.equalsIgnoreCase("false")) {
+				skipEntities = false;
+			} else {
+				sendMessage(sender, onEntity(), true);
+				return;
+			}
 			try {
-				if (AreaMethods.createNewArea((Player) sender, args.get(0), 16)) {
+				if (AreaMethods.createNewArea((Player) sender, args.get(0), 16, skipEntities)) {
 					sendMessage(sender, onCreateSuccess().replaceAll("%area%", area), true);
 				} else {
 					sendMessage(sender, onCreateFail().replaceAll("%area%", area), true);
@@ -41,7 +51,7 @@ public class CreateCommand extends ARCommand {
 				e.printStackTrace();
 			}
 		}
-		if (args.size() > 1) {
+		if (args.size() > 2 || args.size() < 2) {
 			sender.sendMessage(getProperUsage());
 		}
 	}
@@ -56,6 +66,10 @@ public class CreateCommand extends ARCommand {
 
 	private String onCreateFail() {
 		return formatColors(Manager.getConfig().getString("Commands.Create.OnFailure"));
+	}
+	
+	private String onEntity() {
+		return Manager.getConfig().getString("Commands.Create.EntitiesValue");
 	}
 
 }
