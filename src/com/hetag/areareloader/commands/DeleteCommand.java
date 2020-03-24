@@ -27,6 +27,9 @@ public class DeleteCommand extends ARCommand {
 		String area = args.get(0);
 		if (AreaReloader.areas.getConfig().contains("Areas." + area)) {
 			sendMessage(sender, onDelete().replaceAll("%area%", area), true);
+			if (DisplayCommand.display.contains(area)) {
+				DisplayCommand.display.remove(area);
+			}
 			AreaMethods.deleteArea(area);
 			return;
 		}
