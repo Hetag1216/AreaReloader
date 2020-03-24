@@ -25,9 +25,8 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	public WorldEditPlugin wep;
 	public static AreaProtocol ap;
 	public static Config areas;
-	public static boolean debug;
+	public static boolean debug, checker;
 	public static long interval;
-	public static boolean checker;
 	public static ArrayList<String> isDeleted = new ArrayList<>();
 
 	public void onEnable() {
@@ -44,8 +43,8 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		}
 		
 		try {
-			AreaMethods.performSetup();
 			new Manager();
+			AreaMethods.performSetup();
 			areas = new Config(new File("areas.yml"));
 			debug = Manager.getConfig().getBoolean("Settings.Debug.Enabled");
 			interval = Manager.getConfig().getLong("Settings.AreaLoading.Interval");
