@@ -36,14 +36,16 @@ public class InfoCommand extends ARCommand {
 		}
 		if (AreaReloader.areas.getConfig().contains("Areas." + area)) {
 			sender.sendMessage(prefix);
-			sender.sendMessage(ChatColor.DARK_GRAY + "«" + ChatColor.AQUA + area + ChatColor.DARK_GRAY + "»");
-			sender.sendMessage(ChatColor.DARK_AQUA + "World" + ChatColor.DARK_GRAY + " » " + ChatColor.AQUA + AreaMethods.getAreaInWorld(area));
-			sender.sendMessage(ChatColor.DARK_AQUA + "Location X" + ChatColor.DARK_GRAY + " » " + ChatColor.AQUA + AreaMethods.getAreaX(area) + ChatColor.GRAY + " | " + ChatColor.AQUA + AreaMethods.getAreaMaxX(area));
-			sender.sendMessage(ChatColor.DARK_AQUA + "Location Z" + ChatColor.DARK_GRAY + " » " + ChatColor.AQUA + AreaMethods.getAreaZ(area) + ChatColor.GRAY + " | " + ChatColor.AQUA + AreaMethods.getAreaMaxZ(area));
-			sender.sendMessage(ChatColor.DARK_AQUA + "Auto Reloading" + ChatColor.DARK_AQUA + " » " + ChatColor.AQUA + AreaReloader.areas.getConfig().getBoolean("Areas." + area + ".AutoReload.Enabled"));
-			sender.sendMessage(ChatColor.DARK_AQUA + "Auto Reloading Time " + ChatColor.DARK_AQUA + " » " + ChatColor.AQUA + AreaReloader.areas.getConfig().getLong("Areas." + area + ".AutoReload.Time"));
-			sender.sendMessage(ChatColor.DARK_AQUA + "Time Left " + ChatColor.DARK_AQUA + " » " + ChatColor.AQUA + AreaScheduler.getRemainingTime(area));
-			sender.sendMessage(ChatColor.DARK_AQUA + "Is being displayed " + ChatColor.DARK_AQUA + " » " + display);
+			sendMessage(sender, "&8« &b" + area + " &8»", false);
+			sendMessage(sender, "&3World &8» &b" + AreaMethods.getAreaInWorld(area) , false);
+			sendMessage(sender, "&3Location X &8» &b" + AreaMethods.getAreaX(area) + "&7 | &b" + AreaMethods.getAreaMaxX(area) , false);
+			sendMessage(sender, "&3Location Z &8» &b" + AreaMethods.getAreaZ(area) + "&7 | &b" + AreaMethods.getAreaMaxZ(area), false);
+			sendMessage(sender, "&3Is automatically reloading &8» &b" + AreaReloader.areas.getConfig().getBoolean("Areas." + area + ".AutoReload.Enabled"), false);
+			sendMessage(sender, "&3Auto reloading time &8» &b" + AreaReloader.areas.getConfig().getLong("Areas." + area + ".AutoReload.Time"), false);
+			sendMessage(sender, "&3Next auto reload in &8» &b" + AreaScheduler.getRemainingTime(area), false);
+			sendMessage(sender, "&3Is being displayed &8» &b" + display, false);
+			sendMessage(sender, "&3Is ignoring entities &8» &b" + AreaReloader.areas.getConfig().getBoolean("Areas." + area + ".IgnoresEntities"), false);
+			sendMessage(sender, "&3Is ignoring air blocks when loading &8» &b" + AreaMethods.ignoreAirBlocks, false);
 			return;
 		} else {
 			sendMessage(sender, LoadCommand.onInvalid().replaceAll("%area%", area), true);
