@@ -42,6 +42,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			pm.disablePlugin(this);
 		}
 		
+		Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new TPS(), 0L, 1L);
 		try {
 			new Manager();
 			AreaMethods.performSetup();

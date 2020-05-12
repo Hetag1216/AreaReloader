@@ -25,11 +25,15 @@ public class Manager {
 		
 		config.addDefault("Settings.Debug.Enabled", false);
 		config.addDefault("Settings.Debug.Prefix", "&8[&bAR&7-&bDebug&8]&b ");
-		config.addDefault("Settings.AreaLoading.Interval", "200");
-		config.addDefault("Settings.AreaLoading.IgnoreAirBlocks", true);
+		config.addDefault("Settings.AreaLoading.Interval", 200);
+		config.addDefault("Settings.AreaLoading.IgnoreAirBlocks", false);
+		config.addDefault("Settings.AreaLoading.FastMode", true);
+		config.addDefault("Settings.AreaLoading.RequiredTPS", 18);
+		config.addDefault("Settings.AreaLoading.Percentage", 15);
 		
 		config.addDefault("Settings.AutoReload.Checker", true);
 		config.addDefault("Settings.AutoReload.NotifyWhenReloading", true);
+		config.addDefault("Settings.AutoReload.RequiredTPS", 18);
 
 		ArrayList<String> helpLines = new ArrayList<>();
 		Executor.help = helpLines;
@@ -63,7 +67,8 @@ public class Manager {
 
 		config.addDefault("Commands.Load.Description", "&7Loads an existing area.");
 		config.addDefault("Commands.Load.onPrepare", "Preparing area loading for area: &b%area%&3.");
-		config.addDefault("Commands.Load.onLoadSuccess", "Area '&b%area%&3' was succesfully loaded!");
+		config.addDefault("Commands.Load.onLoadSuccess", "Area '&b%area%&3' was succesfully loaded!\n"
+				+ "Completed after &b%time%&3ms.");
 		config.addDefault("Commands.Load.onInvalidArea", "&b%area% &3does not exist.");
 
 		config.addDefault("Commands.Version.Description", "&7Shows information about the plugin.");

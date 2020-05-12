@@ -28,6 +28,8 @@ public class AreaLoader {
 	private Location location;
 	private boolean completed = false;
 	private CommandSender sender;
+	private static long fakeTime;
+	public static double requiredTPS, percentage;
 
 	@SuppressWarnings("unlikely-arg-type")
 	public AreaLoader(String area, int x, int z, int size, Location location, CommandSender sender) {
@@ -35,6 +37,8 @@ public class AreaLoader {
 			return;
 		}
 		delay = Manager.getConfig().getLong("Settings.AreaLoading.Interval");
+		requiredTPS = Manager.getConfig().getDouble("Settings.AreaLoading.RequiredTPS");
+		percentage = Manager.getConfig().getDouble("Settings.AreaLoading.Percentage");
 		this.area = area;
 		this.maxX = x;
 		this.maxZ = z;
@@ -44,6 +48,7 @@ public class AreaLoader {
 		z++;
 		this.maxChunks = (x * z);
 		this.location = location;
+		fakeTime = System.currentTimeMillis();
 		if (sender != null) {
 			this.sender = sender;
 		}
@@ -86,7 +91,8 @@ public class AreaLoader {
 		for (AreaLoader al : areas) {
 			if (al.completed) {
 				if ((al.sender != null)) {
-					al.sender.sendMessage(prefix() + onLoadSuccess().replaceAll("%area%", al.area));
+					final long time = System.currentTimeMillis() - fakeTime;
+					al.sender.sendMessage(prefix() + onLoadSuccess().replaceAll("%area%", al.area).replaceAll("%time%", String.valueOf(time)));
 				}
 				completed.add(areas.indexOf(al));
 			} else {
@@ -101,9 +107,9 @@ public class AreaLoader {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				int percentage = (int) (al.chunks * 100.0D / al.maxChunks);
-				if ((Math.round(percentage) % 1L == 0L) && (Math.round(percentage) % 100L != 0L) && (al.sender != null)) {
-					al.sender.sendMessage(prefix() + "Loading area '" + ChatColor.AQUA + al.area + ChatColor.DARK_AQUA + "' " + ChatColor.AQUA + percentage + "%" + ChatColor.DARK_AQUA + ".");
+				int perc = (int) (al.chunks * 100.0D / al.maxChunks);
+				if ((Math.round(perc) % percentage == 0L) && (Math.round(perc) % 100L != 0L) && (al.sender != null)) {
+					al.sender.sendMessage(prefix() + "Loading area '" + ChatColor.AQUA + al.area + ChatColor.DARK_AQUA + "' " + ChatColor.AQUA + perc + "%" + ChatColor.DARK_AQUA + ".");
 				}
 			}
 		}
@@ -112,11 +118,13 @@ public class AreaLoader {
 			areas.remove(id);
 		}
 	}
-
+	
 	public static void manage() {
 		Runnable br = new Runnable() {
 			public void run() {
+				if (TPS.getTPS() >= requiredTPS) {
 				AreaLoader.progressAll();
+				}
 			}
 		};
 		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0L, delay / 1000 * 20);

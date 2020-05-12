@@ -21,6 +21,7 @@ public class AreaScheduler {
 	public static boolean notifyOnReload;
 	private long reset;
 	private long delay;
+	public static double requiredTPS;
 
 	@SuppressWarnings("unlikely-arg-type")
 	public AreaScheduler(String area, long delay) {
@@ -31,15 +32,16 @@ public class AreaScheduler {
 		this.delay = delay;
 		this.reset = System.currentTimeMillis();
 		notifyOnReload = Manager.getConfig().getBoolean("Settings.AutoReload.NotifyWhenReloading");
+		requiredTPS = Manager.getConfig().getDouble("Settings.AutoReload.RequiredTPS");
 		areas.add(this);
 	}
 
 	public static void checkForAreas() {
 		if (config.contains("Areas")) {
 			for (String keys : config.getConfigurationSection("Areas").getKeys(false)) {
-				if (config.contains("Areas." + keys + ".AutoReload.Enabled")
-						&& config.getBoolean("Areas." + keys + ".AutoReload.Enabled") == true) {
+				if (config.contains("Areas." + keys + ".AutoReload.Enabled") && config.getBoolean("Areas." + keys + ".AutoReload.Enabled") == true) {
 					long resetTime = config.getLong("Areas." + keys + ".AutoReload.Time");
+					if (getRemainingTime(keys) != 0)
 					new AreaScheduler(keys, resetTime);
 				}
 			}
@@ -107,8 +109,7 @@ public class AreaScheduler {
 					if (notifyOnReload) {
 						for (Player ops : Bukkit.getServer().getOnlinePlayers()) {
 							if (ops.isOp()) {
-								ops.sendMessage(AreaLoader.prefix() + "Automatically reloading area: " + ChatColor.AQUA
-										+ scheduler.getArea() + ChatColor.DARK_AQUA + ".");
+								ops.sendMessage(AreaLoader.prefix() + "Automatically reloading area: " + ChatColor.AQUA + scheduler.getArea() + ChatColor.DARK_AQUA + ".");
 								ops.getWorld().playSound(ops.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1F, 0.3F);
 							}
 						}
@@ -122,11 +123,12 @@ public class AreaScheduler {
 	public static void manageReloading() {
 		Runnable br = new Runnable() {
 			public void run() {
+				if (TPS.getTPS() >= requiredTPS) {
 				progress();
+				}
 			}
 		};
-		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0,
-				AreaReloader.interval / 1000 * 20);
+		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0, AreaReloader.interval / 1000 * 20);
 	}
 
 }

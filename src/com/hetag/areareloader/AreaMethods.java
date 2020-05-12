@@ -26,6 +26,7 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardWriter;
+import com.sk89q.worldedit.function.mask.BlockTypeMask;
 import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
@@ -33,10 +34,12 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.ClipboardHolder;
+import com.sk89q.worldedit.world.block.BlockTypes;
 
 public class AreaMethods {
 	static AreaReloader plugin;
 	public static boolean ignoreAirBlocks = Manager.getConfig().getBoolean("Settings.AreaLoading.IgnoreAirBlocks");
+	public static boolean fastMode = Manager.getConfig().getBoolean("Settings.AreaLoading.FastMode");
 
 	public static void performSetup() {
 		File areas = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas");
@@ -121,15 +124,28 @@ public class AreaMethods {
 			}
 
 			try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(BukkitAdapter.adapt(world), Integer.MAX_VALUE)) {
-
+				if (fastMode) {
+				editSession.setFastMode(true);
+				} else {
+					editSession.setFastMode(false);
+				}
 				if (AreaReloader.debug) {
 					if (p != null)
 					sendDebugMessage(p, "Initializing edit session.");
 				}
-
-				Operation operation = new ClipboardHolder(clipboard).createPaste(editSession)
+				Operation operation = null;
+				if (ignoreAirBlocks) {
+				operation = new ClipboardHolder(clipboard).createPaste(editSession)
 						.to(BlockVector3.at(location.getBlockX(), location.getBlockY(), location.getBlockZ()))
-						.ignoreAirBlocks(ignoreAirBlocks).build();
+						.ignoreAirBlocks(false)
+						.maskSource(new BlockTypeMask(editSession, BlockTypes.AIR))
+						.build();
+				} else {	
+					operation = new ClipboardHolder(clipboard).createPaste(editSession)
+						.to(BlockVector3.at(location.getBlockX(), location.getBlockY(), location.getBlockZ()))
+						.ignoreAirBlocks(false)
+						.build();	
+				}
 
 				if (AreaReloader.debug) {
 					if (p != null)
@@ -178,7 +194,7 @@ public class AreaMethods {
 			BlockVector3 max = sel.getMaximumPoint();
 
 			AreaReloader.areas.getConfig().set("Areas." + area + ".World", sel.getWorld().getName());
-			AreaReloader.areas.getConfig().set("Areas." + area + ".IgnoresEntities", copyEntities);
+			AreaReloader.areas.getConfig().set("Areas." + area + ".HasCopiedEntities", copyEntities);
 			AreaReloader.areas.getConfig().set("Areas." + area + ".X", min.getBlockX());
 			AreaReloader.areas.getConfig().set("Areas." + area + ".Z", min.getBlockZ());
 			AreaReloader.areas.getConfig().set("Areas." + area + ".Maximum.Z", max.getBlockZ());
