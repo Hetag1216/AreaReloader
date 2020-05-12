@@ -23,17 +23,31 @@ public class AreaScheduler {
 	private long delay;
 	public static double requiredTPS;
 
-	@SuppressWarnings("unlikely-arg-type")
 	public AreaScheduler(String area, long delay) {
-		if (areas.contains(area)) {
+		if (AreaReloader.getInstance().getQueue().isQueued(area)) {
+			Bukkit.getServer().broadcastMessage(area + " is already being reloaded.");
 			return;
 		}
+		/*for (Entry<String, Integer> IDs : AreaReloader.getInstance().getQueue().entrySet()) {
+			if (IDs.getKey().equals(area) && IDs.getValue() > 1) {
+				Bukkit.getServer().broadcastMessage(area + " is already being reloaded.");
+				return;
+			}
+		}*/
+		/*if (AreaReloader.getInstance().getQueue().containsKey(area) && AreaReloader.getInstance().getQueue().containsValue(2)) {
+			Bukkit.getServer().broadcastMessage(area + " is already being reloaded.");
+			return;
+		}*/
 		this.area = area;
 		this.delay = delay;
 		this.reset = System.currentTimeMillis();
 		notifyOnReload = Manager.getConfig().getBoolean("Settings.AutoReload.NotifyWhenReloading");
 		requiredTPS = Manager.getConfig().getDouble("Settings.AutoReload.RequiredTPS");
 		areas.add(this);
+		// every time the instance is ran a value *should* be added to the instance
+		int count = 0;
+		AreaReloader.getInstance().getQueue().queue().put(area, count++);
+		Bukkit.getServer().broadcastMessage(area + " count: " + count);
 	}
 
 	public static void checkForAreas() {
@@ -41,7 +55,6 @@ public class AreaScheduler {
 			for (String keys : config.getConfigurationSection("Areas").getKeys(false)) {
 				if (config.contains("Areas." + keys + ".AutoReload.Enabled") && config.getBoolean("Areas." + keys + ".AutoReload.Enabled") == true) {
 					long resetTime = config.getLong("Areas." + keys + ".AutoReload.Time");
-					if (getRemainingTime(keys) != 0)
 					new AreaScheduler(keys, resetTime);
 				}
 			}
@@ -105,7 +118,7 @@ public class AreaScheduler {
 				if (!AreaReloader.isDeleted.contains(scheduler.getArea())) {
 					new AreaLoader(scheduler.getArea(), maxX, maxZ, size, location, null);
 				        
-							AreaReloader.log.info("Automatically reloading area: " + scheduler.getArea());
+					AreaReloader.log.info("Automatically reloading area: " + scheduler.getArea());
 					if (notifyOnReload) {
 						for (Player ops : Bukkit.getServer().getOnlinePlayers()) {
 							if (ops.isOp()) {

@@ -25,9 +25,11 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	public WorldEditPlugin wep;
 	public static AreaProtocol ap;
 	public static Config areas;
-	public static boolean debug, checker;
+	public static boolean debug, checker, useQueue;
 	public static long interval;
 	public static ArrayList<String> isDeleted = new ArrayList<>();
+	public Queue queue;
+	//public static HashMap<String, Integer> QUEUE;
 
 	public void onEnable() {
 		plugin = this;
@@ -49,10 +51,16 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			areas = new Config(new File("areas.yml"));
 			debug = Manager.getConfig().getBoolean("Settings.Debug.Enabled");
 			interval = Manager.getConfig().getLong("Settings.AreaLoading.Interval");
+			useQueue = Manager.getConfig().getBoolean("Settings.Queue.Enabled");
 			checker = Manager.getConfig().getBoolean("Settings.AutoReload.Checker");
 			log.info("Configurations succesfully registered!");
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		
+		if (useQueue) {
+			//QUEUE = new HashMap<String, Integer>();
+			queue = new Queue(this);
 		}
 
 		try {
@@ -89,6 +97,9 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	public void onDisable() {
 		log.info("Succesfully disabled AreaReloader!");
 		AreaMethods.updateAreas();
+		if (!getQueue().queue().isEmpty()) {
+			getQueue().queue().clear();;
+		}
 	}
 
 	public void checkProtocol() {
@@ -118,15 +129,47 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			log.info("Using protocol for 1.15 versions compatibility!");
 		}
 	}
-
+	
+	/**
+	 * Returns the protocol version to allow graceful fall back for different spigot's versions.
+	 * @return ap
+	 */
 	public static AreaProtocol getProtocol() {
 		return ap;
 	}
 	
+	/**
+	 * Gets the plugin's instance.
+	 * @return plugin
+	 */
 	public static AreaReloader getInstance() {
 		return plugin;
 	}
 
+	/**
+	 * Stores all areas queued for reloading.
+	 * <p>
+	 * This does not store instances but the areas themselves.
+	 * <p>
+	 * Every time the server is reloaded, restarted or the /ar command is ran, the
+	 * queue gets cleared.
+	 * <p>
+	 * If {@link #useQueue} returns true
+	 * @return QUEUE
+	 */
+	/*public HashMap<String, Integer> getQueue() {
+		if (QUEUE != null) return QUEUE;
+		return null;
+	}*/
+	
+	public Queue getQueue() {
+		return queue;
+	}
+	
+	/**
+	 * Gets the status of AreaReloader's hooks.
+	 * @return status
+	 */
 	public String getStatus() {
 		String enabled = ChatColor.GREEN + "Enabled";
 		String disabled = ChatColor.RED + "Disabled";
@@ -137,4 +180,5 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			return status + disabled;
 		}
 	}
+	
 }

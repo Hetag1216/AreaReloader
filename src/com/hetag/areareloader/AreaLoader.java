@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -31,11 +32,15 @@ public class AreaLoader {
 	private static long fakeTime;
 	public static double requiredTPS, percentage;
 
-	@SuppressWarnings("unlikely-arg-type")
 	public AreaLoader(String area, int x, int z, int size, Location location, CommandSender sender) {
-		if (areas.contains(area)) {
+		if (AreaReloader.getInstance().getQueue().isQueued(area)) {
+			Bukkit.getServer().broadcastMessage(area + " is already being reloaded.");
 			return;
 		}
+		/*if (AreaReloader.getInstance().getQueue().containsKey(area) && AreaReloader.getInstance().getQueue().containsValue(2)) {
+			Bukkit.getServer().broadcastMessage(area + " is already being reloaded.");
+			return;
+		}*/
 		delay = Manager.getConfig().getLong("Settings.AreaLoading.Interval");
 		requiredTPS = Manager.getConfig().getDouble("Settings.AreaLoading.RequiredTPS");
 		percentage = Manager.getConfig().getDouble("Settings.AreaLoading.Percentage");
@@ -53,6 +58,9 @@ public class AreaLoader {
 			this.sender = sender;
 		}
 		areas.add(this);
+		int count = 1;
+		AreaReloader.getInstance().getQueue().queue().put(area, count += 1);
+		Bukkit.getServer().broadcastMessage(area + " count: " + count);
 	}
 
 	private void progress() throws FileNotFoundException, WorldEditException, IOException {
@@ -95,6 +103,11 @@ public class AreaLoader {
 					al.sender.sendMessage(prefix() + onLoadSuccess().replaceAll("%area%", al.area).replaceAll("%time%", String.valueOf(time)));
 				}
 				completed.add(areas.indexOf(al));
+				// only remove the area from the queue when it's finished
+				if (AreaReloader.getInstance().getQueue().queue().containsKey(al.area)) {
+					AreaReloader.getInstance().getQueue().queue().remove(al.area);
+					Bukkit.getServer().broadcastMessage(al.area + " has been removed from the queue list");
+				}
 			} else {
 				try {
 					if (!AreaReloader.isDeleted.contains(al.area)) {

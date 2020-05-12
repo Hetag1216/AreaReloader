@@ -25,6 +25,9 @@ public class Manager {
 		
 		config.addDefault("Settings.Debug.Enabled", false);
 		config.addDefault("Settings.Debug.Prefix", "&8[&bAR&7-&bDebug&8]&b ");
+		
+		config.addDefault("Settings.Queue.Enabled", true);
+		
 		config.addDefault("Settings.AreaLoading.Interval", 200);
 		config.addDefault("Settings.AreaLoading.IgnoreAirBlocks", false);
 		config.addDefault("Settings.AreaLoading.FastMode", true);
