@@ -70,7 +70,7 @@ public class Manager {
 		config.addDefault("Commands.Load.OnPrepare", "Preparing area loading for area: &b%area%&3.");
 		config.addDefault("Commands.Load.OnLoadSuccess", "Area '&b%area%&3' was succesfully loaded!\n"
 				+ "Completed after &b%time%&3ms.");
-		config.addDefault("Commands.Load.onInvalidArea", "&b%area% &3does not exist.");
+		config.addDefault("Commands.Load.OnInvalidArea", "&b%area% &3does not exist.");
 		config.addDefault("Commands.Load.OnAlreadyLoading", "Failed to reload area: '&b%area%&3' as it is already being loaded.");
 		
 		config.addDefault("Commands.TpsMonitor.Description", "Starts a task which displays AreaReloader's method of counting TPS (ticks per seconds).");
@@ -80,7 +80,7 @@ public class Manager {
 		config.addDefault("Commands.Info.Description", "&7Shows information about the specified existing area.");
 		
 		config.addDefault("Commands.Reload.Description", "&7Reloads AreaReloader's configuration file.");
-		config.addDefault("Commands.Reload.OnReload", "&aConfigurations were succesfully reloaded!");
+		config.addDefault("Commands.Reload.OnReload", "&aConfigurations and tasks were succesfully reloaded!");
 		config.addDefault("Commands.Reload.OnFail", "&cAn error occurred while reloading configurations, printing stack trace.");
 
 		config.addDefault("Commands.Hook.Description", "&7Shows an interface for the plugin's dependencies.");

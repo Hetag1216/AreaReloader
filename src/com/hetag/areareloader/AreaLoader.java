@@ -149,7 +149,7 @@ public class AreaLoader {
 	}
 
 	private static String onLoadSuccess() {
-		return ChatColor.translateAlternateColorCodes('&', AreaReloader.plugin.getConfig().getString("Commands.Load.onLoadSuccess"));
+		return ChatColor.translateAlternateColorCodes('&', AreaReloader.plugin.getConfig().getString("Commands.Load.OnLoadSuccess"));
 	}
 
 	/**

@@ -26,12 +26,16 @@ public class ConfigReloadCommand extends ARCommand {
 			AreaMethods.performSetup();
 			Manager.defaultConfig.reloadConfig();
 			AreaReloader.areas.reloadConfig();
+			if (!AreaReloader.getInstance().getServer().getScheduler().getPendingTasks().isEmpty()) {
 			AreaReloader.getInstance().getServer().getScheduler().getPendingTasks().clear();
+			}
 			AreaLoader.manage();
 			if (AreaReloader.checker) {
 				AreaScheduler.checkForAreas();
 				AreaScheduler.manageReloading();
+				if (AreaScheduler.getAreas() != null) {
 				AreaScheduler.updateDelay(AreaScheduler.getAreas(), AreaScheduler.getAreasResetTime());
+				}
 			}
 			sendMessage(sender, onReload(), true);
 		} catch (Exception e) {

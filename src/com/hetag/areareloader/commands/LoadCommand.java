@@ -36,24 +36,24 @@ public class LoadCommand extends ARCommand {
 			int z = AreaReloader.areas.getConfig().getInt("Areas." + args.get(0) + ".Z");
 			Location location = new Location(world, x, 0.0D, z);
 			new AreaLoader(area, AreaMethods.getAreaSizeX(area).intValue(), AreaMethods.getAreaSizeZ(area).intValue(), AreaMethods.getAreaChunk(area).intValue(), location, sender);
-			sender.sendMessage(prefix + onPrepare().replaceAll("%area%", area));
+			sendMessage(sender, onPrepare().replaceAll("%area%", area), true);
 			} else {
 				sendMessage(sender, onAlreadyLoading().replaceAll("%area%", area), true);
 			}
 		} else {
-			sender.sendMessage(prefix + onInvalid().replaceAll("%area%", area));
+			sendMessage(sender, onInvalid().replaceAll("%area%", area), true);
 		}
 	}
 
 	private String onPrepare() {
-		return formatColors(Manager.getConfig().getString("Commands.Load.onPrepare"));
+		return formatColors(Manager.getConfig().getString("Commands.Load.OnPrepare"));
 	}
 
 	public static String onInvalid() {
-		return formatColors(Manager.getConfig().getString("Commands.Load.onInvalidArea"));
+		return formatColors(Manager.getConfig().getString("Commands.Load.OnInvalidArea"));
 	}
 	
 	private String onAlreadyLoading() {
-		return Manager.getConfig().getString("Commands.Load.OnAlreadyLoading");
+		return formatColors(Manager.getConfig().getString("Commands.Load.OnAlreadyLoading"));
 	}
 }
