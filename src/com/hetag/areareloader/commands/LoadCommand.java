@@ -30,12 +30,16 @@ public class LoadCommand extends ARCommand {
 		}
 		String area = args.get(0);
 		if (AreaReloader.areas.getConfig().contains("Areas." + args.get(0))) {
+			if (!AreaReloader.getInstance().getQueue().isQueued(area)) {
 			World world = Bukkit.getWorld(AreaReloader.areas.getConfig().getString("Areas." + args.get(0) + ".World"));
 			int x = AreaReloader.areas.getConfig().getInt("Areas." + args.get(0) + ".X");
 			int z = AreaReloader.areas.getConfig().getInt("Areas." + args.get(0) + ".Z");
 			Location location = new Location(world, x, 0.0D, z);
 			new AreaLoader(area, AreaMethods.getAreaSizeX(area).intValue(), AreaMethods.getAreaSizeZ(area).intValue(), AreaMethods.getAreaChunk(area).intValue(), location, sender);
 			sender.sendMessage(prefix + onPrepare().replaceAll("%area%", area));
+			} else {
+				sendMessage(sender, onAlreadyLoading().replaceAll("%area%", area), true);
+			}
 		} else {
 			sender.sendMessage(prefix + onInvalid().replaceAll("%area%", area));
 		}
@@ -47,5 +51,9 @@ public class LoadCommand extends ARCommand {
 
 	public static String onInvalid() {
 		return formatColors(Manager.getConfig().getString("Commands.Load.onInvalidArea"));
+	}
+	
+	private String onAlreadyLoading() {
+		return Manager.getConfig().getString("Commands.Load.OnAlreadyLoading");
 	}
 }

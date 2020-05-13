@@ -71,7 +71,29 @@ public class AreaScheduler {
 		}
 		return 0L;
 	}
-
+	
+	public static String getAreas() {
+		if (config.contains("Areas")) {
+			for (String keys : config.getConfigurationSection("Areas").getKeys(false)) {
+				if (config.contains("Areas." + keys + ".AutoReload.Enabled") && config.getBoolean("Areas." + keys + ".AutoReload.Enabled") == true) {
+					return keys;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public static long getAreasResetTime() {
+		if (config.contains("Areas")) {
+			for (String keys : config.getConfigurationSection("Areas").getKeys(false)) {
+				if (config.contains("Areas." + keys + ".AutoReload.Enabled") && config.getBoolean("Areas." + keys + ".AutoReload.Enabled") == true) {
+					long resetTime = config.getLong("Areas." + keys + ".AutoReload.Time");
+					return resetTime;
+				}
+			}
+		}
+		return 0;
+	}
 	public String getArea() {
 		return this.area;
 	}
@@ -113,10 +135,8 @@ public class AreaScheduler {
 					if (notifyOnReload) {
 						for (Player ops : Bukkit.getServer().getOnlinePlayers()) {
 							if (ops.isOp() || ops.hasPermission("areareloader.command.admin")) {
-								if (!AreaReloader.getInstance().getQueue().isQueued(scheduler.getArea())) {
 								ops.sendMessage(AreaLoader.prefix() + "Automatically reloading area: " + ChatColor.AQUA + scheduler.getArea() + ChatColor.DARK_AQUA + ".");
 								ops.getWorld().playSound(ops.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1F, 0.3F);
-								}
 							}
 						}
 					}

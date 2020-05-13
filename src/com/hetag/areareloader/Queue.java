@@ -5,13 +5,11 @@ import java.util.Map.Entry;
 
 public class Queue {
 	private HashMap<String, Integer> QUEUE;
-	//private HashMap<String, Boolean> RELOAD_QUEUE;
 	AreaReloader plugin;
 	
 	public Queue(AreaReloader plugin) {
 		this.plugin = plugin;
 		QUEUE = new HashMap<>();
-		//RELOAD_QUEUE = new HashMap<>();
 	}
 	
 	/**
@@ -19,7 +17,7 @@ public class Queue {
 	 * <p>
 	 * This does not store instances but the areas themselves.
 	 * <p>
-	 * Every time the server is reloaded, restarted or the /ar command is ran, the
+	 * Every time the server is reloaded, restarted, the
 	 * queue gets cleared.
 	 * <p>
 	 * If {@link #useQueue} returns true
@@ -38,7 +36,7 @@ public class Queue {
 	 * @param area
 	 * @return queued area
 	 */
-	protected boolean isAreaQueued(String area) {
+	public boolean isAreaQueued(String area) {
 		if (queue().containsKey(area)) return true;
 		return false;
 	}
@@ -55,7 +53,7 @@ public class Queue {
 	 * @return queued area
 	 */
 	
-	protected boolean isQueued(String area) {
+	public boolean isQueued(String area) {
 		for (Entry<String, Integer> IDs : queue().entrySet()) {
 			if (IDs.getKey().equals(area) && IDs.getValue() > 1) {
 				return true;

@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
+import com.hetag.areareloader.AreaLoader;
+import com.hetag.areareloader.AreaMethods;
 import com.hetag.areareloader.AreaReloader;
 import com.hetag.areareloader.AreaScheduler;
 import com.hetag.areareloader.configuration.Manager;
@@ -21,11 +23,15 @@ public class ConfigReloadCommand extends ARCommand {
 			return;
 		}
 		try {
+			AreaMethods.performSetup();
 			Manager.defaultConfig.reloadConfig();
 			AreaReloader.areas.reloadConfig();
+			AreaReloader.getInstance().getServer().getScheduler().getPendingTasks().clear();
+			AreaLoader.manage();
 			if (AreaReloader.checker) {
 				AreaScheduler.checkForAreas();
 				AreaScheduler.manageReloading();
+				AreaScheduler.updateDelay(AreaScheduler.getAreas(), AreaScheduler.getAreasResetTime());
 			}
 			sendMessage(sender, onReload(), true);
 		} catch (Exception e) {

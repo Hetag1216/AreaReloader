@@ -37,9 +37,10 @@ public class AreaLoader {
 		}
 		if (AreaReloader.getInstance().getQueue().isQueued(area)) {
 			if (AreaReloader.debug) {
+				if (getSender() != null)
 				AreaMethods.sendDebugMessage(getSender(), "'" + ChatColor.AQUA + area + ChatColor.DARK_AQUA + "' is already being loaded.");
 			}
-			if (sender != null)
+			if (getSender() != null)
 			getSender().sendMessage(prefix() + "Area '" + ChatColor.AQUA + area + ChatColor.DARK_AQUA + "' is already being loaded.");
 			return;
 		}
@@ -122,9 +123,8 @@ public class AreaLoader {
 				}
 				int perc = (int) (al.chunks * 100.0D / al.maxChunks);
 					if ((Math.round(perc) % percentage == 0L) && (Math.round(perc) % 100L != 0L) && (al.sender != null)) {
-						if (!AreaReloader.getInstance().getQueue().isQueued(al.area))
 						al.sender.sendMessage(prefix() + "Loading area '" + ChatColor.AQUA + al.area + ChatColor.DARK_AQUA + "' " + ChatColor.AQUA + perc + "%" + ChatColor.DARK_AQUA + ".");
-				}
+					}
 			}
 		}
 		for (Iterator<Integer> iterator = completed.iterator(); iterator.hasNext();) {

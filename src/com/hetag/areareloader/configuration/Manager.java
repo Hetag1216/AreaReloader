@@ -53,8 +53,8 @@ public class Manager {
 		config.addDefault("Commands.Create.EntitiesValue", "You must select a value: &btrue&7/&bfalse");
 		
 		config.addDefault("Commands.Display.Description", "&7Displays particles around created areas.");
-		config.addDefault("Commands.Display.onDisplay", "Displaying particles for area: &b%area%&3.");
-		config.addDefault("Commands.Display.onDisplayRemove", "Removed particles display for area: &b%area%&3.");
+		config.addDefault("Commands.Display.OnDisplay", "Displaying particles for area: &b%area%&3.");
+		config.addDefault("Commands.Display.OnDisplayRemove", "Removed particles display for area: &b%area%&3.");
 		config.addDefault("Commands.Display.ParticleDelay", 3000);
 		config.addDefault("Commands.Display.MinimumY", 1);
 		config.addDefault("Commands.Display.MaximumY", 128);
@@ -67,10 +67,11 @@ public class Manager {
 		config.addDefault("Commands.Delete.InvalidArea", "&b%area%&3 does not exist!");
 
 		config.addDefault("Commands.Load.Description", "&7Loads an existing area.");
-		config.addDefault("Commands.Load.onPrepare", "Preparing area loading for area: &b%area%&3.");
-		config.addDefault("Commands.Load.onLoadSuccess", "Area '&b%area%&3' was succesfully loaded!\n"
+		config.addDefault("Commands.Load.OnPrepare", "Preparing area loading for area: &b%area%&3.");
+		config.addDefault("Commands.Load.OnLoadSuccess", "Area '&b%area%&3' was succesfully loaded!\n"
 				+ "Completed after &b%time%&3ms.");
 		config.addDefault("Commands.Load.onInvalidArea", "&b%area% &3does not exist.");
+		config.addDefault("Commands.Load.OnAlreadyLoading", "Failed to reload area: '&b%area%&3' as it is already being loaded.");
 		
 		config.addDefault("Commands.TpsMonitor.Description", "Starts a task which displays AreaReloader's method of counting TPS (ticks per seconds).");
 

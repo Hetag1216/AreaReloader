@@ -74,11 +74,11 @@ public class DisplayCommand extends ARCommand {
 	}
 	
 	public static String onDisplay() {
-		return formatColors(Manager.getConfig().getString("Commands.Display.onDisplay"));
+		return formatColors(Manager.getConfig().getString("Commands.Display.OnDisplay"));
 	}
 	
 	public static String onDisplayRemove() {
-		return formatColors(Manager.getConfig().getString("Commands.Display.onDisplayRemove"));
+		return formatColors(Manager.getConfig().getString("Commands.Display.OnDisplayRemove"));
 	}
 
 	public List<Location> getHollowCube(Location corner1, Location corner2, double point) {
