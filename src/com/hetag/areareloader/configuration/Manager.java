@@ -26,8 +26,6 @@ public class Manager {
 		config.addDefault("Settings.Debug.Enabled", false);
 		config.addDefault("Settings.Debug.Prefix", "&8[&bAR&7-&bDebug&8]&b ");
 		
-		config.addDefault("Settings.Queue.Enabled", true);
-		
 		config.addDefault("Settings.AreaLoading.Interval", 200);
 		config.addDefault("Settings.AreaLoading.IgnoreAirBlocks", false);
 		config.addDefault("Settings.AreaLoading.FastMode", true);
@@ -73,6 +71,8 @@ public class Manager {
 		config.addDefault("Commands.Load.onLoadSuccess", "Area '&b%area%&3' was succesfully loaded!\n"
 				+ "Completed after &b%time%&3ms.");
 		config.addDefault("Commands.Load.onInvalidArea", "&b%area% &3does not exist.");
+		
+		config.addDefault("Commands.TpsMonitor.Description", "Starts a task which displays AreaReloader's method of counting TPS (ticks per seconds).");
 
 		config.addDefault("Commands.Version.Description", "&7Shows information about the plugin.");
 		

@@ -27,11 +27,6 @@ public class ConfigReloadCommand extends ARCommand {
 				AreaScheduler.checkForAreas();
 				AreaScheduler.manageReloading();
 			}
-			/*if (AreaReloader.useQueue) {
-				if (!AreaReloader.getInstance().getQueue().isEmpty()) {
-					AreaReloader.getInstance().getQueue().clear();
-				}
-			}*/
 			sendMessage(sender, onReload(), true);
 		} catch (Exception e) {
 			sendMessage(sender, onFail(), true);

@@ -3,14 +3,15 @@ package com.hetag.areareloader;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
-
 public class Queue {
 	private HashMap<String, Integer> QUEUE;
+	//private HashMap<String, Boolean> RELOAD_QUEUE;
 	AreaReloader plugin;
+	
 	public Queue(AreaReloader plugin) {
 		this.plugin = plugin;
 		QUEUE = new HashMap<>();
+		//RELOAD_QUEUE = new HashMap<>();
 	}
 	
 	/**
@@ -29,10 +30,34 @@ public class Queue {
 		return null;
 	}
 	
+	
+	/**
+	 * Checks if the specified area is already inside the queue.
+	 * <p>
+	 * This should never be used to check whether or not an area can be reloaded.
+	 * @param area
+	 * @return queued area
+	 */
+	protected boolean isAreaQueued(String area) {
+		if (queue().containsKey(area)) return true;
+		return false;
+	}
+	
+	/**
+	 * Checks if the specified area is queued by also checking its count.
+	 * <p>
+	 * This method should be used when checking if an area is already being reloaded
+	 * to prevent its over loading.
+	 * <p>
+	 * If the count > 1 -> run action
+	 * 
+	 * @param area
+	 * @return queued area
+	 */
+	
 	protected boolean isQueued(String area) {
 		for (Entry<String, Integer> IDs : queue().entrySet()) {
 			if (IDs.getKey().equals(area) && IDs.getValue() > 1) {
-				Bukkit.getServer().broadcastMessage(area + " is already being reloaded.");
 				return true;
 			}
 		}

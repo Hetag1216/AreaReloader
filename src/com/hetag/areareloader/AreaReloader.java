@@ -28,8 +28,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	public static boolean debug, checker, useQueue;
 	public static long interval;
 	public static ArrayList<String> isDeleted = new ArrayList<>();
-	public Queue queue;
-	//public static HashMap<String, Integer> QUEUE;
+	private Queue queue;
 
 	public void onEnable() {
 		plugin = this;
@@ -51,16 +50,11 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			areas = new Config(new File("areas.yml"));
 			debug = Manager.getConfig().getBoolean("Settings.Debug.Enabled");
 			interval = Manager.getConfig().getLong("Settings.AreaLoading.Interval");
-			useQueue = Manager.getConfig().getBoolean("Settings.Queue.Enabled");
+			queue = new Queue(this);
 			checker = Manager.getConfig().getBoolean("Settings.AutoReload.Checker");
 			log.info("Configurations succesfully registered!");
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		
-		if (useQueue) {
-			//QUEUE = new HashMap<String, Integer>();
-			queue = new Queue(this);
 		}
 
 		try {
@@ -147,21 +141,9 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	}
 
 	/**
-	 * Stores all areas queued for reloading.
-	 * <p>
-	 * This does not store instances but the areas themselves.
-	 * <p>
-	 * Every time the server is reloaded, restarted or the /ar command is ran, the
-	 * queue gets cleared.
-	 * <p>
-	 * If {@link #useQueue} returns true
-	 * @return QUEUE
+	 * Returns class utility instance.
+	 * @return queue.class
 	 */
-	/*public HashMap<String, Integer> getQueue() {
-		if (QUEUE != null) return QUEUE;
-		return null;
-	}*/
-	
 	public Queue getQueue() {
 		return queue;
 	}

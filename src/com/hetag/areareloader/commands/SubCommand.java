@@ -23,7 +23,7 @@ public interface SubCommand {
 	public String[] getAliases();
 
 	/**
-	 * Gets the proper use of the command, in the format '/bcr {@link ARCommand#name
+	 * Gets the proper use of the command, in the format '/ar {@link ARCommand#name
 	 * name} arg1 arg2 ... '
 	 *
 	 * @return the proper use of the command

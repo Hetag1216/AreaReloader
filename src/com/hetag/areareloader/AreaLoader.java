@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -33,14 +32,17 @@ public class AreaLoader {
 	public static double requiredTPS, percentage;
 
 	public AreaLoader(String area, int x, int z, int size, Location location, CommandSender sender) {
+		if (sender != null) {
+			this.sender = sender;
+		}
 		if (AreaReloader.getInstance().getQueue().isQueued(area)) {
-			Bukkit.getServer().broadcastMessage(area + " is already being reloaded.");
+			if (AreaReloader.debug) {
+				AreaMethods.sendDebugMessage(getSender(), "'" + ChatColor.AQUA + area + ChatColor.DARK_AQUA + "' is already being loaded.");
+			}
+			if (sender != null)
+			getSender().sendMessage(prefix() + "Area '" + ChatColor.AQUA + area + ChatColor.DARK_AQUA + "' is already being loaded.");
 			return;
 		}
-		/*if (AreaReloader.getInstance().getQueue().containsKey(area) && AreaReloader.getInstance().getQueue().containsValue(2)) {
-			Bukkit.getServer().broadcastMessage(area + " is already being reloaded.");
-			return;
-		}*/
 		delay = Manager.getConfig().getLong("Settings.AreaLoading.Interval");
 		requiredTPS = Manager.getConfig().getDouble("Settings.AreaLoading.RequiredTPS");
 		percentage = Manager.getConfig().getDouble("Settings.AreaLoading.Percentage");
@@ -54,13 +56,9 @@ public class AreaLoader {
 		this.maxChunks = (x * z);
 		this.location = location;
 		fakeTime = System.currentTimeMillis();
-		if (sender != null) {
-			this.sender = sender;
-		}
 		areas.add(this);
 		int count = 1;
 		AreaReloader.getInstance().getQueue().queue().put(area, count += 1);
-		Bukkit.getServer().broadcastMessage(area + " count: " + count);
 	}
 
 	private void progress() throws FileNotFoundException, WorldEditException, IOException {
@@ -106,7 +104,9 @@ public class AreaLoader {
 				// only remove the area from the queue when it's finished
 				if (AreaReloader.getInstance().getQueue().queue().containsKey(al.area)) {
 					AreaReloader.getInstance().getQueue().queue().remove(al.area);
-					Bukkit.getServer().broadcastMessage(al.area + " has been removed from the queue list");
+					if (AreaReloader.debug) {
+						AreaMethods.sendDebugMessage(al.getSender(), ChatColor.DARK_AQUA + al.area + ChatColor.AQUA + " has been removed from the queue list.");
+					}
 				}
 			} else {
 				try {
@@ -121,8 +121,9 @@ public class AreaLoader {
 					e.printStackTrace();
 				}
 				int perc = (int) (al.chunks * 100.0D / al.maxChunks);
-				if ((Math.round(perc) % percentage == 0L) && (Math.round(perc) % 100L != 0L) && (al.sender != null)) {
-					al.sender.sendMessage(prefix() + "Loading area '" + ChatColor.AQUA + al.area + ChatColor.DARK_AQUA + "' " + ChatColor.AQUA + perc + "%" + ChatColor.DARK_AQUA + ".");
+					if ((Math.round(perc) % percentage == 0L) && (Math.round(perc) % 100L != 0L) && (al.sender != null)) {
+						if (!AreaReloader.getInstance().getQueue().isQueued(al.area))
+						al.sender.sendMessage(prefix() + "Loading area '" + ChatColor.AQUA + al.area + ChatColor.DARK_AQUA + "' " + ChatColor.AQUA + perc + "%" + ChatColor.DARK_AQUA + ".");
 				}
 			}
 		}
@@ -192,5 +193,9 @@ public class AreaLoader {
 	
 	public void setMaxZ(int maxZ) {
 		this.maxZ = maxZ;
+	}
+	
+	public CommandSender getSender() {
+		return sender != null ? sender : null;
 	}
 }
