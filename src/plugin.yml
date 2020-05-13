@@ -23,3 +23,4 @@ permissions:
       areareloader.command.reload: true
       areareloader.command.info: true
       areareloader.command.display: true
+      areareloader.command.tps: true
