@@ -34,7 +34,7 @@ public class LoadCommand extends ARCommand {
 			World world = Bukkit.getWorld(AreaReloader.areas.getConfig().getString("Areas." + args.get(0) + ".World"));
 			int x = AreaReloader.areas.getConfig().getInt("Areas." + args.get(0) + ".X");
 			int z = AreaReloader.areas.getConfig().getInt("Areas." + args.get(0) + ".Z");
-			Location location = new Location(world, x, 0.0D, z);
+			Location location = new Location(world, x, AreaMethods.getAreaY(area), z);
 			new AreaLoader(area, AreaMethods.getAreaSizeX(area).intValue(), AreaMethods.getAreaSizeZ(area).intValue(), AreaMethods.getAreaChunk(area).intValue(), location, sender);
 			sendMessage(sender, onPrepare().replaceAll("%area%", area), true);
 			} else {

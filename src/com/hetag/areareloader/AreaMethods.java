@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -196,17 +197,19 @@ public class AreaMethods {
 			AreaReloader.areas.getConfig().set("Areas." + area + ".World", sel.getWorld().getName());
 			AreaReloader.areas.getConfig().set("Areas." + area + ".HasCopiedEntities", copyEntities);
 			AreaReloader.areas.getConfig().set("Areas." + area + ".X", min.getBlockX());
+			AreaReloader.areas.getConfig().set("Areas." + area + ".Y", min.getBlockY());
 			AreaReloader.areas.getConfig().set("Areas." + area + ".Z", min.getBlockZ());
 			AreaReloader.areas.getConfig().set("Areas." + area + ".Maximum.Z", max.getBlockZ());
+			AreaReloader.areas.getConfig().set("Areas." + area + ".Maximum.Y", max.getBlockY());
 			AreaReloader.areas.getConfig().set("Areas." + area + ".Maximum.X", max.getBlockX());
 			AreaReloader.areas.saveConfig();
 			for (int x = min.getBlockX(); x <= max.getBlockX(); x += size) {
 				int curZ = 0;
 				for (int z = min.getBlockZ(); z <= max.getBlockZ(); z += size) {
 					EditSession es = WorldEdit.getInstance().getEditSessionFactory().getEditSession(sel.getWorld(), Integer.MAX_VALUE);
-
-					Location pt1 = new Location(player.getWorld(), x, 0, z);
-					Location pt2 = new Location(player.getWorld(), x + getMaxInt(x, max.getBlockX(), size).intValue(), player.getWorld().getMaxHeight(), z + getMaxInt(z, max.getBlockZ(), size).intValue());
+					int maxY = max.getBlockY();
+					Location pt1 = new Location(player.getWorld(), x, min.getBlockY(), z);
+					Location pt2 = new Location(player.getWorld(), x + getMaxInt(x, max.getBlockX(), size).intValue(), maxY, z + getMaxInt(z, max.getBlockZ(), size).intValue());
 
 					BlockVector3 bvmin = BukkitAdapter.asBlockVector(pt1);
 					BlockVector3 bvmax = BukkitAdapter.asBlockVector(pt2);
@@ -289,12 +292,20 @@ public class AreaMethods {
 		return AreaReloader.areas.getConfig().getInt("Areas." + area + ".Maximum.X");
 	}
 	
+	public static Integer getAreaMaxY(String area) {
+		return AreaReloader.areas.getConfig().getInt("Areas." + area + ".Maximum.Y");
+	}
+	
 	public static Integer getAreaMaxZ(String area) {
 		return AreaReloader.areas.getConfig().getInt("Areas." + area + ".Maximum.Z");
 	}
 	
 	public static Integer getAreaX(String area) {
 		return AreaReloader.areas.getConfig().getInt("Areas." + area + ".X");
+	}
+	
+	public static Integer getAreaY(String area) {
+		return AreaReloader.areas.getConfig().getInt("Areas." + area + ".Y");
 	}
 	
 	public static Integer getAreaZ(String area) {
