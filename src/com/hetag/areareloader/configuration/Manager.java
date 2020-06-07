@@ -60,8 +60,6 @@ public class Manager {
 		config.addDefault("Commands.Display.OnDisplay", "Displaying particles for area: &b%area%&3.");
 		config.addDefault("Commands.Display.OnDisplayRemove", "Removed particles display for area: &b%area%&3.");
 		config.addDefault("Commands.Display.ParticleDelay", 3000);
-		config.addDefault("Commands.Display.MinimumY", 1);
-		config.addDefault("Commands.Display.MaximumY", 128);
 		
 		config.addDefault("Commands.List.Description", "&7Lists all existing areas.");
 		config.addDefault("Commands.List.NoAreasFound", "No areas were found.");

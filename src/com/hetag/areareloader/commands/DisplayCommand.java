@@ -22,13 +22,10 @@ public class DisplayCommand extends ARCommand {
 	public long pDelay;
 	public BukkitRunnable br;
 	static String path = "Commands.Display.Description";
-	private int minY, maxY;
 
 	public DisplayCommand() {
 		super("display", "/ar display <area>", ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString(path)), new String[] { "display" });
 		pDelay = Manager.getConfig().getLong("Commands.Display.ParticleDelay");
-		minY = Manager.getConfig().getInt("Commands.Display.MinimumY");
-		maxY = Manager.getConfig().getInt("Commands.Display.MaximumY");
 	}
 
 	@Override
@@ -61,8 +58,8 @@ public class DisplayCommand extends ARCommand {
 		if (display.contains(area)) {
 			br = new BukkitRunnable() {
 				public void run() {
-					Location corner1 = new Location(Bukkit.getWorld(AreaMethods.getAreaInWorld(area)), AreaMethods.getAreaX(area), minY, AreaMethods.getAreaZ(area));
-					Location corner2 = new Location(Bukkit.getWorld(AreaMethods.getAreaInWorld(area)), AreaMethods.getAreaMaxX(area), maxY, AreaMethods.getAreaMaxZ(area));
+					Location corner1 = new Location(Bukkit.getWorld(AreaMethods.getAreaInWorld(area)), AreaMethods.getAreaX(area), AreaMethods.getAreaY(area), AreaMethods.getAreaZ(area));
+					Location corner2 = new Location(Bukkit.getWorld(AreaMethods.getAreaInWorld(area)), AreaMethods.getAreaMaxX(area), AreaMethods.getAreaMaxY(area), AreaMethods.getAreaMaxZ(area));
 					for (Location finalLoc : getHollowCube(corner1, corner2, 0.25)) {
 						ParticleEffect.FLAME.display(finalLoc, 1, 0.05F, 0.05F, 0.05F, 0.05F);
 						ParticleEffect.FLAME.display(finalLoc, 1);
