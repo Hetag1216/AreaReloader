@@ -16,20 +16,17 @@ import com.hetag.areareloader.configuration.Manager;
 import com.sk89q.worldedit.WorldEditException;
 public class AreaLoader {
 	public static List<AreaLoader> areas = new ArrayList<AreaLoader>();
-	private static long delay;
 	private String area;
-	private int maxX;
-	private int maxZ;
-	private int x;
-	private int z;
+	private int x, maxX, z, maxZ;
 	private int size;
-	public int chunks;
-	private int maxChunks;
+	private int chunks, maxChunks;
 	private Location location;
 	private boolean completed = false;
 	private CommandSender sender;
 	private static long fakeTime;
+	private static long interval;
 	public static double requiredTPS, percentage;
+	public static boolean useTPSChecker;
 
 	public AreaLoader(String area, int x, int z, int size, Location location, CommandSender sender) {
 		if (sender != null) {
@@ -44,9 +41,6 @@ public class AreaLoader {
 			getSender().sendMessage(prefix() + "Area '" + ChatColor.AQUA + area + ChatColor.DARK_AQUA + "' is already being loaded.");
 			return;
 		}
-		delay = Manager.getConfig().getLong("Settings.AreaLoading.Interval");
-		requiredTPS = Manager.getConfig().getDouble("Settings.AreaLoading.RequiredTPS");
-		percentage = Manager.getConfig().getDouble("Settings.AreaLoading.Percentage");
 		this.area = area;
 		this.maxX = x;
 		this.maxZ = z;
@@ -60,6 +54,14 @@ public class AreaLoader {
 		areas.add(this);
 		int count = 1;
 		AreaReloader.getInstance().getQueue().queue().put(area, count += 1);
+	}
+	
+	public static void init() {
+		interval = Manager.getConfig().getLong("Settings.AreaLoading.Interval");
+		useTPSChecker = Manager.getConfig().getBoolean("Settings.AreaLoading.TPSChecker.Enabled");
+		requiredTPS = Manager.getConfig().getDouble("Settings.AreaLoading.TPSChecker.RequiredTPS");
+		percentage = Manager.getConfig().getDouble("Settings.AreaLoading.Percentage");
+		manage();
 	}
 
 	private void progress() throws FileNotFoundException, WorldEditException, IOException {
@@ -136,12 +138,15 @@ public class AreaLoader {
 	public static void manage() {
 		Runnable br = new Runnable() {
 			public void run() {
-				if (TPS.getTPS() >= requiredTPS) {
-				AreaLoader.progressAll();
+				if (useTPSChecker) {
+					if (TPS.getTPS() >= requiredTPS)
+						AreaLoader.progressAll();
+				} else {
+					AreaLoader.progressAll();
 				}
 			}
 		};
-		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0L, delay / 1000 * 20);
+		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0L, interval / 1000 * 20);
 	}
 
 	public static String prefix() {

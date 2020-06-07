@@ -25,8 +25,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	public WorldEditPlugin wep;
 	public static AreaProtocol ap;
 	public static Config areas;
-	public static boolean debug, checker, useQueue;
-	public static long interval;
+	public static boolean debug, checker;
 	public static ArrayList<String> isDeleted = new ArrayList<>();
 	private Queue queue;
 
@@ -44,18 +43,18 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		}
 		
 		Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new TPS(), 0L, 1L);
-		try {
 			new Manager();
 			AreaMethods.performSetup();
+			// General setup
 			areas = new Config(new File("areas.yml"));
-			debug = Manager.getConfig().getBoolean("Settings.Debug.Enabled");
-			interval = Manager.getConfig().getLong("Settings.AreaLoading.Interval");
 			queue = new Queue(this);
-			checker = Manager.getConfig().getBoolean("Settings.AutoReload.Checker");
+			debug = Manager.getConfig().getBoolean("Settings.Debug.Enabled");
+			// AreaLoader setup
+			AreaLoader.init();
+			// AreaScheduler setup
+			AreaScheduler.init();
+			
 			log.info("Configurations succesfully registered!");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 		try {
 			new Executor(this);
@@ -64,24 +63,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			e.printStackTrace();
 		}
 		
-		AreaLoader.manage();
-		
-		/**
-		 * Whether or not to check and enable/disable the auto reloading function.
-		 * @return checker
-		 */
-		if (checker) {
-			try {
-				AreaScheduler.checkForAreas();
-				AreaScheduler.manageReloading();
-				log.info("Checker for areas to auto reload is enabled!");
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			log.info("Checker for areas to auto reload is disabled!");
-		}
+
 		
 		getServer().getPluginManager().registerEvents(new AreaListener(this), this);
 		log.info("Succesfully enabled AreaReloader!");
@@ -162,5 +144,4 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			return status + disabled;
 		}
 	}
-	
 }

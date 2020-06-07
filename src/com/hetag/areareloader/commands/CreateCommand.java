@@ -22,9 +22,6 @@ public class CreateCommand extends ARCommand {
 		if (!hasPermission(sender) || !isPlayer(sender)) {
 			return;
 		}
-		if (args.size() == 0) {
-			sendMessage(sender, getProperUsage(), false);
-		}
 		if (args.size() == 2) {
 			String area = args.get(0);
 			boolean skipEntities = false;

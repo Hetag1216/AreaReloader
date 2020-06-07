@@ -40,6 +40,7 @@ public class InfoCommand extends ARCommand {
 			sendMessage(sender, "&7« &b" + area + " &7»", false);
 			sendMessage(sender, "&3World &7» &b" + AreaMethods.getAreaInWorld(area) , false);
 			sendMessage(sender, "&3Location X &7» &b" + AreaMethods.getAreaX(area) + "&7 | &b" + AreaMethods.getAreaMaxX(area) , false);
+			sendMessage(sender, "&3Location Y &7» &b" + AreaMethods.getAreaY(area) + "&7 | &b" + AreaMethods.getAreaMaxY(area) , false);
 			sendMessage(sender, "&3Location Z &7» &b" + AreaMethods.getAreaZ(area) + "&7 | &b" + AreaMethods.getAreaMaxZ(area), false);
 			sendMessage(sender, "&3Is being displayed &7» &b" + display, false);
 			sendMessage(sender, "&3Has copied entities &7» &b" + AreaReloader.areas.getConfig().getBoolean("Areas." + area + ".HasCopiedEntities"), false);

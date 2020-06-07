@@ -29,12 +29,16 @@ public class Manager {
 		config.addDefault("Settings.AreaLoading.Interval", 200);
 		config.addDefault("Settings.AreaLoading.IgnoreAirBlocks", false);
 		config.addDefault("Settings.AreaLoading.FastMode", true);
-		config.addDefault("Settings.AreaLoading.RequiredTPS", 18);
+		config.addDefault("Settings.AreaLoading.TPSChecker.Enabled", false);
+		config.addDefault("Settings.AreaLoading.TPSChecker.RequiredTPS", 18);
 		config.addDefault("Settings.AreaLoading.Percentage", 15);
 		
 		config.addDefault("Settings.AutoReload.Checker", true);
-		config.addDefault("Settings.AutoReload.NotifyWhenReloading", true);
-		config.addDefault("Settings.AutoReload.RequiredTPS", 18);
+		config.addDefault("Settings.AutoReload.Interval", 200);
+		config.addDefault("Settings.AutoReload.Notify.Admins", true);
+		config.addDefault("Settings.AutoReload.Notify.Console", true);
+		config.addDefault("Settings.AutoReload.TPSChecker.Enabled", false);
+		config.addDefault("Settings.AutoReload.TPSChecker.RequiredTPS", 18);
 
 		ArrayList<String> helpLines = new ArrayList<>();
 		Executor.help = helpLines;

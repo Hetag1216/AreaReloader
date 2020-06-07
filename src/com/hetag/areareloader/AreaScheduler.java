@@ -18,10 +18,11 @@ public class AreaScheduler {
 	public static FileConfiguration config = AreaReloader.areas.getConfig();
 
 	public String area;
-	public static boolean notifyOnReload;
+	public static boolean notifyOnReload, notifyConsoleOnReload, checker, useTPSChecker;
 	private long reset;
 	private long delay;
 	public static double requiredTPS;
+	public static long interval;
 
 	public AreaScheduler(String area, long delay) {
 		if (areas.contains(this)) {
@@ -31,16 +32,31 @@ public class AreaScheduler {
 			updateDelay(area, delay);
 			return;
 		}
-		this.area = area;
 		this.delay = delay;
 		this.reset = System.currentTimeMillis();
-		notifyOnReload = Manager.getConfig().getBoolean("Settings.AutoReload.NotifyWhenReloading");
-		requiredTPS = Manager.getConfig().getDouble("Settings.AutoReload.RequiredTPS");
 		areas.add(this);
 		int count = 0;
 		AreaReloader.getInstance().getQueue().queue().put(area, count++);
 	}
-
+	
+	public static void init() {
+		checker = Manager.getConfig().getBoolean("Settings.AutoReload.Checker");
+		requiredTPS = Manager.getConfig().getDouble("Settings.AutoReload.RequiredTPS");		
+		notifyOnReload = Manager.getConfig().getBoolean("Settings.AutoReload.Notify.Admins");
+		notifyConsoleOnReload = Manager.getConfig().getBoolean("Settings.AutoReload.Notify.Console");
+		useTPSChecker = Manager.getConfig().getBoolean("Settings.AutoReload.TPSChecker.Enabled");
+		requiredTPS = Manager.getConfig().getDouble("Settings.AutoReload.TPSChecker.RequiredTPS");
+		interval = Manager.getConfig().getLong("Settings.AutoReload.Interval");
+		
+		if (checker) {
+			AreaReloader.log.info("Checker for areas to auto reload is enabled!");
+			checkForAreas();
+			manageReloading();
+		} else {
+			AreaReloader.log.info("Checker for areas to auto reload is disabled!");
+		}
+	}
+	
 	public static void checkForAreas() {
 		if (config.contains("Areas")) {
 			for (String keys : config.getConfigurationSection("Areas").getKeys(false)) {
@@ -51,6 +67,8 @@ public class AreaScheduler {
 			}
 		}
 	}
+
+
 
 	public static void updateDelay(String area, long delay) {
 		for (AreaScheduler s : areas) {
@@ -130,8 +148,9 @@ public class AreaScheduler {
 				Location location = new Location(world, x, 0, z);
 				if (!AreaReloader.isDeleted.contains(scheduler.getArea())) {
 					new AreaLoader(scheduler.getArea(), maxX, maxZ, size, location, null);
-				        
+				    if (notifyConsoleOnReload) {   
 					AreaReloader.log.info("Automatically reloading area: " + scheduler.getArea());
+				    }
 					if (notifyOnReload) {
 						for (Player ops : Bukkit.getServer().getOnlinePlayers()) {
 							if (ops.isOp() || ops.hasPermission("areareloader.command.admin")) {
@@ -149,12 +168,15 @@ public class AreaScheduler {
 	public static void manageReloading() {
 		Runnable br = new Runnable() {
 			public void run() {
-				if (TPS.getTPS() >= requiredTPS) {
-				progress();
+				if (useTPSChecker) {
+					if (TPS.getTPS() >= requiredTPS)
+						progress();
+				} else {
+					progress();
 				}
 			}
 		};
-		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0, AreaReloader.interval / 1000 * 20);
+		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0, interval / 1000 * 20);
 	}
 
 }
