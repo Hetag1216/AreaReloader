@@ -27,6 +27,8 @@ An easy to use Spigot plugin to roll back areas at the stage they were saved!
 
 /ar display <AreaName> - Displays particles around an area
 
+/ar display <time in milliseconds> - Starts a TPS monitoring task
+
 ![Core Icon](https://cdn.discordapp.com/attachments/595194807932944385/614124189229514772/ARPermissions.png)
 
 areareloader.command.help - Gives access to the /ar help command
@@ -46,6 +48,8 @@ areareloader.command.hook - Gives access to the /ar hook command
 areareloader.command.info - Gives access to the /ar info command
 
 areareloader.command.reload - Gives access to the /ar reload command
+
+areareloader.command.tps - Gives access to the /ar tps command
 
 areareloader.command.admin - Gives access to all commands
 
