@@ -27,7 +27,7 @@ An easy to use Spigot plugin to roll back areas at the stage they were saved!
 
 /ar display <AreaName> - Displays particles around an area
 
-/ar display <time in milliseconds> - Starts a TPS monitoring task
+/ar tps <time in milliseconds> - Starts a TPS monitoring task
 
 ![Core Icon](https://cdn.discordapp.com/attachments/595194807932944385/614124189229514772/ARPermissions.png)
 
