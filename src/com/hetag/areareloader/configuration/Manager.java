@@ -59,6 +59,9 @@ public class Manager {
 		config.addDefault("Commands.Display.Description", "&7Displays particles around created areas.");
 		config.addDefault("Commands.Display.OnDisplay", "Displaying particles for area: &b%area%&3.");
 		config.addDefault("Commands.Display.OnDisplayRemove", "Removed particles display for area: &b%area%&3.");
+		config.addDefault("Commands.Display.UseParticles", false);
+		config.addDefault("Commands.Display.Block.Material", "PRISMARINE");
+		config.addDefault("Commands.Display.Block.RestrictVision", true);
 		config.addDefault("Commands.Display.ParticleDelay", 3000);
 		
 		config.addDefault("Commands.List.Description", "&7Lists all existing areas.");
