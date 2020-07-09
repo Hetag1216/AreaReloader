@@ -25,9 +25,10 @@ public class DisplayCommand extends ARCommand {
 	public long pDelay;
 	public BukkitRunnable br;
 	static String path = "Commands.Display.Description";
+	public ArrayList<Block> blocks = new ArrayList<Block>();
 
 	public DisplayCommand() {
-		super("display", "/ar display <area>", ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString(path)), new String[] { "display" });
+		super("display", "/ar display <area>", ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString(path)), new String[] { "display", "d" });
 		pDelay = Manager.getConfig().getLong("Commands.Display.ParticleDelay");
 	}
 
@@ -37,35 +38,14 @@ public class DisplayCommand extends ARCommand {
 			return;
 		}
 		
-		if (args.size() == 0) {
-			sendMessage(sender, getProperUsage(), false);
-			return;
-		}
 		String area = args.get(0);
 		if (AreaReloader.areas.getConfig().contains("Areas." + area)) {
-			if (display.contains(area)) {
-				display.remove(area);
-				sender.sendMessage(prefix + onDisplayRemove().replaceAll("%area%", area));
-				br.cancel();
-			} else {
+			if (!display.contains(area)) {
 				if (!display.isEmpty()) {
 					display.clear();
 					br.cancel();
-				}
-				display.add(area);
-				sender.sendMessage(prefix + onDisplay().replaceAll("%area%", area));
-			}
-		} else {
-			sender.sendMessage(prefix + LoadCommand.onInvalid().replaceAll("%area%", area));
-		}
-		
-		if (display.contains(area)) {
-			br = new BukkitRunnable() {
-				public void run() {
-					Location corner1 = new Location(Bukkit.getWorld(AreaMethods.getAreaInWorld(area)), AreaMethods.getAreaX(area), AreaMethods.getAreaY(area), AreaMethods.getAreaZ(area));
-					Location corner2 = new Location(Bukkit.getWorld(AreaMethods.getAreaInWorld(area)), AreaMethods.getAreaMaxX(area), AreaMethods.getAreaMaxY(area), AreaMethods.getAreaMaxZ(area));
-					for (Location finalLoc : getHollowCube(corner1, corner2, 0.25)) {
-						if (!useParticles()) {
+					if (!blocks.isEmpty()) {
+						for (Block block : blocks) {
 							Player player = null;
 							if (restrictVision()) {
 								player = (Player) sender;
@@ -74,16 +54,73 @@ public class DisplayCommand extends ARCommand {
 									player = online;
 								}
 							}
-							blockChange(player, finalLoc.getBlock());
-						} else {
+							player.sendBlockChange(block.getLocation(), block.getBlockData());
+						}
+						blocks.clear();
+					}
+				}
+				display(area, sender);
+				sendMessage(sender, onDisplay().replace("%area%", area), true);
+			} else {
+				removeDisplay(area, sender);
+				sendMessage(sender, onDisplayRemove().replace("%area%", area), true);
+			}
+		} else {
+			sendMessage(sender, LoadCommand.onInvalid().replaceAll("%area%", area), true);
+		}
+	}
+	
+	public void display(String area, CommandSender sender) {
+		display.add(area);
+		if (display.contains(area)) {
+			br = new BukkitRunnable() {
+				public void run() {
+					Location corner1 = new Location(Bukkit.getWorld(AreaMethods.getAreaInWorld(area)), AreaMethods.getAreaX(area), AreaMethods.getAreaY(area), AreaMethods.getAreaZ(area));
+					Location corner2 = new Location(Bukkit.getWorld(AreaMethods.getAreaInWorld(area)), AreaMethods.getAreaMaxX(area), AreaMethods.getAreaMaxY(area), AreaMethods.getAreaMaxZ(area));
+					for (Location finalLoc : getHollowCube(corner1, corner2, 0.25)) {
+						if (useParticles()) {
 							ParticleEffect.FLAME.display(finalLoc, 1, 0.05F, 0.05F, 0.05F, 0.05F);
 							ParticleEffect.FLAME.display(finalLoc, 1);
+						} else {
+							Player player = null;
+							if (restrictVision()) {
+								player = (Player) sender;
+							} else {
+								for (Player online : Bukkit.getServer().getOnlinePlayers()) {
+									player = online;
+								}
+							}
+							if (!blocks.contains(finalLoc.getBlock())) {
+								blocks.add(finalLoc.getBlock());
+							}
+							blockChange(player, finalLoc.getBlock());
 						}
 					}
 				}
 			};
 			br.runTaskTimerAsynchronously(AreaReloader.plugin, 0, pDelay * 20 / 1000);
 		}
+	}
+	
+	public void removeDisplay(String area, CommandSender sender) {
+		display.remove(area);
+		br.cancel();
+		BukkitRunnable runner = new BukkitRunnable() {
+			public void run() {
+				for (Block block : blocks) {
+					Player player = null;
+					if (restrictVision()) {
+						player = (Player) sender;
+					} else {
+						for (Player online : Bukkit.getServer().getOnlinePlayers()) {
+							player = online;
+						}
+					}
+					player.sendBlockChange(block.getLocation(), block.getBlockData());
+				}
+			}
+		};
+		runner.runTaskLater(AreaReloader.getInstance(), 1);
 	}
 	
 	private void blockChange(Player player, Block block) {
