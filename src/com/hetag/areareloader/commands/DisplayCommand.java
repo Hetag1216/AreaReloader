@@ -5,8 +5,11 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.hetag.areareloader.AreaMethods;
@@ -22,9 +25,10 @@ public class DisplayCommand extends ARCommand {
 	public long pDelay;
 	public BukkitRunnable br;
 	static String path = "Commands.Display.Description";
+	public ArrayList<Block> blocks = new ArrayList<Block>();
 
 	public DisplayCommand() {
-		super("display", "/ar display <area>", ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString(path)), new String[] { "display" });
+		super("display", "/ar display <area>", ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString(path)), new String[] { "display", "d" });
 		pDelay = Manager.getConfig().getLong("Commands.Display.ParticleDelay");
 	}
 
@@ -33,41 +37,94 @@ public class DisplayCommand extends ARCommand {
 		if (!hasPermission(sender) || !correctLength(sender, 0, 0, 1) && isPlayer(sender)) {
 			return;
 		}
-		if (args.size() == 0) {
-			sendMessage(sender, getProperUsage(), false);
-			return;
-		}
+		
 		String area = args.get(0);
 		if (AreaReloader.areas.getConfig().contains("Areas." + area)) {
-			if (display.contains(area)) {
-				display.remove(area);
-				sender.sendMessage(prefix + onDisplayRemove().replaceAll("%area%", area));
-				br.cancel();
-			} else {
+			if (!display.contains(area)) {
 				if (!display.isEmpty()) {
 					display.clear();
 					br.cancel();
+					if (!blocks.isEmpty()) {
+						for (Block block : blocks) {
+							Player player = null;
+							if (restrictVision()) {
+								player = (Player) sender;
+							} else {
+								for (Player online : Bukkit.getServer().getOnlinePlayers()) {
+									player = online;
+								}
+							}
+							player.sendBlockChange(block.getLocation(), block.getBlockData());
+						}
+						blocks.clear();
+					}
 				}
-				display.add(area);
-				sender.sendMessage(prefix + onDisplay().replaceAll("%area%", area));
+				display(area, sender);
+				sendMessage(sender, onDisplay().replace("%area%", area), true);
+			} else {
+				removeDisplay(area, sender);
+				sendMessage(sender, onDisplayRemove().replace("%area%", area), true);
 			}
 		} else {
-			sender.sendMessage(prefix + LoadCommand.onInvalid().replaceAll("%area%", area));
+			sendMessage(sender, LoadCommand.onInvalid().replaceAll("%area%", area), true);
 		}
-		
+	}
+	
+	public void display(String area, CommandSender sender) {
+		display.add(area);
 		if (display.contains(area)) {
 			br = new BukkitRunnable() {
 				public void run() {
 					Location corner1 = new Location(Bukkit.getWorld(AreaMethods.getAreaInWorld(area)), AreaMethods.getAreaX(area), AreaMethods.getAreaY(area), AreaMethods.getAreaZ(area));
 					Location corner2 = new Location(Bukkit.getWorld(AreaMethods.getAreaInWorld(area)), AreaMethods.getAreaMaxX(area), AreaMethods.getAreaMaxY(area), AreaMethods.getAreaMaxZ(area));
 					for (Location finalLoc : getHollowCube(corner1, corner2, 0.25)) {
-						ParticleEffect.FLAME.display(finalLoc, 1, 0.05F, 0.05F, 0.05F, 0.05F);
-						ParticleEffect.FLAME.display(finalLoc, 1);
+						if (useParticles()) {
+							ParticleEffect.FLAME.display(finalLoc, 1, 0.05F, 0.05F, 0.05F, 0.05F);
+							ParticleEffect.FLAME.display(finalLoc, 1);
+						} else {
+							Player player = null;
+							if (restrictVision()) {
+								player = (Player) sender;
+							} else {
+								for (Player online : Bukkit.getServer().getOnlinePlayers()) {
+									player = online;
+								}
+							}
+							if (!blocks.contains(finalLoc.getBlock())) {
+								blocks.add(finalLoc.getBlock());
+							}
+							blockChange(player, finalLoc.getBlock());
+						}
 					}
 				}
 			};
 			br.runTaskTimerAsynchronously(AreaReloader.plugin, 0, pDelay * 20 / 1000);
 		}
+	}
+	
+	public void removeDisplay(String area, CommandSender sender) {
+		display.remove(area);
+		br.cancel();
+		BukkitRunnable runner = new BukkitRunnable() {
+			public void run() {
+				for (Block block : blocks) {
+					Player player = null;
+					if (restrictVision()) {
+						player = (Player) sender;
+					} else {
+						for (Player online : Bukkit.getServer().getOnlinePlayers()) {
+							player = online;
+						}
+					}
+					player.sendBlockChange(block.getLocation(), block.getBlockData());
+				}
+			}
+		};
+		runner.runTaskLater(AreaReloader.getInstance(), 1);
+	}
+	
+	private void blockChange(Player player, Block block) {
+		player.sendBlockChange(block.getLocation(), Material.matchMaterial(match()).createBlockData());
 	}
 	
 	public static String onDisplay() {
@@ -76,6 +133,18 @@ public class DisplayCommand extends ARCommand {
 	
 	public static String onDisplayRemove() {
 		return formatColors(Manager.getConfig().getString("Commands.Display.OnDisplayRemove"));
+	}
+	
+	public boolean useParticles() {
+		return Manager.getConfig().getBoolean("Commands.Display.UseParticles");
+	}
+	
+	public boolean restrictVision() {
+		return Manager.getConfig().getBoolean("Commands.Display.Block.RestrictVision");
+	}
+	
+	public String match() {
+		return Manager.getConfig().getString("Commands.Display.Block.Material");
 	}
 
 	public List<Location> getHollowCube(Location corner1, Location corner2, double point) {

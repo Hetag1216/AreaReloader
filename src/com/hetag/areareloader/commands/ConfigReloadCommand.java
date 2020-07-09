@@ -52,5 +52,4 @@ public class ConfigReloadCommand extends ARCommand {
 	public String onFail() {
 		return Manager.getConfig().getString("Commands.Reload.OnFail");
 	}
-
 }
