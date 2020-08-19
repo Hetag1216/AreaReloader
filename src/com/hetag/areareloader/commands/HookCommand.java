@@ -24,8 +24,8 @@ public class HookCommand extends ARCommand {
 		sender.sendMessage(ChatColor.DARK_AQUA + "-=-=-=-= Hooks =-=-=-=-");
 		sender.sendMessage(ChatColor.GRAY + "- " + ChatColor.AQUA + "WorldEdit");
 		sender.sendMessage(AreaReloader.plugin.getStatus());
-		if (AreaReloader.plugin.wep != null) {
-			sender.sendMessage(ChatColor.DARK_AQUA + "Version: " + ChatColor.AQUA + AreaReloader.plugin.wep.getDescription().getVersion());
+		if (AreaReloader.getWEInstance() != null) {
+			sender.sendMessage(ChatColor.DARK_AQUA + "Version: " + ChatColor.AQUA + AreaReloader.getWEInstance().getDescription().getVersion());
 		}
 		sender.sendMessage(ChatColor.DARK_AQUA + "-=-=-=-= -=- =-=-=-=-");
 	}

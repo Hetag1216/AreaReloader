@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -40,6 +41,7 @@ public class AreaMethods {
 	static AreaReloader plugin;
 	public static boolean ignoreAirBlocks = Manager.getConfig().getBoolean("Settings.AreaLoading.IgnoreAirBlocks");
 	public static boolean fastMode = Manager.getConfig().getBoolean("Settings.AreaLoading.FastMode");
+	public static HashMap<String, EditSession> active_sessions = new HashMap<String, EditSession>();
 
 	public static void performSetup() {
 		File areas = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas");
@@ -124,6 +126,7 @@ public class AreaMethods {
 			}
 
 			try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(BukkitAdapter.adapt(world), Integer.MAX_VALUE)) {
+				active_sessions.put(area, editSession);
 				if (fastMode) {
 				editSession.setFastMode(true);
 				} else {
@@ -161,6 +164,23 @@ public class AreaMethods {
 			}
 		}
 		return true;
+	}
+	
+	public static int finalCount() {
+		for (EditSession entry : active_sessions.values()) {
+			int blocks = 0;
+			blocks =+ entry.getBlockChangeCount();
+			return blocks;
+		}
+		return 0;
+	}
+	
+	public static HashMap<String, EditSession> getActiveSessions() {
+		if (active_sessions.size() >= 1) {
+		return active_sessions;
+		} else {
+			return null;
+		}
 	}
 
 	public static boolean createNewArea(Player player, String area, int size, boolean copyEntities) throws WorldEditException {

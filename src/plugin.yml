@@ -1,7 +1,7 @@
 name: AreaReloader
 main: com.hetag.areareloader.AreaReloader
 version: ${project.version}
-api-vetsion: 1.13.2
+api-version: 1.13
 authors: ['_Hetag1216_']
 depend: ['WorldEdit']
 commands:

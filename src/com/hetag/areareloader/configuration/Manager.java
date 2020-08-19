@@ -56,9 +56,9 @@ public class Manager {
 		config.addDefault("Commands.Create.AlreadyExists", "An area with the name &b%area%&3 already exists, please choose a different name!");
 		config.addDefault("Commands.Create.EntitiesValue", "You must select a value: &btrue&7/&bfalse");
 		
-		config.addDefault("Commands.Display.Description", "&7Displays particles around created areas.");
-		config.addDefault("Commands.Display.OnDisplay", "Displaying particles for area: &b%area%&3.");
-		config.addDefault("Commands.Display.OnDisplayRemove", "Removed particles display for area: &b%area%&3.");
+		config.addDefault("Commands.Display.Description", "&7Displays corners around existing areas.");
+		config.addDefault("Commands.Display.OnDisplay", "Displaying area: &b%area%&3.");
+		config.addDefault("Commands.Display.OnDisplayRemove", "Removed display for area: &b%area%&3.");
 		config.addDefault("Commands.Display.UseParticles", false);
 		config.addDefault("Commands.Display.Block.Material", "PRISMARINE");
 		config.addDefault("Commands.Display.Block.RestrictVision", true);
@@ -73,11 +73,12 @@ public class Manager {
 
 		config.addDefault("Commands.Load.Description", "&7Loads an existing area.");
 		config.addDefault("Commands.Load.OnPrepare", "Preparing area loading for area: &b%area%&3.");
-		config.addDefault("Commands.Load.OnLoadSuccess", "Area '&b%area%&3' was succesfully loaded! Completed after &b%time%&3ms.");
+		config.addDefault("Commands.Load.OnLoadSuccess", "Area '&b%area%&3' was succesfully loaded! Changed &b%count%&3 blocks in &b%time%&3ms.");
 		config.addDefault("Commands.Load.OnInvalidArea", "&b%area% &3does not exist.");
 		config.addDefault("Commands.Load.OnAlreadyLoading", "Failed to reload area: '&b%area%&3' as it is already being loaded.");
 		
 		config.addDefault("Commands.TpsMonitor.Description", "Starts a task which displays AreaReloader's method of counting TPS (ticks per seconds).");
+		config.addDefault("Commands.TpsMonitor.Enabled", false);
 
 		config.addDefault("Commands.Version.Description", "&7Shows information about the plugin.");
 		

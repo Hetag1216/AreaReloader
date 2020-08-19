@@ -6,7 +6,7 @@
 
 	<groupId>com.hetag.areareloader</groupId>
 	<artifactId>AreaReloader</artifactId>
-	<version>1.8.2</version>
+	<version>1.9</version>
 	<packaging>jar</packaging>
 	<name>AreaReloader</name>
 
@@ -20,6 +20,11 @@
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+		<!-- Paper Repo -->
+		<repository>
+			<id>papermc</id>
+			<url>https://papermc.io/repo/repository/maven-public/</url>
 		</repository>
 	</repositories>
 
@@ -44,6 +49,12 @@
 			<artifactId>worldedit-bukkit</artifactId>
 			<version>7.0.0-SNAPSHOT</version>
 			<scope>provided</scope>
+		</dependency>
+		<!-- PaperLib -->
+		<dependency>
+			<groupId>io.papermc</groupId>
+			<artifactId>paperlib</artifactId>
+			<version>1.0.1</version>
 		</dependency>
 	</dependencies>
 
