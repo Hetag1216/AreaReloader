@@ -11,14 +11,20 @@ import com.hetag.areareloader.configuration.Manager;
 
 public class TPSMonitorCommand extends ARCommand {
 	private long startTime, time;
+	public static boolean enabled;
 
 	public TPSMonitorCommand() {
 		super("tps", "/ar tps <time>", formatColors(Manager.getConfig().getString("Commands.TpsMonitor.Description")), new String[] { "tps" });
+		enabled = Manager.getConfig().getBoolean("Commands.TpsMonitor.Enabled");
 	}
 
 	@Override
 	public void execute(CommandSender sender, List<String> args) {
 		if (!hasPermission(sender) || !correctLength(sender, 0, 0, 1)) {
+			return;
+		}
+		if (!enabled) {
+			sendMessage(sender, "&cThis command is disabled, if you wish to use it, enable it from the configuration file.", true);
 			return;
 		}
 		if (args.size() <= 0) {

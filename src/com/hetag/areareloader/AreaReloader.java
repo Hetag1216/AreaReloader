@@ -11,18 +11,20 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.hetag.areareloader.commands.Executor;
+import com.hetag.areareloader.commands.TPSMonitorCommand;
 import com.hetag.areareloader.configuration.Config;
 import com.hetag.areareloader.configuration.Manager;
 import com.hetag.areareloader.reflection.AreaProtocol;
 import com.hetag.areareloader.reflection.V1_13.Protocol_1_13;
 import com.hetag.areareloader.reflection.V1_14.Protocol_1_14;
 import com.hetag.areareloader.reflection.V1_15.Protocol_1_15;
+import com.hetag.areareloader.reflection.V1_16.Protocol_1_16;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 public class AreaReloader extends JavaPlugin implements Listener {
 	public static AreaReloader plugin;
 	public static Logger log;
-	public WorldEditPlugin wep;
+	public static WorldEditPlugin wep;
 	public static AreaProtocol ap;
 	public static Config areas;
 	public static boolean debug, checker;
@@ -37,24 +39,25 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		checkProtocol();
 		PluginManager pm = Bukkit.getPluginManager();
 		wep = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
-		if (this.wep == null) {
+		if (wep == null) {
 			log.warning("Worldedit hook was not found, the plugin cannot be enabled without this dependency.");
 			pm.disablePlugin(this);
 		}
-		
-		Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new TPS(), 0L, 1L);
-			new Manager();
-			AreaMethods.performSetup();
-			// General setup
-			areas = new Config(new File("areas.yml"));
-			queue = new Queue(this);
-			debug = Manager.getConfig().getBoolean("Settings.Debug.Enabled");
-			// AreaLoader setup
-			AreaLoader.init();
-			// AreaScheduler setup
-			AreaScheduler.init();
-			
-			log.info("Configurations succesfully registered!");
+		if (TPSMonitorCommand.enabled) {
+			Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new TPS(), 0L, 1L);
+		}
+		new Manager();
+		AreaMethods.performSetup();
+		// General setup
+		areas = new Config(new File("areas.yml"));
+		queue = new Queue(this);
+		debug = Manager.getConfig().getBoolean("Settings.Debug.Enabled");
+		// AreaLoader setup
+		AreaLoader.init();
+		// AreaScheduler setup
+		AreaScheduler.init();
+
+		log.info("Configurations succesfully registered!");
 
 		try {
 			new Executor(this);
@@ -96,6 +99,9 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		case "v1_15_R1":
 			ap = new Protocol_1_15();
 			break;
+		case "v1_16_R1":
+			ap = new Protocol_1_16();
+			break;
 		}
 		if (ap.equals(new Protocol_1_13())) {
 			log.info("Using protocol for 1.13 versions compatibility!");
@@ -103,6 +109,8 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			log.info("Using protocol for 1.14 versions compatibility!");
 		} else if (ap.equals(new Protocol_1_15())) {
 			log.info("Using protocol for 1.15 versions compatibility!");
+		} else if (ap.equals(new Protocol_1_16())) {
+			log.info("Using protocol for 1.16 versions compatibility!");
 		}
 	}
 	
@@ -128,6 +136,10 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	 */
 	public Queue getQueue() {
 		return queue;
+	}
+	
+	public static WorldEditPlugin getWEInstance() {
+		return wep;
 	}
 	
 	/**

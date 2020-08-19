@@ -101,14 +101,16 @@ public class AreaLoader {
 			if (al.completed) {
 				if ((al.sender != null)) {
 					final long time = System.currentTimeMillis() - fakeTime;
-					al.sender.sendMessage(prefix() + onLoadSuccess().replaceAll("%area%", al.area).replaceAll("%time%", String.valueOf(time)));
+					al.sender.sendMessage(prefix() + onLoadSuccess().replaceAll("%area%", al.area).replaceAll("%time%", String.valueOf(time)).replaceAll("%count%", String.valueOf(AreaMethods.finalCount())));
 				}
 				completed.add(areas.indexOf(al));
 				// only remove the area from the queue when it's finished
 				if (AreaReloader.getInstance().getQueue().queue().containsKey(al.area)) {
 					AreaReloader.getInstance().getQueue().queue().remove(al.area);
+					AreaMethods.getActiveSessions().remove(al.area);
 					if (AreaReloader.debug) {
 						AreaMethods.sendDebugMessage(al.getSender(), ChatColor.DARK_AQUA + al.area + ChatColor.AQUA + " has been removed from the queue list.");
+						AreaMethods.sendDebugMessage(al.getSender(), ChatColor.DARK_AQUA + al.area + ChatColor.AQUA + " has been removed from the active sessions.");
 					}
 				}
 			} else {
