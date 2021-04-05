@@ -113,6 +113,7 @@ public class AreaScheduler {
 		}
 		return 0;
 	}
+	
 	public String getArea() {
 		return this.area;
 	}

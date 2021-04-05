@@ -154,8 +154,7 @@ public abstract class ARCommand implements SubCommand {
 				page = 1;
 			}
 		}
-		strings.add(ChatColor.DARK_AQUA + "Area Reloader " + ChatColor.DARK_GRAY + "- [" + ChatColor.GRAY + page + "/"
-				+ (int) Math.ceil((entries.size() + 0.0D) / 8.0D) + ChatColor.DARK_GRAY + "]");
+		strings.add(ChatColor.DARK_AQUA + "Area Reloader " + ChatColor.DARK_GRAY + "- [" + ChatColor.GRAY + page + "/" + (int) Math.ceil((entries.size() + 0.0D) / 8.0D) + ChatColor.DARK_GRAY + "]");
 		strings.add(title);
 		if (entries.size() > page * 8 - 8) {
 			for (int i = page * 8 - 8; i < entries.size(); i++) {

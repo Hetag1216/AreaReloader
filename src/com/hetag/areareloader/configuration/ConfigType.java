@@ -8,7 +8,7 @@ import java.util.List;
 public class ConfigType {
 	private static final HashMap<String, ConfigType> ALL_TYPES = new HashMap<>();
 	public static final ConfigType DEFAULT = new ConfigType("Default");
-	public static final ConfigType[] CORE_TYPES = { DEFAULT};
+	public static final ConfigType[] CORE_TYPES = { DEFAULT };
 	private final String string;
 
 	public ConfigType(String string) {
