@@ -101,6 +101,11 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			break;
 		case "v1_16_R1":
 		case "v1_16_R2":
+		case "v1_16_R3":
+		case "v1_16_R4":
+		case "v1_16_R5":
+		case "v1_16_R6":
+		case "v1_16_R7":
 			ap = new Protocol_1_16();
 			break;
 		}
