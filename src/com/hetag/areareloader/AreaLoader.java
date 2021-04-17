@@ -27,6 +27,7 @@ public class AreaLoader {
 	private static long interval;
 	public static double requiredTPS, percentage;
 	public static boolean useTPSChecker;
+	public long time;
 
 	public AreaLoader(String area, int x, int z, int size, Location location, CommandSender sender) {
 		if (sender != null) {
@@ -51,6 +52,7 @@ public class AreaLoader {
 		this.maxChunks = (x * z);
 		this.location = location;
 		fakeTime = System.currentTimeMillis();
+		time = System.currentTimeMillis();
 		areas.add(this);
 		int count = 1;
 		AreaReloader.getInstance().getQueue().queue().put(area, count += 1);
@@ -73,8 +75,11 @@ public class AreaLoader {
 			}
 			return;
 		} else {
+			if (System.currentTimeMillis() >= time + interval) {	
 			chunks += 1;
 			z += 1;
+			time = System.currentTimeMillis();
+			}
 		}
 		if (z > this.maxZ) {
 			z = 0;
@@ -148,7 +153,7 @@ public class AreaLoader {
 				}
 			}
 		};
-		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0L, interval / 1000 * 20);
+		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0L, 200 / 1000 * 20);
 	}
 
 	public static String prefix() {

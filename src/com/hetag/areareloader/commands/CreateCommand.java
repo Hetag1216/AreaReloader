@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.hetag.areareloader.AreaMethods;
-import com.hetag.areareloader.AreaReloader;
 import com.hetag.areareloader.configuration.Manager;
 import com.sk89q.worldedit.WorldEditException;
 
@@ -25,7 +24,7 @@ public class CreateCommand extends ARCommand {
 		if (args.size() == 2) {
 			String area = args.get(0);
 			boolean skipEntities = false;
-			if (AreaReloader.areas.getConfig().contains("Areas." + args.get(0))) {
+			if (Manager.areas.getConfig().contains("Areas." + args.get(0))) {
 				sendMessage(sender, onCreateExists().replaceAll("%area%", area), true);
 				return;
 			}

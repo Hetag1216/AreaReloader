@@ -5,7 +5,6 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 
 import com.hetag.areareloader.AreaMethods;
-import com.hetag.areareloader.AreaReloader;
 import com.hetag.areareloader.configuration.Manager;
 
 public class DeleteCommand extends ARCommand {
@@ -25,7 +24,7 @@ public class DeleteCommand extends ARCommand {
 			return;
 		}
 		String area = args.get(0);
-		if (AreaReloader.areas.getConfig().contains("Areas." + area)) {
+		if (Manager.areas.getConfig().contains("Areas." + area)) {
 			sendMessage(sender, onDelete().replaceAll("%area%", area), true);
 			if (DisplayCommand.display.contains(area)) {
 				DisplayCommand.display.remove(area);

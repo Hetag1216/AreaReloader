@@ -15,14 +15,13 @@ import com.hetag.areareloader.configuration.Manager;
 
 public class AreaScheduler {
 	public static List<AreaScheduler> areas = new ArrayList<>();
-	public static FileConfiguration config = AreaReloader.areas.getConfig();
+	public static FileConfiguration config = Manager.areas.getConfig();
 
 	public String area;
 	public static boolean notifyOnReload, notifyConsoleOnReload, checker, useTPSChecker;
 	private long reset;
 	private long delay;
 	public static double requiredTPS;
-	public static long interval;
 
 	public AreaScheduler(String area, long delay) {
 		if (areas.contains(this)) {
@@ -47,7 +46,6 @@ public class AreaScheduler {
 		notifyConsoleOnReload = Manager.getConfig().getBoolean("Settings.AutoReload.Notify.Console");
 		useTPSChecker = Manager.getConfig().getBoolean("Settings.AutoReload.TPSChecker.Enabled");
 		requiredTPS = Manager.getConfig().getDouble("Settings.AutoReload.TPSChecker.RequiredTPS");
-		interval = Manager.getConfig().getLong("Settings.AutoReload.Interval");
 		
 		if (checker) {
 			AreaReloader.log.info("Checker for areas to auto reload is enabled!");
@@ -113,6 +111,7 @@ public class AreaScheduler {
 		}
 		return 0;
 	}
+	
 	public String getArea() {
 		return this.area;
 	}
@@ -178,7 +177,7 @@ public class AreaScheduler {
 				}
 			}
 		};
-		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0, interval / 1000 * 20);
+		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0, 200 / 1000 * 20);
 	}
 
 }

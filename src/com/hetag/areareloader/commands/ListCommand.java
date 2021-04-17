@@ -7,7 +7,6 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 
-import com.hetag.areareloader.AreaReloader;
 import com.hetag.areareloader.configuration.Manager;
 
 import net.md_5.bungee.api.ChatColor;
@@ -26,7 +25,7 @@ public class ListCommand extends ARCommand {
 		}
 		if (args.size() == 0) {
 			List<String> strings = new ArrayList<>();
-			ConfigurationSection cs = AreaReloader.areas.getConfig().getConfigurationSection("Areas");
+			ConfigurationSection cs = Manager.areas.getConfig().getConfigurationSection("Areas");
 			if (cs != null && cs.getKeys(false).size() > 0) {
 				for (String area : cs.getKeys(false)) {
 					strings.add(area);
@@ -45,7 +44,7 @@ public class ListCommand extends ARCommand {
 			String arg = args.get(0).toLowerCase();
 			if (isNumeric(arg)) {
 				List<String> strings = new ArrayList<>();
-				ConfigurationSection cs = AreaReloader.areas.getConfig().getConfigurationSection("Areas");
+				ConfigurationSection cs = Manager.areas.getConfig().getConfigurationSection("Areas");
 				if (cs != null && cs.getKeys(false).size() > 0) {
 					for (String area : cs.getKeys(false)) {
 						strings.add(area);

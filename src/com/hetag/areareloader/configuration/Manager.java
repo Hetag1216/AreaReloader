@@ -9,15 +9,23 @@ import com.hetag.areareloader.commands.Executor;
 
 public class Manager {
 	public static Config defaultConfig;
-
-	public Manager() {
+	public static Config areas;
+	
+	public void initConfigs() {
 		defaultConfig = new Config(new File("config.yml"));
-		loadConfig(ConfigType.DEFAULT);
+		areas = new Config(new File("areas.yml"));
+	}
+	
+	public Manager() {
+		initConfigs();
+		loadConfig(defaultConfig);
+		loadConfig(areas);
 	}
 
-	private void loadConfig(ConfigType type) {
-		if (type == ConfigType.DEFAULT) {
-		FileConfiguration config = defaultConfig.getConfig();
+	private void loadConfig(Config configurationFile) {
+		FileConfiguration config = null;
+		if (configurationFile == defaultConfig) {
+			config = defaultConfig.getConfig();
 
 		config.addDefault("Settings.Language.ChatPrefix", "&8[&bAreaReloader&8]&3 ");
 		config.addDefault("Settings.Language.NoPermission", "You don't own sufficent permissions to run this command!");
@@ -26,7 +34,7 @@ public class Manager {
 		config.addDefault("Settings.Debug.Enabled", false);
 		config.addDefault("Settings.Debug.Prefix", "&8[&bAR&7-&bDebug&8]&b ");
 		
-		config.addDefault("Settings.AreaLoading.Interval", 200);
+		config.addDefault("Settings.AreaLoading.Interval", 1500);
 		config.addDefault("Settings.AreaLoading.IgnoreAirBlocks", false);
 		config.addDefault("Settings.AreaLoading.FastMode", true);
 		config.addDefault("Settings.AreaLoading.TPSChecker.Enabled", false);
@@ -95,5 +103,10 @@ public class Manager {
 
 	  public static FileConfiguration getConfig() {
 	    return defaultConfig.getConfig();
+	  }
+	  
+	  public static void reloadAllInstances() {
+		  defaultConfig.reloadConfig();
+		  areas.reloadConfig();
 	  }
 }
