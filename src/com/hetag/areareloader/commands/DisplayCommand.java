@@ -39,7 +39,7 @@ public class DisplayCommand extends ARCommand {
 		}
 		
 		String area = args.get(0);
-		if (AreaReloader.areas.getConfig().contains("Areas." + area)) {
+		if (Manager.areas.getConfig().contains("Areas." + area)) {
 			if (!display.contains(area)) {
 				if (!display.isEmpty()) {
 					display.clear();

@@ -1,5 +1,15 @@
 package com.hetag.areareloader;
 
+@Deprecated
+/**
+ * The TPS checking function will be removed in a future update and will
+ * completely be replaced by interval and blocks checks for areas' loads.
+ * <p>
+ * v1.9.1
+ * 
+ * @author dario
+ *
+ */
 public class TPS implements Runnable {
 	private static double tps;
 	long sec;
@@ -23,7 +33,7 @@ public class TPS implements Runnable {
 			}
 		}
 	}
-	
+
 	public static double getTPS() {
 		return Math.round(tps);
 	}

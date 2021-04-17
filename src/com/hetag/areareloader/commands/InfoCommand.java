@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 
 import com.hetag.areareloader.AreaLoader;
 import com.hetag.areareloader.AreaMethods;
-import com.hetag.areareloader.AreaReloader;
 import com.hetag.areareloader.AreaScheduler;
 import com.hetag.areareloader.configuration.Manager;
 
@@ -35,7 +34,7 @@ public class InfoCommand extends ARCommand {
 		} else {
 			display = ChatColor.AQUA + "false";
 		}
-		if (AreaReloader.areas.getConfig().contains("Areas." + area)) {
+		if (Manager.areas.getConfig().contains("Areas." + area)) {
 			sender.sendMessage(prefix);
 			sendMessage(sender, "&7« &b" + area + " &7»", false);
 			sendMessage(sender, "&3World &7» &b" + AreaMethods.getAreaInWorld(area) , false);
@@ -43,12 +42,12 @@ public class InfoCommand extends ARCommand {
 			sendMessage(sender, "&3Location Y &7» &b" + AreaMethods.getAreaY(area) + "&7 | &b" + AreaMethods.getAreaMaxY(area) , false);
 			sendMessage(sender, "&3Location Z &7» &b" + AreaMethods.getAreaZ(area) + "&7 | &b" + AreaMethods.getAreaMaxZ(area), false);
 			sendMessage(sender, "&3Is being displayed &7» &b" + display, false);
-			sendMessage(sender, "&3Has copied entities &7» &b" + AreaReloader.areas.getConfig().getBoolean("Areas." + area + ".HasCopiedEntities"), false);
+			sendMessage(sender, "&3Has copied entities &7» &b" + Manager.areas.getConfig().getBoolean("Areas." + area + ".HasCopiedEntities"), false);
 			sendMessage(sender, "&3Is ignoring air blocks when loading &7» &b" + AreaMethods.ignoreAirBlocks, false);
 			sendMessage(sender, "&3Is using fast mode &7» &b" + AreaMethods.fastMode, false);
 			sendMessage(sender, "&3Required TPS &7» &b" + AreaLoader.requiredTPS, false);
-			sendMessage(sender, "&3Is automatically reloading &7» &b" + AreaReloader.areas.getConfig().getBoolean("Areas." + area + ".AutoReload.Enabled"), false);
-			sendMessage(sender, "&3Auto reloading time &7» &b" + AreaReloader.areas.getConfig().getLong("Areas." + area + ".AutoReload.Time"), false);
+			sendMessage(sender, "&3Is automatically reloading &7» &b" + Manager.areas.getConfig().getBoolean("Areas." + area + ".AutoReload.Enabled"), false);
+			sendMessage(sender, "&3Auto reloading time &7» &b" + Manager.areas.getConfig().getLong("Areas." + area + ".AutoReload.Time"), false);
 			sendMessage(sender, "&3Next auto reload in &7» &b" + AreaScheduler.getRemainingTime(area), false);
 			sendMessage(sender, "&3Required auto reloading TPS &7» &b" + AreaScheduler.requiredTPS, false);
 			return;
