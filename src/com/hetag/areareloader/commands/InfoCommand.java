@@ -29,7 +29,7 @@ public class InfoCommand extends ARCommand {
 		}
 		String area = args.get(0);
 		String display = null;
-		if (DisplayCommand.display.contains(area)) {
+		if (DisplayCommand.getDisplayedAreas().contains(area)) {
 			display = ChatColor.AQUA + "true";
 		} else {
 			display = ChatColor.AQUA + "false";
