@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.hetag.areareloader.commands.DisplayCommand;
 import com.hetag.areareloader.commands.Executor;
 import com.hetag.areareloader.commands.TPSMonitorCommand;
 import com.hetag.areareloader.configuration.Manager;
@@ -72,11 +73,8 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	}
 
 	public void onDisable() {
+		ShutDown();
 		log.info("Succesfully disabled AreaReloader!");
-		AreaMethods.updateAreas();
-		if (!getQueue().queue().isEmpty()) {
-			getQueue().queue().clear();;
-		}
 	}
 
 	public void checkProtocol() {
@@ -155,6 +153,24 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			return status + enabled;
 		} else {
 			return status + disabled;
+		}
+	}
+	
+	/**
+	 * Shut down all active tasks.
+	 */
+	public void ShutDown() {
+		if (!getInstance().getServer().getScheduler().getPendingTasks().isEmpty()) {
+			getInstance().getServer().getScheduler().getPendingTasks().clear();
+		}
+		if (!getInstance().getServer().getScheduler().getActiveWorkers().isEmpty()) {
+			getInstance().getServer().getScheduler().getActiveWorkers().clear();;
+		}
+		
+		AreaMethods.updateAreas();
+		
+		if (!getQueue().queue().isEmpty()) {
+			getQueue().queue().clear();
 		}
 	}
 }

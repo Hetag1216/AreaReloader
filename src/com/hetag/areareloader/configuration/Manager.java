@@ -81,7 +81,7 @@ public class Manager {
 
 		config.addDefault("Commands.Load.Description", "&7Loads an existing area.");
 		config.addDefault("Commands.Load.OnPrepare", "Preparing area loading for area: &b%area%&3.");
-		config.addDefault("Commands.Load.OnLoadSuccess", "Area '&b%area%&3' was succesfully loaded! Changed &b%count%&3 blocks in &b%time%&3ms.");
+		config.addDefault("Commands.Load.OnLoadSuccess", "Area '&b%area%&3' was succesfully loaded! Changed &b%count%&3 blocks in &b%time%&3.");
 		config.addDefault("Commands.Load.OnInvalidArea", "&b%area% &3does not exist.");
 		config.addDefault("Commands.Load.OnAlreadyLoading", "Failed to reload area: '&b%area%&3' as it is already being loaded.");
 		

@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -76,6 +77,28 @@ public class AreaMethods {
 
 	public static boolean isInteger(String s) {
 		return isInteger(s, 10);
+	}
+	
+	public static String formatTime(long time) {
+		time = Math.abs(time);
+		final long days = time / TimeUnit.DAYS.toMillis(1);
+		final long hours = time % TimeUnit.DAYS.toMillis(1) / TimeUnit.HOURS.toMillis(1);
+		final long minutes = time % TimeUnit.HOURS.toMillis(1) / TimeUnit.MINUTES.toMillis(1);
+		final long seconds = time % TimeUnit.MINUTES.toMillis(1) / TimeUnit.SECONDS.toMillis(1);
+		String format = "";
+		if (days > 0) {
+			format += String.valueOf(days) + "days";
+		}
+		if (hours > 0) {
+			format += String.valueOf(hours) + "hours";
+		}
+		if (minutes > 0) {
+			format += String.valueOf(minutes) + " minutes";
+		}
+		if (seconds >= 0) {
+			format += String.valueOf(seconds) + " seconds";
+		}
+		return format;
 	}
 
 	public static boolean isInteger(String s, int radix) {

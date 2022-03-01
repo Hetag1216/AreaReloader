@@ -23,6 +23,7 @@ public class ConfigReloadCommand extends ARCommand {
 			return;
 		}
 		try {
+			DisplayCommand.removeAllDisplays();
 			AreaMethods.performSetup();
 			Manager.reloadAllInstances();
 			if (!AreaReloader.getInstance().getServer().getScheduler().getPendingTasks().isEmpty()) {
