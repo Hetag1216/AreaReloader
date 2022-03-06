@@ -35,8 +35,6 @@ public class AreaScheduler {
 		this.delay = delay;
 		this.reset = System.currentTimeMillis();
 		areas.add(this);
-		int count = 0;
-		AreaReloader.getInstance().getQueue().queue().put(area, count++);
 	}
 	
 	public static void init() {

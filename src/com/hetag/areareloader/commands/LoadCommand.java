@@ -36,6 +36,7 @@ public class LoadCommand extends ARCommand {
 			int z = Manager.areas.getConfig().getInt("Areas." + args.get(0) + ".Z");
 			Location location = new Location(world, x, AreaMethods.getAreaY(area), z);
 			new AreaLoader(area, AreaMethods.getAreaSizeX(area).intValue(), AreaMethods.getAreaSizeZ(area).intValue(), AreaMethods.getAreaChunk(area).intValue(), location, sender);
+			//AreaLoader.manage();
 			sendMessage(sender, onPrepare().replaceAll("%area%", area), true);
 			} else {
 				sendMessage(sender, onAlreadyLoading().replaceAll("%area%", area), true);

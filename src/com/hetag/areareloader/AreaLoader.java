@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.hetag.areareloader.configuration.Manager;
 import com.sk89q.worldedit.WorldEditException;
@@ -28,6 +30,8 @@ public class AreaLoader {
 	public static double requiredTPS, percentage;
 	public static boolean useTPSChecker;
 	public long time;
+	public static String areaCopy;
+	public static BukkitRunnable buru;
 
 	public AreaLoader(String area, int x, int z, int size, Location location, CommandSender sender) {
 		if (sender != null) {
@@ -43,6 +47,7 @@ public class AreaLoader {
 			return;
 		}
 		this.area = area;
+		areaCopy = this.area;
 		this.maxX = x;
 		this.maxZ = z;
 		this.size = size;
@@ -54,8 +59,7 @@ public class AreaLoader {
 		fakeTime = System.currentTimeMillis();
 		time = System.currentTimeMillis();
 		areas.add(this);
-		int count = 1;
-		AreaReloader.getInstance().getQueue().queue().put(area, count += 1);
+		newManage();
 	}
 	
 	public static void init() {
@@ -63,7 +67,6 @@ public class AreaLoader {
 		useTPSChecker = Manager.getConfig().getBoolean("Settings.AreaLoading.TPSChecker.Enabled");
 		requiredTPS = Manager.getConfig().getDouble("Settings.AreaLoading.TPSChecker.RequiredTPS");
 		percentage = Manager.getConfig().getDouble("Settings.AreaLoading.Percentage");
-		manage();
 	}
 
 	private void progress() throws FileNotFoundException, WorldEditException, IOException {
@@ -110,11 +113,13 @@ public class AreaLoader {
 				}
 				completed.add(areas.indexOf(al));
 				// only remove the area from the queue when it's finished
-				if (AreaReloader.getInstance().getQueue().queue().containsKey(al.area)) {
-					AreaReloader.getInstance().getQueue().queue().remove(al.area);
+				if (AreaReloader.getInstance().getQueue().isQueued(al.area)) {
+					int task = AreaReloader.getInstance().getQueue().getTaskByName(al.area);
+					AreaReloader.getInstance().getServer().getScheduler().cancelTask(task);
+					AreaReloader.getInstance().getQueue().get().remove(al.area);
 					AreaMethods.getActiveSessions().remove(al.area);
 					if (AreaReloader.debug) {
-						AreaMethods.sendDebugMessage(al.getSender(), ChatColor.DARK_AQUA + al.area + ChatColor.AQUA + " has been removed from the queue list.");
+						AreaMethods.sendDebugMessage(al.getSender(), ChatColor.DARK_AQUA + al.area + ChatColor.AQUA + " with task id " + ChatColor.DARK_AQUA + buru.getTaskId() + " has been removed from the queue list.");
 						AreaMethods.sendDebugMessage(al.getSender(), ChatColor.DARK_AQUA + al.area + ChatColor.AQUA + " has been removed from the active sessions.");
 					}
 				}
@@ -142,6 +147,17 @@ public class AreaLoader {
 		}
 	}
 	
+	public static void newManage() {
+		buru = new BukkitRunnable() {
+			public void run() {
+				AreaReloader.getInstance().getQueue().addToQueue(areaCopy, buru.getTaskId());
+				progressAll();
+			}
+		};
+		buru.runTaskTimer(AreaReloader.getInstance(), 0, 200 / 1000 * 20);
+	}
+	
+	@Deprecated
 	public static void manage() {
 		Runnable br = new Runnable() {
 			public void run() {

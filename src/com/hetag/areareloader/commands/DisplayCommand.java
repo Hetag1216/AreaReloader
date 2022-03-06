@@ -88,7 +88,6 @@ public class DisplayCommand extends ARCommand {
 	}
 
 	public void removeTask(String area, CommandSender sender) {
-		if (!blocks.isEmpty()) {
 			BukkitRunnable runner = new BukkitRunnable() {
 				public void run() {
 					for (Block block : blocks) {
@@ -105,7 +104,6 @@ public class DisplayCommand extends ARCommand {
 				}
 			};
 			runner.runTaskLater(AreaReloader.getInstance(), 1);
-		}
 
 		for (Entry<String, Integer> task : entries.entrySet()) {
 			if (task.getKey().equals(area)) {
@@ -113,8 +111,14 @@ public class DisplayCommand extends ARCommand {
 			}
 		}
 		entries.remove(area);
-		// force clear all blocks, the list will be refilled by active displays.
-		blocks.clear();
+		BukkitRunnable clear = new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (!blocks.isEmpty())
+					blocks.clear();
+			}
+		};
+		clear.runTaskLater(AreaReloader.getInstance(), 20);
 	}
 
 	public static void removeAllDisplays() {
@@ -134,6 +138,14 @@ public class DisplayCommand extends ARCommand {
 		};
 		run.runTaskLater(AreaReloader.getInstance(), 1);
 		entries.clear();
+		BukkitRunnable clear = new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (!blocks.isEmpty())
+					blocks.clear();
+			}
+		};
+		clear.runTaskLater(AreaReloader.getInstance(), 20);
 	}
 	
 	private void blockChange(Player player, Block block) {

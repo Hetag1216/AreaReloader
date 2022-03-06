@@ -13,49 +13,67 @@ public class Queue {
 	}
 	
 	/**
-	 * Stores all areas queued for reloading.
-	 * <p>
-	 * This does not store instances but the areas themselves.
-	 * <p>
-	 * Every time the server is reloaded, restarted, the
-	 * queue gets cleared.
-	 * <p>
-	 * If {@link #useQueue} returns true
+	 * Returns the queue instance.
 	 * @return QUEUE
 	 */
-	protected HashMap<String, Integer> queue() {
+	public HashMap<String, Integer> get() {
 		if (QUEUE != null) return QUEUE;
 		return null;
 	}
 	
+	/**
+	 * Adds an area to the queue with its given task ID.
+	 * @param area
+	 * @param ID
+	 * @return
+	 */
+	public void addToQueue(String area, int ID) {
+		if (!isQueued(area)) {
+			get().put(area, ID);
+		}
+	}
 	
 	/**
-	 * Checks if the specified area is already inside the queue.
-	 * <p>
-	 * This should never be used to check whether or not an area can be reloaded.
+	 * Returns the task id number associated with the area's name.
 	 * @param area
-	 * @return queued area
+	 * @return taskID if != null
 	 */
-	public boolean isAreaQueued(String area) {
-		if (queue().containsKey(area)) return true;
+	
+	public int getTaskByName(String area) {
+		if (isQueued(area)) {
+			for (Entry<String, Integer> IDs : get().entrySet()) {
+				if (IDs.getKey().equals(area)) {
+					return IDs.getValue() != null ? IDs.getValue() : 0;
+				}
+			}
+		}
+		return 0;
+	}
+	
+	/**
+	 * Check if the specified area is queued.
+	 * <p>
+	 * Looks for the area's name.
+	 * @param area
+	 * @return true/false
+	 */
+	public boolean isQueued(String area) {
+		if (get().containsKey(area)) return true;
 		return false;
 	}
 	
 	/**
-	 * Checks if the specified area is queued by also checking its count.
+	 * Check if the specified area is queued.
 	 * <p>
-	 * This method should be used when checking if an area is already being reloaded
-	 * to prevent its over loading.
-	 * <p>
-	 * If the count > 1 -> run action
-	 * 
+	 * Looks for the area's name and task id.
+	 * This method is mainly used to deeply check whether an area is queued with its unique task ID or not.
 	 * @param area
-	 * @return queued area
+	 * @param ID
+	 * @return true/false
 	 */
-	
-	public boolean isQueued(String area) {
-		for (Entry<String, Integer> IDs : queue().entrySet()) {
-			if (IDs.getKey().equals(area) && IDs.getValue() > 1) {
+	public boolean isQueued(String area, int ID) {
+		for (Entry<String, Integer> IDs : get().entrySet()) {
+			if (IDs.getKey().equals(area) && IDs.getValue() == ID) {
 				return true;
 			}
 		}

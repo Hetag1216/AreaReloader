@@ -9,7 +9,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.hetag.areareloader.commands.DisplayCommand;
 import com.hetag.areareloader.commands.Executor;
 import com.hetag.areareloader.commands.TPSMonitorCommand;
 import com.hetag.areareloader.configuration.Manager;
@@ -18,6 +17,8 @@ import com.hetag.areareloader.reflection.V1_13.Protocol_1_13;
 import com.hetag.areareloader.reflection.V1_14.Protocol_1_14;
 import com.hetag.areareloader.reflection.V1_15.Protocol_1_15;
 import com.hetag.areareloader.reflection.V1_16.Protocol_1_16;
+import com.hetag.areareloader.reflection.V1_17.Protocol_1_17;
+import com.hetag.areareloader.reflection.V1_18.Protocol_1_18;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 public class AreaReloader extends JavaPlugin implements Listener {
@@ -101,15 +102,27 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		case "v1_16_R2":
 			ap = new Protocol_1_16();
 			break;
+		case "v1_17_R1":
+		case "v1_17_R2":
+			ap = new Protocol_1_17();
+			break;
+		case "v1_18_R1":
+		case "v1_18_R2":
+			ap = new Protocol_1_18();
+			break;
 		}
 		if (ap.equals(new Protocol_1_13())) {
-			log.info("Using default protocol versions compatibility!");
+			log.info("Using default protocol (1.13) for versions compatibility!");
 		} else if (ap.equals(new Protocol_1_14())) {
 			log.info("Using protocol for 1.14 versions compatibility!");
 		} else if (ap.equals(new Protocol_1_15())) {
 			log.info("Using protocol for 1.15 versions compatibility!");
 		} else if (ap.equals(new Protocol_1_16())) {
 			log.info("Using protocol for 1.16 versions compatibility!");
+		} else if (ap.equals(new Protocol_1_17())) {
+			log.info("Using protocol for 1.17 versions compatibility!");
+		} else if (ap.equals(new Protocol_1_18())) {
+			log.info("Using protocol for 1.18 versions compatibility!");
 		}
 	}
 	
@@ -169,8 +182,8 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		
 		AreaMethods.updateAreas();
 		
-		if (!getQueue().queue().isEmpty()) {
-			getQueue().queue().clear();
+		if (!getQueue().get().isEmpty()) {
+			getQueue().get().clear();
 		}
 	}
 }

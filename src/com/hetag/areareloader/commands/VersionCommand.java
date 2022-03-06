@@ -24,7 +24,7 @@ public class VersionCommand extends ARCommand {
 		sendMessage(sender, "", true);
 		sendMessage(sender, "&3Version: &b" + AreaReloader.getInstance().getDescription().getVersion(), false);
 		sendMessage(sender, "&3Author: &b" + AreaReloader.getInstance().getDescription().getAuthors().toString().replace("[", "").toString().replace("]", ""), false);
-		sendMessage(sender, "&3Compatible Minecraft Version(s): &b 1.13 - 1.14 - 1.15", false);
+		sendMessage(sender, "&3Compatible Minecraft Version(s): &b 1.13 - 1.14 - 1.15 - 1.16 - 1.17 - 1.18", false);
 		sendMessage(sender, "&3Using Protocol: &b" + AreaReloader.getProtocol().toString(), false);
 		sendMessage(sender, "", false);
 		sendMessage(sender, "&8« &bUseful links &8»", false);
