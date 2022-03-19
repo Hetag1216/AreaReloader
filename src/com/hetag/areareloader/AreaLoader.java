@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -27,11 +26,9 @@ public class AreaLoader {
 	private CommandSender sender;
 	private static long fakeTime;
 	private static long interval;
-	public static double requiredTPS, percentage;
-	public static boolean useTPSChecker;
+	public static double percentage;
 	public long time;
-	public static String areaCopy;
-	public static BukkitRunnable buru;
+	public static BukkitRunnable executer;
 
 	public AreaLoader(String area, int x, int z, int size, Location location, CommandSender sender) {
 		if (sender != null) {
@@ -47,7 +44,6 @@ public class AreaLoader {
 			return;
 		}
 		this.area = area;
-		areaCopy = this.area;
 		this.maxX = x;
 		this.maxZ = z;
 		this.size = size;
@@ -59,13 +55,11 @@ public class AreaLoader {
 		fakeTime = System.currentTimeMillis();
 		time = System.currentTimeMillis();
 		areas.add(this);
-		newManage();
+		manage();
 	}
 	
 	public static void init() {
 		interval = Manager.getConfig().getLong("Settings.AreaLoading.Interval");
-		useTPSChecker = Manager.getConfig().getBoolean("Settings.AreaLoading.TPSChecker.Enabled");
-		requiredTPS = Manager.getConfig().getDouble("Settings.AreaLoading.TPSChecker.RequiredTPS");
 		percentage = Manager.getConfig().getDouble("Settings.AreaLoading.Percentage");
 	}
 
@@ -103,7 +97,7 @@ public class AreaLoader {
 		}
 	}
 
-	private static void progressAll() {
+	private void progressAll() {
 		List<Integer> completed = new ArrayList<Integer>();
 		for (AreaLoader al : areas) {
 			if (al.completed) {
@@ -119,15 +113,15 @@ public class AreaLoader {
 					AreaReloader.getInstance().getQueue().get().remove(al.area);
 					AreaMethods.getActiveSessions().remove(al.area);
 					if (AreaReloader.debug) {
-						AreaMethods.sendDebugMessage(al.getSender(), ChatColor.DARK_AQUA + al.area + ChatColor.AQUA + " with task id " + ChatColor.DARK_AQUA + buru.getTaskId() + " has been removed from the queue list.");
+						AreaMethods.sendDebugMessage(al.getSender(), ChatColor.DARK_AQUA + al.area + ChatColor.AQUA + " with task id " + ChatColor.DARK_AQUA + AreaReloader.getInstance().getQueue().getTaskByName(al.area) + " has been removed from the queue list.");
 						AreaMethods.sendDebugMessage(al.getSender(), ChatColor.DARK_AQUA + al.area + ChatColor.AQUA + " has been removed from the active sessions.");
 					}
 				}
 			} else {
 				try {
-					if (!AreaReloader.isDeleted.contains(al.area)) {
+					//if (!AreaReloader.isDeleted.contains(al.area)) {
 					al.progress();
-					}
+					//}
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (WorldEditException e) {
@@ -147,29 +141,14 @@ public class AreaLoader {
 		}
 	}
 	
-	public static void newManage() {
-		buru = new BukkitRunnable() {
+	private void manage() {
+		executer = new BukkitRunnable() {
 			public void run() {
-				AreaReloader.getInstance().getQueue().addToQueue(areaCopy, buru.getTaskId());
+				AreaReloader.getInstance().getQueue().addToQueue(area, executer.getTaskId());
 				progressAll();
 			}
 		};
-		buru.runTaskTimer(AreaReloader.getInstance(), 0, 200 / 1000 * 20);
-	}
-	
-	@Deprecated
-	public static void manage() {
-		Runnable br = new Runnable() {
-			public void run() {
-				if (useTPSChecker) {
-					if (TPS.getTPS() >= requiredTPS)
-						AreaLoader.progressAll();
-				} else {
-					AreaLoader.progressAll();
-				}
-			}
-		};
-		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0L, 200 / 1000 * 20);
+		executer.runTaskTimer(AreaReloader.getInstance(), 0, interval / 1000 * 20);
 	}
 
 	public static String prefix() {

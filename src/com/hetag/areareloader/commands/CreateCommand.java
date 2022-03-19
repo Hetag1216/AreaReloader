@@ -18,7 +18,7 @@ public class CreateCommand extends ARCommand {
 
 	@Override
 	public void execute(CommandSender sender, List<String> args) {
-		if (!hasPermission(sender) || !isPlayer(sender)) {
+		if (!hasPermission(sender) || !isPlayer(sender) || !this.correctLength(sender, args.size(), 2, 2)) {
 			return;
 		}
 		if (args.size() == 2) {

@@ -36,7 +36,7 @@ public class Executor {
 		new DisplayCommand();
 		new ConfigReloadCommand();
 		new DisplayCommand();
-		new TPSMonitorCommand();
+		new CancelCommand();
 		help = Manager.getConfig().getStringList("Commands.HelpLines");
 
 		CommandExecutor exe = new CommandExecutor() {

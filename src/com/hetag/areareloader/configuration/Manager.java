@@ -37,16 +37,12 @@ public class Manager {
 		config.addDefault("Settings.AreaLoading.Interval", 1500);
 		config.addDefault("Settings.AreaLoading.IgnoreAirBlocks", false);
 		config.addDefault("Settings.AreaLoading.FastMode", true);
-		config.addDefault("Settings.AreaLoading.TPSChecker.Enabled", false);
-		config.addDefault("Settings.AreaLoading.TPSChecker.RequiredTPS", 18);
 		config.addDefault("Settings.AreaLoading.Percentage", 15);
 		
 		config.addDefault("Settings.AutoReload.Checker", true);
 		config.addDefault("Settings.AutoReload.Interval", 200);
 		config.addDefault("Settings.AutoReload.Notify.Admins", true);
 		config.addDefault("Settings.AutoReload.Notify.Console", true);
-		config.addDefault("Settings.AutoReload.TPSChecker.Enabled", false);
-		config.addDefault("Settings.AutoReload.TPSChecker.RequiredTPS", 18);
 
 		ArrayList<String> helpLines = new ArrayList<>();
 		Executor.help = helpLines;
@@ -84,9 +80,6 @@ public class Manager {
 		config.addDefault("Commands.Load.OnLoadSuccess", "Area '&b%area%&3' was succesfully loaded! Changed &b%count%&3 blocks in &b%time%&3.");
 		config.addDefault("Commands.Load.OnInvalidArea", "&b%area% &3does not exist.");
 		config.addDefault("Commands.Load.OnAlreadyLoading", "Failed to reload area: '&b%area%&3' as it is already being loaded.");
-		
-		config.addDefault("Commands.TpsMonitor.Description", "Starts a task which displays AreaReloader's method of counting TPS (ticks per seconds).");
-		config.addDefault("Commands.TpsMonitor.Enabled", false);
 
 		config.addDefault("Commands.Version.Description", "&7Shows information about the plugin.");
 		
@@ -97,7 +90,18 @@ public class Manager {
 		config.addDefault("Commands.Reload.OnFail", "&cAn error occurred while reloading configurations, printing stack trace.");
 
 		config.addDefault("Commands.Hook.Description", "&7Shows an interface for the plugin's dependencies.");
+		
+		config.addDefault("Commands.Cancel.Description", "&7Cancels the loading of one or all areas.");
+		config.addDefault("Commands.Cancel.OnCancelArea", "&b%area% &7(&bTask: %id%&7) &3loading has been cancelled!");
+		config.addDefault("Commands.Cancel.OnCancelFail", "&b%area% &3is not currently being loaded.");
+		config.addDefault("Commands.Cancel.OnCancelAll", "All areas have been cancelled from loading!");
+		
+		config.addDefault("Config.Version", "1.9.2");
 		defaultConfig.saveConfig();
+		} else if (configurationFile == areas) {
+			config = areas.getConfig();
+			
+			config.addDefault("Config.Version", 1.9);
 		}
 	}
 

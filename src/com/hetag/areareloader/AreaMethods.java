@@ -57,6 +57,7 @@ public class AreaMethods {
 	}
 
 	public static void deleteArea(String area) {
+		kill(area);
 		Manager.areas.getConfig().set("Areas." + area, null);
 		Manager.areas.saveConfig();
 		File dir = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area);
@@ -71,7 +72,7 @@ public class AreaMethods {
 				}
 			}
 			dir.delete();
-			AreaReloader.isDeleted.add(area);
+			//AreaReloader.isDeleted.add(area);
 		}
 	}
 
@@ -85,18 +86,19 @@ public class AreaMethods {
 		final long hours = time % TimeUnit.DAYS.toMillis(1) / TimeUnit.HOURS.toMillis(1);
 		final long minutes = time % TimeUnit.HOURS.toMillis(1) / TimeUnit.MINUTES.toMillis(1);
 		final long seconds = time % TimeUnit.MINUTES.toMillis(1) / TimeUnit.SECONDS.toMillis(1);
+		final long millis = time / TimeUnit.MILLISECONDS.toMillis(1);
 		String format = "";
 		if (days > 0) {
-			format += String.valueOf(days) + "days";
+			format += String.valueOf(days) + " days";
 		}
 		if (hours > 0) {
-			format += String.valueOf(hours) + "hours";
+			format += String.valueOf(hours) + " hours";
 		}
 		if (minutes > 0) {
 			format += String.valueOf(minutes) + " minutes";
 		}
 		if (seconds >= 0) {
-			format += String.valueOf(seconds) + " seconds";
+			format += String.valueOf(seconds) + "." + String.valueOf(Math.round(millis)) +  " seconds";
 		}
 		return format;
 	}
@@ -207,11 +209,11 @@ public class AreaMethods {
 	}
 
 	public static boolean createNewArea(Player player, String area, int size, boolean copyEntities) throws WorldEditException {
-		if (AreaReloader.isDeleted.contains(area)) {
-			AreaReloader.isDeleted.remove(area);
+		//if (AreaReloader.isDeleted.contains(area)) {
+			//AreaReloader.isDeleted.remove(area);
 			if (AreaReloader.debug) {
 				sendDebugMessage(player, "Updating selected area.");
-			}
+			//}
 		}
             File dir = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area);
 		if (dir.exists()) {
@@ -306,6 +308,18 @@ public class AreaMethods {
 		return false;
 	}
 	
+	public static void kill(String area) {
+		if (AreaReloader.getInstance().getQueue().isQueued(area)) {
+			AreaReloader.getInstance().getServer().getScheduler().cancelTask(AreaReloader.getInstance().getQueue().getTaskByName(area));
+			AreaReloader.getInstance().getQueue().remove(area);
+		}
+		if (AreaLoader.areas.contains(area))
+			AreaLoader.areas.remove(area);
+		
+		if (AreaScheduler.areas.contains(area)) {
+			AreaScheduler.areas.remove(area);
+		}
+	}
 	public static String getXCoord(String area) {
 		return Manager.areas.getConfig().getString("Areas." + area + ".X");
 	}
@@ -370,13 +384,13 @@ public class AreaMethods {
 		sender.sendMessage(debugPrefix() + string);
 	}
 	
-	public static void updateAreas() {
+	/*public static void updateAreas() {
 		if (AreaReloader.isDeleted.isEmpty()) {
 			return;
 		} else {
 			AreaReloader.isDeleted.clear();
 		}
-	}
+	}*/
 
 	public static String debugPrefix() {
 		return ChatColor.translateAlternateColorCodes('&', AreaReloader.plugin.getConfig().getString("Settings.Debug.Prefix"));

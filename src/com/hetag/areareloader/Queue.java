@@ -34,6 +34,17 @@ public class Queue {
 	}
 	
 	/**
+	 * Removes an area from the queue.
+	 * @param area
+	 */
+	
+	public void remove(String area) {
+		if (isQueued(area)) {
+			get().remove(area);
+		}
+	}
+	
+	/**
 	 * Returns the task id number associated with the area's name.
 	 * @param area
 	 * @return taskID if != null

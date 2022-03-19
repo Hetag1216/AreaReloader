@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import com.hetag.areareloader.AreaLoader;
 import com.hetag.areareloader.AreaMethods;
 import com.hetag.areareloader.AreaScheduler;
 import com.hetag.areareloader.configuration.Manager;
@@ -20,7 +19,7 @@ public class InfoCommand extends ARCommand {
 
 	@Override
 	public void execute(CommandSender sender, List<String> args) {
-		if (!hasPermission(sender) || !correctLength(sender, 0, 0, 1)) {
+		if (!hasPermission(sender) || !correctLength(sender, args.size(), 0, 1)) {
 			return;
 		}
 		if (args.size() == 0) {
@@ -45,11 +44,9 @@ public class InfoCommand extends ARCommand {
 			sendMessage(sender, "&3Has copied entities &7» &b" + Manager.areas.getConfig().getBoolean("Areas." + area + ".HasCopiedEntities"), false);
 			sendMessage(sender, "&3Is ignoring air blocks when loading &7» &b" + AreaMethods.ignoreAirBlocks, false);
 			sendMessage(sender, "&3Is using fast mode &7» &b" + AreaMethods.fastMode, false);
-			sendMessage(sender, "&3Required TPS &7» &b" + AreaLoader.requiredTPS, false);
 			sendMessage(sender, "&3Is automatically reloading &7» &b" + Manager.areas.getConfig().getBoolean("Areas." + area + ".AutoReload.Enabled"), false);
 			sendMessage(sender, "&3Auto reloading time &7» &b" + Manager.areas.getConfig().getLong("Areas." + area + ".AutoReload.Time"), false);
 			sendMessage(sender, "&3Next auto reload in &7» &b" + AreaScheduler.getRemainingTime(area), false);
-			sendMessage(sender, "&3Required auto reloading TPS &7» &b" + AreaScheduler.requiredTPS, false);
 			return;
 		} else {
 			sendMessage(sender, LoadCommand.onInvalid().replaceAll("%area%", area), true);

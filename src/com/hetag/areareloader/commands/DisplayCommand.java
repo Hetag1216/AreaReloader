@@ -37,7 +37,7 @@ public class DisplayCommand extends ARCommand {
 
 	@Override
 	public void execute(CommandSender sender, List<String> args) {
-		if (!hasPermission(sender) || !correctLength(sender, 0, 0, 1) && isPlayer(sender)) {
+		if (!hasPermission(sender) || !correctLength(sender, args.size(), 1, 1) && !isPlayer(sender)) {
 			return;
 		}
 

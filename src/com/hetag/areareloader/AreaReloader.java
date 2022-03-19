@@ -1,6 +1,5 @@
 package com.hetag.areareloader;
 
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -10,7 +9,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.hetag.areareloader.commands.Executor;
-import com.hetag.areareloader.commands.TPSMonitorCommand;
 import com.hetag.areareloader.configuration.Manager;
 import com.hetag.areareloader.reflection.AreaProtocol;
 import com.hetag.areareloader.reflection.V1_13.Protocol_1_13;
@@ -27,7 +25,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	public static WorldEditPlugin wep;
 	public static AreaProtocol ap;
 	public static boolean debug, checker;
-	public static ArrayList<String> isDeleted = new ArrayList<>();
+	//public static ArrayList<String> isDeleted = new ArrayList<>();
 	private Queue queue;
 
 	public void onEnable() {
@@ -43,9 +41,6 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			pm.disablePlugin(this);
 		} else {
 			log.info("Plugin's dependency has been found!");
-		}
-		if (TPSMonitorCommand.enabled) {
-			Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new TPS(), 0L, 1L);
 		}
 		new Manager();
 		AreaMethods.performSetup();
@@ -88,26 +83,42 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			break;
 		case "v1_13_R2":
 		case "v1_13_R1":
+		case "v1_13_R3":
+		case "v1_13_R4":
+		case "v1_13_R5":
 			ap = new Protocol_1_13();
 			break;
 		case "v1_14_R1":
 		case "v1_14_R2":
+		case "v1_14_R3":
+		case "v1_14_R4":
+		case "v1_14_R5":
 			ap = new Protocol_1_14();
 			break;
 		case "v1_15_R1":
 		case "v1_15_R2":
+		case "v1_15_R3":
+		case "v1_15_R4":
+		case "v1_15_R5":
 			ap = new Protocol_1_15();
 			break;
 		case "v1_16_R1":
 		case "v1_16_R2":
+		case "v1_16_R3":
+		case "v1_16_R4":
+		case "v1_16_R5":
 			ap = new Protocol_1_16();
 			break;
 		case "v1_17_R1":
 		case "v1_17_R2":
+		case "v1_17_R3":
+		case "v1_17_R4":
 			ap = new Protocol_1_17();
 			break;
 		case "v1_18_R1":
 		case "v1_18_R2":
+		case "v1_18_R3":
+		case "v1_18_R4":
 			ap = new Protocol_1_18();
 			break;
 		}
@@ -180,7 +191,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			getInstance().getServer().getScheduler().getActiveWorkers().clear();;
 		}
 		
-		AreaMethods.updateAreas();
+		//AreaMethods.updateAreas();
 		
 		if (!getQueue().get().isEmpty()) {
 			getQueue().get().clear();

@@ -18,10 +18,9 @@ public class AreaScheduler {
 	public static FileConfiguration config = Manager.areas.getConfig();
 
 	public String area;
-	public static boolean notifyOnReload, notifyConsoleOnReload, checker, useTPSChecker;
+	public static boolean notifyOnReload, notifyConsoleOnReload, checker;
 	private long reset;
 	private long delay;
-	public static double requiredTPS;
 
 	public AreaScheduler(String area, long delay) {
 		if (areas.contains(this)) {
@@ -39,16 +38,14 @@ public class AreaScheduler {
 	
 	public static void init() {
 		checker = Manager.getConfig().getBoolean("Settings.AutoReload.Checker");
-		requiredTPS = Manager.getConfig().getDouble("Settings.AutoReload.RequiredTPS");		
 		notifyOnReload = Manager.getConfig().getBoolean("Settings.AutoReload.Notify.Admins");
 		notifyConsoleOnReload = Manager.getConfig().getBoolean("Settings.AutoReload.Notify.Console");
-		useTPSChecker = Manager.getConfig().getBoolean("Settings.AutoReload.TPSChecker.Enabled");
-		requiredTPS = Manager.getConfig().getDouble("Settings.AutoReload.TPSChecker.RequiredTPS");
 		
 		if (checker) {
 			AreaReloader.log.info("Checker for areas to auto reload is enabled!");
 			checkForAreas();
-			manageReloading();
+			manageTimings();
+			AreaReloader.log.info("Found " + areas.size() + " areas to automatically reload!");
 		} else {
 			AreaReloader.log.info("Checker for areas to auto reload is disabled!");
 		}
@@ -145,7 +142,7 @@ public class AreaScheduler {
 				int maxX = AreaMethods.getAreaSizeX(scheduler.getArea());
 				int maxZ = AreaMethods.getAreaSizeZ(scheduler.getArea());
 				Location location = new Location(world, x, y, z);
-				if (!AreaReloader.isDeleted.contains(scheduler.getArea())) {
+				//if (!AreaReloader.isDeleted.contains(scheduler.getArea())) {
 					new AreaLoader(scheduler.getArea(), maxX, maxZ, size, location, null);
 				    if (notifyConsoleOnReload) {   
 					AreaReloader.log.info("Automatically reloading area: " + scheduler.getArea());
@@ -159,23 +156,18 @@ public class AreaScheduler {
 						}
 					}
 					scheduler.setLastReset(System.currentTimeMillis());
-				}
+				//}
 			}
 		}
 	}
 
-	public static void manageReloading() {
+	public static void manageTimings() {
 		Runnable br = new Runnable() {
 			public void run() {
-				if (useTPSChecker) {
-					if (TPS.getTPS() >= requiredTPS)
-						progress();
-				} else {
-					progress();
-				}
+				progress();
 			}
 		};
-		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0, 200 / 1000 * 20);
+		AreaReloader.plugin.getServer().getScheduler().scheduleSyncRepeatingTask(AreaReloader.plugin, br, 0, 10000 / 1000 * 20);
 	}
 
 }

@@ -20,7 +20,7 @@ public class ListCommand extends ARCommand {
 
 	@Override
 	public void execute(CommandSender sender, List<String> args) {
-		if (!hasPermission(sender) || !correctLength(sender, 0, 0, 1)) {
+		if (!hasPermission(sender) || !correctLength(sender, args.size(), 0, 1)) {
 			return;
 		}
 		if (args.size() == 0) {
