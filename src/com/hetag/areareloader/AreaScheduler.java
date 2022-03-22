@@ -142,21 +142,19 @@ public class AreaScheduler {
 				int maxX = AreaMethods.getAreaSizeX(scheduler.getArea());
 				int maxZ = AreaMethods.getAreaSizeZ(scheduler.getArea());
 				Location location = new Location(world, x, y, z);
-				//if (!AreaReloader.isDeleted.contains(scheduler.getArea())) {
-					new AreaLoader(scheduler.getArea(), maxX, maxZ, size, location, null);
-				    if (notifyConsoleOnReload) {   
+				new AreaLoader(scheduler.getArea(), maxX, maxZ, size, location, null);
+				if (notifyConsoleOnReload) {
 					AreaReloader.log.info("Automatically reloading area: " + scheduler.getArea());
-				    }
-					if (notifyOnReload) {
-						for (Player ops : Bukkit.getServer().getOnlinePlayers()) {
-							if (ops.isOp() || ops.hasPermission("areareloader.command.admin")) {
-								ops.sendMessage(AreaLoader.prefix() + "Automatically reloading area: " + ChatColor.AQUA + scheduler.getArea() + ChatColor.DARK_AQUA + ".");
-								ops.getWorld().playSound(ops.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1F, 0.3F);
-							}
+				}
+				if (notifyOnReload) {
+					for (Player ops : Bukkit.getServer().getOnlinePlayers()) {
+						if (ops.isOp() || ops.hasPermission("areareloader.command.admin")) {
+							ops.sendMessage(AreaLoader.prefix() + "Automatically reloading area: " + ChatColor.AQUA + scheduler.getArea() + ChatColor.DARK_AQUA + ".");
+							ops.getWorld().playSound(ops.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1F, 0.3F);
 						}
 					}
-					scheduler.setLastReset(System.currentTimeMillis());
-				//}
+				}
+				scheduler.setLastReset(System.currentTimeMillis());
 			}
 		}
 	}

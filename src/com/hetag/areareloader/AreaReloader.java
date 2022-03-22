@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.hetag.areareloader.commands.Executor;
 import com.hetag.areareloader.configuration.Manager;
 import com.hetag.areareloader.reflection.AreaProtocol;
+import com.hetag.areareloader.reflection.UpdateChecker;
 import com.hetag.areareloader.reflection.V1_13.Protocol_1_13;
 import com.hetag.areareloader.reflection.V1_14.Protocol_1_14;
 import com.hetag.areareloader.reflection.V1_15.Protocol_1_15;
@@ -27,21 +28,23 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	public static boolean debug, checker;
 	//public static ArrayList<String> isDeleted = new ArrayList<>();
 	private Queue queue;
+	private boolean fetch = false;
 
 	public void onEnable() {
+		PluginManager pm = Bukkit.getPluginManager();
+		if ((WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit") == null) {
+			getLogger().warning("Worldedit hook was not found, the plugin cannot be enabled without this dependency.");
+			pm.disablePlugin(this);
+		} else {
+			getLogger().info("Plugin's dependency has been found!");
+			wep = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
+		}
+		
 		plugin = this;
 		log = getLogger();
 
 		log.info("-=-=-=-= AreaReloader " + plugin.getDescription().getVersion() + " =-=-=-=-");
 		checkProtocol();
-		PluginManager pm = Bukkit.getPluginManager();
-		wep = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
-		if (wep == null) {
-			log.warning("Worldedit hook was not found, the plugin cannot be enabled without this dependency.");
-			pm.disablePlugin(this);
-		} else {
-			log.info("Plugin's dependency has been found!");
-		}
 		new Manager();
 		AreaMethods.performSetup();
 		// General setup
@@ -61,9 +64,23 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			e.printStackTrace();
 		}
 		
-
-		
 		getServer().getPluginManager().registerEvents(new AreaListener(this), this);
+		
+		//time out the updater so that it doesn't slow the main thread if unable to reach the url.
+		long time = System.currentTimeMillis();
+		if (System.currentTimeMillis() <= time + 5000 && !fetch) {
+			new UpdateChecker(this, 70655).getVersion(version -> {
+				if (this.getDescription().getVersion().equals(version)) {
+					getLogger().info("There is not a new update available.");
+					fetch = true;
+				} else {
+					getLogger().info("There is a new update available.");
+					fetch = true;
+				}
+			});
+		} else {
+			log.warning("Unable to check for an update.");
+		}
 		log.info("Succesfully enabled AreaReloader!");
 		log.info("-=-=-=-= -=- =-=-=-=-");
 	}
@@ -75,65 +92,25 @@ public class AreaReloader extends JavaPlugin implements Listener {
 
 	public void checkProtocol() {
 		String version = Bukkit.getServer().getClass().getPackage().getName();
-		String formmatedVersion = version.substring(version.lastIndexOf(".") + 1);
-
-		switch (formmatedVersion) {
-		default:
-			ap = new Protocol_1_13();
-			break;
-		case "v1_13_R2":
-		case "v1_13_R1":
-		case "v1_13_R3":
-		case "v1_13_R4":
-		case "v1_13_R5":
-			ap = new Protocol_1_13();
-			break;
-		case "v1_14_R1":
-		case "v1_14_R2":
-		case "v1_14_R3":
-		case "v1_14_R4":
-		case "v1_14_R5":
+		final String formattedVersion = version.substring(version.lastIndexOf(".") + 1);
+		if (formattedVersion.contains("1_14")) {
 			ap = new Protocol_1_14();
-			break;
-		case "v1_15_R1":
-		case "v1_15_R2":
-		case "v1_15_R3":
-		case "v1_15_R4":
-		case "v1_15_R5":
-			ap = new Protocol_1_15();
-			break;
-		case "v1_16_R1":
-		case "v1_16_R2":
-		case "v1_16_R3":
-		case "v1_16_R4":
-		case "v1_16_R5":
-			ap = new Protocol_1_16();
-			break;
-		case "v1_17_R1":
-		case "v1_17_R2":
-		case "v1_17_R3":
-		case "v1_17_R4":
-			ap = new Protocol_1_17();
-			break;
-		case "v1_18_R1":
-		case "v1_18_R2":
-		case "v1_18_R3":
-		case "v1_18_R4":
-			ap = new Protocol_1_18();
-			break;
-		}
-		if (ap.equals(new Protocol_1_13())) {
-			log.info("Using default protocol (1.13) for versions compatibility!");
-		} else if (ap.equals(new Protocol_1_14())) {
 			log.info("Using protocol for 1.14 versions compatibility!");
-		} else if (ap.equals(new Protocol_1_15())) {
+		} else if (formattedVersion.contains("1_15")) {
+			ap = new Protocol_1_15();
 			log.info("Using protocol for 1.15 versions compatibility!");
-		} else if (ap.equals(new Protocol_1_16())) {
+		} else if (formattedVersion.contains("1_16")) {
+			ap = new Protocol_1_16();
 			log.info("Using protocol for 1.16 versions compatibility!");
-		} else if (ap.equals(new Protocol_1_17())) {
+		} else if (formattedVersion.contains("1_17")) {
+			ap = new Protocol_1_17();
 			log.info("Using protocol for 1.17 versions compatibility!");
-		} else if (ap.equals(new Protocol_1_18())) {
+		} else if (formattedVersion.contains("1_18")) {
+			ap = new Protocol_1_18();
 			log.info("Using protocol for 1.18 versions compatibility!");
+		} else {
+			ap = new Protocol_1_13();
+			log.info("Using default protocol (1.13) for versions compatibility!");
 		}
 	}
 	
@@ -173,7 +150,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		String enabled = ChatColor.GREEN + "Enabled";
 		String disabled = ChatColor.RED + "Disabled";
 		String status = ChatColor.DARK_AQUA + "Status: ";
-		if (wep != null) {
+		if (wep != null && wep.isEnabled()) {
 			return status + enabled;
 		} else {
 			return status + disabled;
@@ -190,9 +167,6 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		if (!getInstance().getServer().getScheduler().getActiveWorkers().isEmpty()) {
 			getInstance().getServer().getScheduler().getActiveWorkers().clear();;
 		}
-		
-		//AreaMethods.updateAreas();
-		
 		if (!getQueue().get().isEmpty()) {
 			getQueue().get().clear();
 		}

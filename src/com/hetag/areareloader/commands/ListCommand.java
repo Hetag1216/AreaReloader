@@ -56,10 +56,9 @@ public class ListCommand extends ARCommand {
 				for (String formatted : getPage(strings, ChatColor.BOLD + "- " + ChatColor.AQUA + "Existing Areas" + ChatColor.BOLD + " -" , Integer.valueOf(arg), true)) {
 					sendMessage(sender, "&b" + formatted, false);
 				}
+			} else {
+				sendMessage(sender, ChatColor.AQUA + arg + ChatColor.DARK_AQUA + "is not a number!", true);
 			}
-		}
-		if (args.size() > 1) {
-			sendMessage(sender, this.getProperUsage(), false);
 		}
 	}
 

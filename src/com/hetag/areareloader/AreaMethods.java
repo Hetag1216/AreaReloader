@@ -72,7 +72,6 @@ public class AreaMethods {
 				}
 			}
 			dir.delete();
-			//AreaReloader.isDeleted.add(area);
 		}
 	}
 
@@ -98,7 +97,7 @@ public class AreaMethods {
 			format += String.valueOf(minutes) + " minutes";
 		}
 		if (seconds >= 0) {
-			format += String.valueOf(seconds) + "." + String.valueOf(Math.round(millis)) +  " seconds";
+			format += String.valueOf(seconds) + "." + Math.round(millis) +  " seconds";
 		}
 		return format;
 	}
@@ -209,11 +208,8 @@ public class AreaMethods {
 	}
 
 	public static boolean createNewArea(Player player, String area, int size, boolean copyEntities) throws WorldEditException {
-		//if (AreaReloader.isDeleted.contains(area)) {
-			//AreaReloader.isDeleted.remove(area);
 			if (AreaReloader.debug) {
 				sendDebugMessage(player, "Updating selected area.");
-			//}
 		}
             File dir = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area);
 		if (dir.exists()) {
@@ -310,8 +306,7 @@ public class AreaMethods {
 	
 	public static void kill(String area) {
 		if (AreaReloader.getInstance().getQueue().isQueued(area)) {
-			AreaReloader.getInstance().getServer().getScheduler().cancelTask(AreaReloader.getInstance().getQueue().getTaskByName(area));
-			AreaReloader.getInstance().getQueue().remove(area);
+			AreaReloader.getInstance().getQueue().remove(area, AreaReloader.getInstance().getQueue().getTaskByName(area));
 		}
 		if (AreaLoader.areas.contains(area))
 			AreaLoader.areas.remove(area);
@@ -320,6 +315,7 @@ public class AreaMethods {
 			AreaScheduler.areas.remove(area);
 		}
 	}
+	
 	public static String getXCoord(String area) {
 		return Manager.areas.getConfig().getString("Areas." + area + ".X");
 	}
@@ -383,14 +379,6 @@ public class AreaMethods {
 	public static void sendDebugMessage(CommandSender sender, String string) {
 		sender.sendMessage(debugPrefix() + string);
 	}
-	
-	/*public static void updateAreas() {
-		if (AreaReloader.isDeleted.isEmpty()) {
-			return;
-		} else {
-			AreaReloader.isDeleted.clear();
-		}
-	}*/
 
 	public static String debugPrefix() {
 		return ChatColor.translateAlternateColorCodes('&', AreaReloader.plugin.getConfig().getString("Settings.Debug.Prefix"));

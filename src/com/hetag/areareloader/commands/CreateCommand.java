@@ -47,9 +47,6 @@ public class CreateCommand extends ARCommand {
 				e.printStackTrace();
 			}
 		}
-		if (args.size() > 2 || args.size() < 2) {
-			sender.sendMessage(getProperUsage());
-		}
 	}
 
 	private String onCreateExists() {

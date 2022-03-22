@@ -25,8 +25,7 @@ public class CancelCommand extends ARCommand {
 		switch (input) {
 		default:
 			if (AreaReloader.getInstance().getQueue().isQueued(input)) {
-				AreaReloader.getInstance().getServer().getScheduler().cancelTask(AreaReloader.getInstance().getQueue().getTaskByName(input));
-				AreaReloader.getInstance().getQueue().remove(input);
+				AreaReloader.getInstance().getQueue().remove(input, AreaReloader.getInstance().getQueue().getTaskByName(input)); 
 				this.sendMessage(sender, this.onCancelArea().replace("%area%", input).replace("%id%", String.valueOf(AreaReloader.getInstance().getQueue().getTaskByName(input))), true);
 				} else {
 					this.sendMessage(sender, this.onCancelFail().replace("%area%", input), true);
@@ -36,8 +35,7 @@ public class CancelCommand extends ARCommand {
 		case "all":
 			//subsequentially remove all areas.
 			for (String ID : AreaReloader.getInstance().getQueue().get().keySet()) {
-				AreaReloader.getInstance().getServer().getScheduler().cancelTask(AreaReloader.getInstance().getQueue().getTaskByName(ID));
-				AreaReloader.getInstance().getQueue().remove(ID);
+				AreaReloader.getInstance().getQueue().remove(ID, AreaReloader.getInstance().getQueue().getTaskByName(ID)); 
 			}
 			this.sendMessage(sender, this.onCancelAll(), true);
 			break;

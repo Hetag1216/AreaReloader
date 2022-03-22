@@ -72,11 +72,8 @@ public class AreaLoader {
 			}
 			return;
 		} else {
-			if (System.currentTimeMillis() >= time + interval) {	
 			chunks += 1;
 			z += 1;
-			time = System.currentTimeMillis();
-			}
 		}
 		if (z > this.maxZ) {
 			z = 0;
@@ -106,12 +103,11 @@ public class AreaLoader {
 					al.sender.sendMessage(prefix() + onLoadSuccess().replaceAll("%area%", al.area).replaceAll("%time%", AreaMethods.formatTime(time)).replaceAll("%count%", String.valueOf(AreaMethods.finalCount())));
 				}
 				completed.add(areas.indexOf(al));
-				// only remove the area from the queue when it's finished
+				// remove the area from the queue and cancel its running task.
 				if (AreaReloader.getInstance().getQueue().isQueued(al.area)) {
-					int task = AreaReloader.getInstance().getQueue().getTaskByName(al.area);
-					AreaReloader.getInstance().getServer().getScheduler().cancelTask(task);
-					AreaReloader.getInstance().getQueue().get().remove(al.area);
+					AreaReloader.getInstance().getQueue().remove(al.area, AreaReloader.getInstance().getQueue().getTaskByName(al.area));
 					AreaMethods.getActiveSessions().remove(al.area);
+					
 					if (AreaReloader.debug) {
 						AreaMethods.sendDebugMessage(al.getSender(), ChatColor.DARK_AQUA + al.area + ChatColor.AQUA + " with task id " + ChatColor.DARK_AQUA + AreaReloader.getInstance().getQueue().getTaskByName(al.area) + " has been removed from the queue list.");
 						AreaMethods.sendDebugMessage(al.getSender(), ChatColor.DARK_AQUA + al.area + ChatColor.AQUA + " has been removed from the active sessions.");
@@ -119,9 +115,7 @@ public class AreaLoader {
 				}
 			} else {
 				try {
-					//if (!AreaReloader.isDeleted.contains(al.area)) {
 					al.progress();
-					//}
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (WorldEditException e) {
@@ -144,7 +138,9 @@ public class AreaLoader {
 	private void manage() {
 		executer = new BukkitRunnable() {
 			public void run() {
-				AreaReloader.getInstance().getQueue().addToQueue(area, executer.getTaskId());
+				if (!AreaReloader.getInstance().getQueue().isQueued(area)) {
+					AreaReloader.getInstance().getQueue().add(area, executer.getTaskId());
+				}
 				progressAll();
 			}
 		};
