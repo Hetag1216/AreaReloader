@@ -1,25 +1,31 @@
 package com.hetag.areareloader.configuration;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
+import com.hetag.areareloader.AreaReloader;
 import com.hetag.areareloader.commands.Executor;
 
 public class Manager {
 	public static Config defaultConfig;
 	public static Config areas;
 	
-	public void initConfigs() {
-		defaultConfig = new Config(new File("config.yml"));
-		areas = new Config(new File("areas.yml"));
-	}
-	
 	public Manager() {
 		initConfigs();
 		loadConfig(defaultConfig);
 		loadConfig(areas);
+		setDebug();
+	}
+	
+	public void initConfigs() {
+		defaultConfig = new Config(new File("config.yml"));
+		areas = new Config(new File("areas.yml"));
 	}
 
 	private void loadConfig(Config configurationFile) {
@@ -33,6 +39,8 @@ public class Manager {
 		
 		config.addDefault("Settings.Debug.Enabled", false);
 		config.addDefault("Settings.Debug.Prefix", "&8[&bAR&7-&bDebug&8]&b ");
+		
+		config.addDefault("Settings.Updater.Enabled", true);
 		
 		config.addDefault("Settings.AreaLoading.Interval", 1500);
 		config.addDefault("Settings.AreaLoading.IgnoreAirBlocks", false);
@@ -96,21 +104,61 @@ public class Manager {
 		config.addDefault("Commands.Cancel.OnCancelFail", "&b%area% &3is not currently being loaded.");
 		config.addDefault("Commands.Cancel.OnCancelAll", "All areas have been cancelled from loading!");
 		
-		config.addDefault("Config.Version", "1.9.2");
+		config.addDefault("Config.Version", 1.0);
 		defaultConfig.saveConfig();
 		} else if (configurationFile == areas) {
 			config = areas.getConfig();
 			
-			config.addDefault("Config.Version", 1.9);
+			config.addDefault("Config.Version", 1.0);
 		}
 	}
 
-	  public static FileConfiguration getConfig() {
-	    return defaultConfig.getConfig();
-	  }
-	  
-	  public static void reloadAllInstances() {
-		  defaultConfig.reloadConfig();
-		  areas.reloadConfig();
-	  }
+	public static FileConfiguration getConfig() {
+		return defaultConfig.getConfig();
+	}
+
+	public static void reloadAllInstances() {
+		defaultConfig.reloadConfig();
+		areas.reloadConfig();
+	}
+
+	public static void setDebug() {
+		resetDebug();
+		try {
+			File folder = AreaReloader.getInstance().getDataFolder();
+			if (!folder.exists()) {
+				folder.mkdir();
+			}
+
+			File debug = new File(AreaReloader.getInstance().getDataFolder(), "debug.txt");
+			if (!debug.exists()) {
+				debug.createNewFile();
+			}
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void printDebug(String string) {
+		if (AreaReloader.debug) {
+			try {
+				final FileWriter fw = new FileWriter(new File(AreaReloader.getInstance().getDataFolder(), "debug.txt"),
+						true);
+				final PrintWriter pw = new PrintWriter(fw);
+				pw.println(LocalTime.now() + " " + string);
+				pw.flush();
+				pw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void resetDebug() {
+		File file = new File(AreaReloader.getInstance().getDataFolder(), "debug.txt");
+		if (file.exists()) {
+			file.delete();
+		}
+		return;
+	}
 }

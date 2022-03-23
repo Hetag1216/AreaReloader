@@ -26,9 +26,8 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	public static WorldEditPlugin wep;
 	public static AreaProtocol ap;
 	public static boolean debug, checker;
-	//public static ArrayList<String> isDeleted = new ArrayList<>();
 	private Queue queue;
-	private boolean fetch = false;
+	private boolean updater;
 
 	public void onEnable() {
 		PluginManager pm = Bukkit.getPluginManager();
@@ -44,18 +43,29 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		log = getLogger();
 
 		log.info("-=-=-=-= AreaReloader " + plugin.getDescription().getVersion() + " =-=-=-=-");
+		
 		checkProtocol();
-		new Manager();
+		
+		try {
+			new Manager();
+			log.info("Configurations succesfully registered!");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		AreaMethods.performSetup();
-		// General setup
+		// Instantiate queue
 		queue = new Queue(this);
+		
+		// Instantiate settings
 		debug = Manager.getConfig().getBoolean("Settings.Debug.Enabled");
+		updater = Manager.getConfig().getBoolean("Settings.Updater.Enabled");
+		
 		// AreaLoader setup
 		AreaLoader.init();
+		
 		// AreaScheduler setup
 		AreaScheduler.init();
-
-		log.info("Configurations succesfully registered!");
 
 		try {
 			new Executor(this);
@@ -65,22 +75,10 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		}
 		
 		getServer().getPluginManager().registerEvents(new AreaListener(this), this);
-		
-		//time out the updater so that it doesn't slow the main thread if unable to reach the url.
-		long time = System.currentTimeMillis();
-		if (System.currentTimeMillis() <= time + 5000 && !fetch) {
-			new UpdateChecker(this, 70655).getVersion(version -> {
-				if (this.getDescription().getVersion().equals(version)) {
-					getLogger().info("There is not a new update available.");
-					fetch = true;
-				} else {
-					getLogger().info("There is a new update available.");
-					fetch = true;
-				}
-			});
-		} else {
-			log.warning("Unable to check for an update.");
+		if (updater) {
+			checkForUpdates();
 		}
+		
 		log.info("Succesfully enabled AreaReloader!");
 		log.info("-=-=-=-= -=- =-=-=-=-");
 	}
@@ -156,11 +154,27 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			return status + disabled;
 		}
 	}
+	/**
+	 * Checks for plugin's update from the official spigot page.
+	 */
+	private void checkForUpdates() {
+		new UpdateChecker(this, 70655).getVersion(version -> {
+			log.info("-=-=-=-= AreaReloader Updater =-=-=-=-");
+			if (this.getDescription().getVersion().equals(version)) {
+				log.info("You're running the latest version of the plugin!");
+			} else {
+				log.info("AreaReloader " + version + " is now available!");
+				log.info("You're running AreaReloader " + this.getDescription().getVersion());
+				log.info("DOWNLOAD IT AT: https://www.spigotmc.org/resources/areareloader.70655/");
+			}
+			log.info("-=-=-=-= -=- =-=-=-=-");
+		});
+	}
 	
 	/**
 	 * Shut down all active tasks.
 	 */
-	public void ShutDown() {
+	private void ShutDown() {
 		if (!getInstance().getServer().getScheduler().getPendingTasks().isEmpty()) {
 			getInstance().getServer().getScheduler().getPendingTasks().clear();
 		}

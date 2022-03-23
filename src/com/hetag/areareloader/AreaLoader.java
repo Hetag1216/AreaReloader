@@ -36,8 +36,9 @@ public class AreaLoader {
 		}
 		if (AreaReloader.getInstance().getQueue().isQueued(area)) {
 			if (AreaReloader.debug) {
-				if (getSender() != null)
-				AreaMethods.sendDebugMessage(getSender(), "'" + ChatColor.AQUA + area + ChatColor.DARK_AQUA + "' is already being loaded.");
+				Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- Area Loading -=-=-=-=-=-=-=-=-=-=-");
+				Manager.printDebug(area + " is already in the queue, it may be currently loading.");
+				Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- -=- -=-=-=-=-=-=-=-=-=-=-");
 			}
 			if (getSender() != null)
 			getSender().sendMessage(prefix() + "Area '" + ChatColor.AQUA + area + ChatColor.DARK_AQUA + "' is already being loaded.");
@@ -93,7 +94,7 @@ public class AreaLoader {
 			player.getWorld().playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.5F, 0.3F);
 		}
 	}
-
+	
 	private void progressAll() {
 		List<Integer> completed = new ArrayList<Integer>();
 		for (AreaLoader al : areas) {
@@ -109,18 +110,16 @@ public class AreaLoader {
 					AreaMethods.getActiveSessions().remove(al.area);
 					
 					if (AreaReloader.debug) {
-						AreaMethods.sendDebugMessage(al.getSender(), ChatColor.DARK_AQUA + al.area + ChatColor.AQUA + " with task id " + ChatColor.DARK_AQUA + AreaReloader.getInstance().getQueue().getTaskByName(al.area) + " has been removed from the queue list.");
-						AreaMethods.sendDebugMessage(al.getSender(), ChatColor.DARK_AQUA + al.area + ChatColor.AQUA + " has been removed from the active sessions.");
+						Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- Area Loading -=-=-=-=-=-=-=-=-=-=-");
+						Manager.printDebug("Area: " + al.area + " with task id " + AreaReloader.getInstance().getQueue().getTaskByName(al.area) + " has been removed from the queue list.");
+						Manager.printDebug(al.area + " has succesfully been removed from the active sessions.");
+						Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- -=- -=-=-=-=-=-=-=-=-=-=-");
 					}
 				}
 			} else {
 				try {
 					al.progress();
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (WorldEditException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
+				} catch (WorldEditException | IOException e) {
 					e.printStackTrace();
 				}
 				int perc = (int) (al.chunks * 100.0D / al.maxChunks);

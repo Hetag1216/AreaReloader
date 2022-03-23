@@ -1,5 +1,6 @@
 package com.hetag.areareloader.commands;
 
+import java.io.File;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
@@ -22,6 +23,7 @@ public class ConfigReloadCommand extends ARCommand {
 			return;
 		}
 		try {
+			Manager.resetDebug();
 			DisplayCommand.removeAllDisplays();
 			AreaMethods.performSetup();
 			Manager.reloadAllInstances();

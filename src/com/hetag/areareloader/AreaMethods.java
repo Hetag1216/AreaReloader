@@ -44,7 +44,7 @@ public class AreaMethods {
 	public static boolean fastMode = Manager.getConfig().getBoolean("Settings.AreaLoading.FastMode");
 	public static HashMap<String, EditSession> active_sessions = new HashMap<String, EditSession>();
 	public static int blocks = 0;
-
+	
 	public static void performSetup() {
 		File areas = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas");
 		if (!areas.exists()) {
@@ -97,7 +97,7 @@ public class AreaMethods {
 			format += String.valueOf(minutes) + " minutes";
 		}
 		if (seconds >= 0) {
-			format += String.valueOf(seconds) + "." + Math.round(millis) +  " seconds";
+			format += String.valueOf(seconds) + "." + String.valueOf(Math.round(millis)).substring(0, 2) +  " seconds";
 		}
 		return format;
 	}
@@ -127,67 +127,56 @@ public class AreaMethods {
 
 	public static boolean loadSchematicArea(CommandSender p, String area, String schemFile, World world, Location location) throws WorldEditException, FileNotFoundException, IOException {
 		File file = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area + File.separator + schemFile + ".schematic");
+		Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- Area Building -=-=-=-=-=-=-=-=-=-=-");
 		if (!file.exists()) {
+			Manager.printDebug("Schematic File: Missing.");
 			return false;
 		}
-		if (AreaReloader.debug) {
-			if (p != null)
-			sendDebugMessage(p, "Schematic file found");
-		}
+		Manager.printDebug("Schematic File: Found.");
+		
 
 		ClipboardFormat format = ClipboardFormats.findByFile(file);
-
-		if (AreaReloader.debug) {
-			if (p != null)
-			sendDebugMessage(p, "Schematic format found.");
+		if (format == null) {
+			Manager.printDebug("Schematic Format: Missing.");
+		} else {
+			Manager.printDebug("Schematic Format: Found.");
 		}
 
 		try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
 			Clipboard clipboard = reader.read();
-
-			if (AreaReloader.debug) {
-				if (p != null)
-				sendDebugMessage(p, "Reading schematic.");
-			}
+			Manager.printDebug("Reading Schematic.");
 
 			try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(BukkitAdapter.adapt(world), Integer.MAX_VALUE)) {
 				active_sessions.put(area, editSession);
 				if (fastMode) {
-				editSession.setFastMode(true);
+					editSession.setFastMode(true);
 				} else {
 					editSession.setFastMode(false);
 				}
-				if (AreaReloader.debug) {
-					if (p != null)
-					sendDebugMessage(p, "Initializing edit session.");
-				}
+				Manager.printDebug("Building chunk.");
+
 				Operation operation = null;
 				if (ignoreAirBlocks) {
-				operation = new ClipboardHolder(clipboard).createPaste(editSession)
-						.to(BlockVector3.at(location.getBlockX(), location.getBlockY(), location.getBlockZ()))
-						.ignoreAirBlocks(false)
-						.maskSource(new BlockTypeMask(editSession, BlockTypes.AIR))
-						.build();
-				} else {	
-					operation = new ClipboardHolder(clipboard).createPaste(editSession)
-						.to(BlockVector3.at(location.getBlockX(), location.getBlockY(), location.getBlockZ()))
-						.ignoreAirBlocks(false)
-						.build();	
+					operation = new ClipboardHolder(clipboard).createPaste(editSession).to(BlockVector3.at(location.getBlockX(), location.getBlockY(), location.getBlockZ())).ignoreAirBlocks(false).maskSource(new BlockTypeMask(editSession, BlockTypes.AIR)).build();
+				} else {
+					operation = new ClipboardHolder(clipboard).createPaste(editSession).to(BlockVector3.at(location.getBlockX(), location.getBlockY(), location.getBlockZ())).ignoreAirBlocks(false).build();
 				}
-
-				if (AreaReloader.debug) {
-					if (p != null)
-					sendDebugMessage(p, "Ran building operations.");
+				try {
+					Operations.complete(operation);
+					Manager.printDebug("The chunk for " + file + " has been built correctly!");
+				} catch (Exception e) {
+					e.printStackTrace();
+					Manager.printDebug(e.toString());
 				}
-
-				Operations.complete(operation);
-
-				if (AreaReloader.debug) {
-					if (p != null)
-					sendDebugMessage(p, "Operations succesfully completed!");
-				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				Manager.printDebug(e.toString());
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Manager.printDebug(e.toString());
 		}
+		Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- -=- -=-=-=-=-=-=-=-=-=-=-");
 		return true;
 	}
 	
@@ -208,10 +197,7 @@ public class AreaMethods {
 	}
 
 	public static boolean createNewArea(Player player, String area, int size, boolean copyEntities) throws WorldEditException {
-			if (AreaReloader.debug) {
-				sendDebugMessage(player, "Updating selected area.");
-		}
-            File dir = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area);
+		File dir = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area);
 		if (dir.exists()) {
 			File[] files = dir.listFiles();
 			if ((files != null) && (files.length != 0)) {
@@ -258,9 +244,13 @@ public class AreaMethods {
 					BlockArrayClipboard cc = new BlockArrayClipboard(region);
 					ForwardExtentCopy clipCopy = new ForwardExtentCopy(es, region, cc, region.getMinimumPoint());
 					clipCopy.setCopyingEntities(copyEntities);
-					Operations.complete(clipCopy);
-					if (AreaReloader.debug) {
-						sendDebugMessage(player, "Succesfully copied the selected clipboard to system.");
+					Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- Area Creation -=-=-=-=-=-=-=-=-=-=-");					
+					try {
+						Operations.complete(clipCopy);
+						Manager.printDebug("Succesfully copied the selected clipboard to system.");
+					} catch (Exception e) {
+						e.printStackTrace();
+						Manager.printDebug(e.toString());
 					}
 					File file = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area + File.separator + getFileName(area, curX, curZ) + ".schematic");
 					if (file.exists()) {
@@ -268,22 +258,25 @@ public class AreaMethods {
 					}
 					if (!file.getParentFile().exists()) {
 						file.getParentFile().mkdirs();
+						Manager.printDebug("Creating Areas' files directory.");
 					}
 					if (!file.exists()) {
 						try {
 							file.createNewFile();
+							Manager.printDebug("Saving to file the selected clipboard.");
 						} catch (IOException e) {
 							e.printStackTrace();
+							Manager.printDebug(e.toString());
 						}
 					}
 					try (ClipboardWriter writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(new FileOutputStream(file))) {
 						writer.write(cc);
-						if (AreaReloader.debug) {
-							sendDebugMessage(player, "Clipboard succesfully saved to file.");
-						}
+						Manager.printDebug("The clipboard was succesfully saved to file.");
 					} catch (IOException e) {
 						e.printStackTrace();
+						Manager.printDebug(e.toString());
 					}
+					Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- -=- -=-=-=-=-=-=-=-=-=-=-");
 					curZ++;
 					maxZ = curZ;
 				}
@@ -304,16 +297,22 @@ public class AreaMethods {
 		return false;
 	}
 	
-	public static void kill(String area) {
-		if (AreaReloader.getInstance().getQueue().isQueued(area)) {
-			AreaReloader.getInstance().getQueue().remove(area, AreaReloader.getInstance().getQueue().getTaskByName(area));
+	public static void kill(String id) {
+		Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- Area Killing -=-=-=-=-=-=-=-=-=-=-");
+		if (AreaReloader.getInstance().getQueue().isQueued(id)) {
+			AreaReloader.getInstance().getQueue().remove(id, AreaReloader.getInstance().getQueue().getTaskByName(id));
+			Manager.printDebug("Killed execution of " + id + ".");
 		}
-		if (AreaLoader.areas.contains(area))
-			AreaLoader.areas.remove(area);
+		if (AreaLoader.areas.contains(id)) {
+			AreaLoader.areas.remove(id);
+			Manager.printDebug("Removed " + id + " from the loading instances.");
+		}
 		
-		if (AreaScheduler.areas.contains(area)) {
-			AreaScheduler.areas.remove(area);
+		if (AreaScheduler.areas.contains(id)) {
+			AreaScheduler.areas.remove(id);
+			Manager.printDebug("Removed " + id + " from the automatic loading instances.");
 		}
+		Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- -=- -=-=-=-=-=-=-=-=-=-=-");
 	}
 	
 	public static String getXCoord(String area) {
