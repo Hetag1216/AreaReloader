@@ -9,6 +9,8 @@ import com.hetag.areareloader.AreaMethods;
 import com.hetag.areareloader.configuration.Manager;
 import com.sk89q.worldedit.WorldEditException;
 
+import net.md_5.bungee.api.ChatColor;
+
 public class CreateCommand extends ARCommand {
 	static String path = "Commands.Create.Description";
 
@@ -24,6 +26,10 @@ public class CreateCommand extends ARCommand {
 		if (args.size() == 2) {
 			String area = args.get(0);
 			boolean skipEntities = false;
+			if (area.equalsIgnoreCase("all")) {
+				sendMessage(sender, ChatColor.AQUA + area + ChatColor.DARK_AQUA + " cannot be a valid name.", true);
+				return;
+			}
 			if (Manager.areas.getConfig().contains("Areas." + args.get(0))) {
 				sendMessage(sender, onCreateExists().replaceAll("%area%", area), true);
 				return;

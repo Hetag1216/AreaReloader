@@ -163,7 +163,7 @@ public class AreaMethods {
 				}
 				try {
 					Operations.complete(operation);
-					Manager.printDebug("The chunk for " + file + " has been built correctly!");
+					Manager.printDebug("The chunk for " + file.getName() + " has been built correctly!");
 				} catch (Exception e) {
 					e.printStackTrace();
 					Manager.printDebug(e.toString());
@@ -297,21 +297,17 @@ public class AreaMethods {
 		return false;
 	}
 	
-	public static void kill(String id) {
+	public static void kill(String area) {
 		Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- Area Killing -=-=-=-=-=-=-=-=-=-=-");
-		if (AreaReloader.getInstance().getQueue().isQueued(id)) {
-			AreaReloader.getInstance().getQueue().remove(id, AreaReloader.getInstance().getQueue().getTaskByName(id));
-			Manager.printDebug("Killed execution of " + id + ".");
+		if (AreaReloader.getInstance().getQueue().isQueued(area)) {
+			AreaReloader.getInstance().getQueue().remove(area, AreaReloader.getInstance().getQueue().getTaskByName(area));
+			Manager.printDebug("Killed execution of " + area + ".");
 		}
-		if (AreaLoader.areas.contains(id)) {
-			AreaLoader.areas.remove(id);
-			Manager.printDebug("Removed " + id + " from the loading instances.");
-		}
+		AreaLoader.reset(area);
+		Manager.printDebug("Removed " + area + " from the loading instances.");
 		
-		if (AreaScheduler.areas.contains(id)) {
-			AreaScheduler.areas.remove(id);
-			Manager.printDebug("Removed " + id + " from the automatic loading instances.");
-		}
+		Manager.printDebug("Removed " + area + " from the automatic loading instances.");
+		
 		Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- -=- -=-=-=-=-=-=-=-=-=-=-");
 	}
 	

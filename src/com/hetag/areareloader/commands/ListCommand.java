@@ -7,6 +7,8 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 
+import com.hetag.areareloader.AreaLoader;
+import com.hetag.areareloader.AreaReloader;
 import com.hetag.areareloader.configuration.Manager;
 
 import net.md_5.bungee.api.ChatColor;
@@ -38,6 +40,12 @@ public class ListCommand extends ARCommand {
 			Collections.reverse(strings);
 			for (String formatted : getPage(strings, ChatColor.BOLD + "- " + ChatColor.AQUA + "Existing Areas" + ChatColor.BOLD + " -" , 1, true)) {
 				sendMessage(sender, "&b" + formatted, false);
+				
+			}
+			this.sendMessage(sender, "Size " + AreaLoader.areas.size() + ", " + AreaReloader.getInstance().getQueue().get().size(), false);
+			for (AreaLoader al : AreaLoader.areas) {
+				this.sendMessage(sender, al.getArea(), false);
+				this.sendMessage(sender, al.toString(), false);
 			}
 			return;
 		} else if (args.size() == 1) {

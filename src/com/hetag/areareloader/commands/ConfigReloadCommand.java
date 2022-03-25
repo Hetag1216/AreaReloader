@@ -1,6 +1,5 @@
 package com.hetag.areareloader.commands;
 
-import java.io.File;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
@@ -29,9 +28,6 @@ public class ConfigReloadCommand extends ARCommand {
 			Manager.reloadAllInstances();
 			if (!AreaReloader.getInstance().getServer().getScheduler().getPendingTasks().isEmpty()) {
 			AreaReloader.getInstance().getServer().getScheduler().getPendingTasks().clear();
-			}
-			if (!AreaReloader.getInstance().getQueue().get().isEmpty()) {
-				AreaReloader.getInstance().getQueue().get().clear();
 			}
 			if (AreaReloader.checker) {
 				AreaScheduler.checkForAreas();

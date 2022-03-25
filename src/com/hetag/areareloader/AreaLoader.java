@@ -34,7 +34,7 @@ public class AreaLoader {
 		if (sender != null) {
 			this.sender = sender;
 		}
-		if (AreaReloader.getInstance().getQueue().isQueued(area)) {
+		if (AreaReloader.getInstance().getQueue().isQueued(area) || areas.contains(this)) {
 			if (AreaReloader.debug) {
 				Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- Area Loading -=-=-=-=-=-=-=-=-=-=-");
 				Manager.printDebug(area + " is already in the queue, it may be currently loading.");
@@ -44,7 +44,7 @@ public class AreaLoader {
 			getSender().sendMessage(prefix() + "Area '" + ChatColor.AQUA + area + ChatColor.DARK_AQUA + "' is already being loaded.");
 			return;
 		}
-		this.area = area;
+		this.setArea(area);
 		this.maxX = x;
 		this.maxZ = z;
 		this.size = size;
@@ -65,8 +65,8 @@ public class AreaLoader {
 	}
 
 	private void progress() throws FileNotFoundException, WorldEditException, IOException {
-		if (!AreaMethods.loadSchematicArea(sender, area, AreaMethods.getFileName(area, x, z), location.getWorld(), location.clone().add(x * size, 0.0D, z * size))) {
-			AreaReloader.log.warning("Failed to reset section '" + AreaMethods.getFileName(area, x, z) + "'!");
+		if (!AreaMethods.loadSchematicArea(sender, getArea(), AreaMethods.getFileName(getArea(), x, z), location.getWorld(), location.clone().add(x * size, 0.0D, z * size))) {
+			AreaReloader.log.warning("Failed to reset section '" + AreaMethods.getFileName(getArea(), x, z) + "'!");
 			if (sender instanceof Player) {
 				Player player = (Player) sender;
 				player.getWorld().playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1F, 0.5F);
@@ -101,18 +101,18 @@ public class AreaLoader {
 			if (al.completed) {
 				if ((al.sender != null)) {
 					final long time = System.currentTimeMillis() - fakeTime;
-					al.sender.sendMessage(prefix() + onLoadSuccess().replaceAll("%area%", al.area).replaceAll("%time%", AreaMethods.formatTime(time)).replaceAll("%count%", String.valueOf(AreaMethods.finalCount())));
+					al.sender.sendMessage(prefix() + onLoadSuccess().replaceAll("%area%", al.getArea()).replaceAll("%time%", AreaMethods.formatTime(time)).replaceAll("%count%", String.valueOf(AreaMethods.finalCount())));
 				}
 				completed.add(areas.indexOf(al));
 				// remove the area from the queue and cancel its running task.
-				if (AreaReloader.getInstance().getQueue().isQueued(al.area)) {
-					AreaReloader.getInstance().getQueue().remove(al.area, AreaReloader.getInstance().getQueue().getTaskByName(al.area));
-					AreaMethods.getActiveSessions().remove(al.area);
+				if (AreaReloader.getInstance().getQueue().isQueued(al.getArea())) {
+					AreaReloader.getInstance().getQueue().remove(al.getArea(), AreaReloader.getInstance().getQueue().getTaskByName(al.getArea()));
+					AreaMethods.getActiveSessions().remove(al.getArea());
 					
 					if (AreaReloader.debug) {
 						Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- Area Loading -=-=-=-=-=-=-=-=-=-=-");
-						Manager.printDebug("Area: " + al.area + " with task id " + AreaReloader.getInstance().getQueue().getTaskByName(al.area) + " has been removed from the queue list.");
-						Manager.printDebug(al.area + " has succesfully been removed from the active sessions.");
+						Manager.printDebug("Area: " + al.getArea() + " with task id " + AreaReloader.getInstance().getQueue().getTaskByName(al.getArea()) + " has been removed from the queue list.");
+						Manager.printDebug(al.getArea() + " has succesfully been removed from the active sessions.");
 						Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- -=- -=-=-=-=-=-=-=-=-=-=-");
 					}
 				}
@@ -124,7 +124,7 @@ public class AreaLoader {
 				}
 				int perc = (int) (al.chunks * 100.0D / al.maxChunks);
 					if ((Math.round(perc) % percentage == 0L) && (Math.round(perc) % 100L != 0L) && (al.sender != null)) {
-						al.sender.sendMessage(prefix() + "Loading area '" + ChatColor.AQUA + al.area + ChatColor.DARK_AQUA + "' " + ChatColor.AQUA + perc + "%" + ChatColor.DARK_AQUA + ".");
+						al.sender.sendMessage(prefix() + "Loading area '" + ChatColor.AQUA + al.getArea() + ChatColor.DARK_AQUA + "' " + ChatColor.AQUA + perc + "%" + ChatColor.DARK_AQUA + ".");
 					}
 			}
 		}
@@ -137,8 +137,8 @@ public class AreaLoader {
 	private void manage() {
 		executer = new BukkitRunnable() {
 			public void run() {
-				if (!AreaReloader.getInstance().getQueue().isQueued(area)) {
-					AreaReloader.getInstance().getQueue().add(area, executer.getTaskId());
+				if (!AreaReloader.getInstance().getQueue().isQueued(getArea())) {
+					AreaReloader.getInstance().getQueue().add(getArea(), executer.getTaskId());
 				}
 				progressAll();
 			}
@@ -153,9 +153,28 @@ public class AreaLoader {
 	private static String onLoadSuccess() {
 		return ChatColor.translateAlternateColorCodes('&', AreaReloader.plugin.getConfig().getString("Commands.Load.OnLoadSuccess"));
 	}
+	
+	public static void reset(String area) {
+		for (AreaLoader al : areas) {
+			if (al.getArea().contains(area)) {
+				al.complete();			
+				areas.remove(al);
+				break;
+			}
+		}
+	}
+	
+	public static boolean isInstance(String area) {
+		for (AreaLoader al : areas) {
+			if (al.getArea() == area) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
-	 * @return the maxX
+	 * @return maxX
 	 */
 	public int getMaxX() {
 		return maxX;
@@ -163,41 +182,69 @@ public class AreaLoader {
 	
 	/**
 	 * 
-	 * @return the maxZ
+	 * @return maxZ
 	 */
 	public int getMaxZ() {
 		return maxZ;
 	}
 	
 	/**
-	 * 
-	 * @return the original X point
+	 * The advancement point of x.
+	 * @return z
 	 */
 	public int getX() {
 		return x;
 	}
 	
 	/**
-	 * 
-	 * @return the original Z point
+	 * The advancement point of Z.
+	 * @return z
 	 */
 	public int getZ() {
 		return z;
 	}
 
 	/**
+	 * The maximum X point to set.
 	 * @param maxX
-	 * the maxX to set
 	 */
 	public void setMaxX(int maxX) {
 		this.maxX = maxX;
 	}
 	
+	/**
+	 * The maximum Z point to set.
+	 * @param maxZ
+	 */
 	public void setMaxZ(int maxZ) {
 		this.maxZ = maxZ;
 	}
 	
+	/**
+	 * The advancement of point X to set.
+	 * @param maxX
+	 */
+	public void setX(int x) {
+		this.x = x;
+	}
+	
+	/**
+	 * The advancement of point Z to set.
+	 * @param maxZ
+	 */
+	public void setZ(int z) {
+		this.z = z;
+	}
+	
 	public CommandSender getSender() {
 		return sender != null ? sender : null;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
 	}
 }

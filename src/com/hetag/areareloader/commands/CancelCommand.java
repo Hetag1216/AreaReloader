@@ -1,9 +1,11 @@
 package com.hetag.areareloader.commands;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
+import com.hetag.areareloader.AreaMethods;
 import com.hetag.areareloader.AreaReloader;
 import com.hetag.areareloader.configuration.Manager;
 
@@ -21,34 +23,32 @@ public class CancelCommand extends ARCommand {
 			return;
 		}
 		String input = args.get(0);
-		input = input.toLowerCase();
-		switch (input) {
-		default:
-			if (AreaReloader.getInstance().getQueue().isQueued(input)) {
-				AreaReloader.getInstance().getQueue().remove(input, AreaReloader.getInstance().getQueue().getTaskByName(input)); 
-				this.sendMessage(sender, this.onCancelArea().replace("%area%", input).replace("%id%", String.valueOf(AreaReloader.getInstance().getQueue().getTaskByName(input))), true);
-				} else {
-					this.sendMessage(sender, this.onCancelFail().replace("%area%", input), true);
-					return;
-				}
-			break;
-		case "all":
-			//subsequentially remove all areas.
-			for (String ID : AreaReloader.getInstance().getQueue().get().keySet()) {
-				AreaReloader.getInstance().getQueue().remove(ID, AreaReloader.getInstance().getQueue().getTaskByName(ID)); 
+		if (input.equalsIgnoreCase("all")) {
+			for (Iterator<String> IDs = AreaReloader.getInstance().getQueue().get().keySet().iterator(); IDs.hasNext();) {
+				AreaMethods.kill(IDs.next());
 			}
 			this.sendMessage(sender, this.onCancelAll(), true);
-			break;
+			return;
+		} else {
+			if (AreaReloader.getInstance().getQueue().isQueued(input)) {
+				AreaMethods.kill(input);
+				this.sendMessage(sender, this.onCancelArea().replace("%area%", input).replace("%id%", String.valueOf(AreaReloader.getInstance().getQueue().getTaskByName(input))), true);
+				return;
+			} else {
+				this.sendMessage(sender, this.onCancelFail().replace("%area%", input), true);
+				return;
+			}
 		}
 	}
+
 	private String onCancelArea() {
 		return formatColors(Manager.getConfig().getString("Commands.Cancel.OnCancelArea"));
 	}
-	
+
 	private String onCancelFail() {
 		return formatColors(Manager.getConfig().getString("Commands.Cancel.OnCancelFail"));
 	}
-	
+
 	private String onCancelAll() {
 		return formatColors(Manager.getConfig().getString("Commands.Cancel.OnCancelAll"));
 	}

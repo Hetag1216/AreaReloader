@@ -23,10 +23,7 @@ public class AreaScheduler {
 	private long delay;
 
 	public AreaScheduler(String area, long delay) {
-		if (areas.contains(this)) {
-			return;
-		}
-		if (AreaReloader.getInstance().getQueue().isQueued(area)) {
+		if (AreaReloader.getInstance().getQueue().isQueued(area) || areas.contains(this)) {
 			updateDelay(area, delay);
 			return;
 		}
@@ -105,6 +102,15 @@ public class AreaScheduler {
 			}
 		}
 		return 0;
+	}
+	
+	public static boolean isInstance(String area) {
+		for (AreaScheduler as : areas) {
+			if (as.area == area) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public String getArea() {
