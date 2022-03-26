@@ -21,7 +21,7 @@ public class LoadCommand extends ARCommand {
 
 	@Override
 	public void execute(CommandSender sender, List<String> args) {
-		if (!hasPermission(sender) || !correctLength(sender, args.size(), 0, 1)) {
+		if (!hasPermission(sender) || !correctLength(sender, args.size(), 1, 1)) {
 			return;
 		}
 		String area = args.get(0);

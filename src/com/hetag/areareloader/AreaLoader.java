@@ -31,9 +31,6 @@ public class AreaLoader {
 	public static BukkitRunnable executer;
 
 	public AreaLoader(String area, int x, int z, int size, Location location, CommandSender sender) {
-		if (sender != null) {
-			this.sender = sender;
-		}
 		if (AreaReloader.getInstance().getQueue().isQueued(area) || areas.contains(this)) {
 			if (AreaReloader.debug) {
 				Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- Area Loading -=-=-=-=-=-=-=-=-=-=-");
@@ -43,6 +40,9 @@ public class AreaLoader {
 			if (getSender() != null)
 			getSender().sendMessage(prefix() + "Area '" + ChatColor.AQUA + area + ChatColor.DARK_AQUA + "' is already being loaded.");
 			return;
+		}
+		if (sender != null) {
+			this.sender = sender;
 		}
 		this.setArea(area);
 		this.maxX = x;
@@ -73,8 +73,11 @@ public class AreaLoader {
 			}
 			return;
 		} else {
+			if (System.currentTimeMillis() >= time + interval) {	
 			chunks += 1;
 			z += 1;
+			time = System.currentTimeMillis();
+			}
 		}
 		if (z > this.maxZ) {
 			z = 0;
@@ -125,7 +128,7 @@ public class AreaLoader {
 				int perc = (int) (al.chunks * 100.0D / al.maxChunks);
 					if ((Math.round(perc) % percentage == 0L) && (Math.round(perc) % 100L != 0L) && (al.sender != null)) {
 						al.sender.sendMessage(prefix() + "Loading area '" + ChatColor.AQUA + al.getArea() + ChatColor.DARK_AQUA + "' " + ChatColor.AQUA + perc + "%" + ChatColor.DARK_AQUA + ".");
-					}
+				}
 			}
 		}
 		for (Iterator<Integer> iterator = completed.iterator(); iterator.hasNext();) {
@@ -138,7 +141,7 @@ public class AreaLoader {
 		executer = new BukkitRunnable() {
 			public void run() {
 				if (!AreaReloader.getInstance().getQueue().isQueued(getArea())) {
-					AreaReloader.getInstance().getQueue().add(getArea(), executer.getTaskId());
+					AreaReloader.getInstance().getQueue().add(getArea(), this.getTaskId());
 				}
 				progressAll();
 			}
@@ -157,7 +160,6 @@ public class AreaLoader {
 	public static void reset(String area) {
 		for (AreaLoader al : areas) {
 			if (al.getArea().contains(area)) {
-				al.complete();			
 				areas.remove(al);
 				break;
 			}
@@ -166,7 +168,7 @@ public class AreaLoader {
 	
 	public static boolean isInstance(String area) {
 		for (AreaLoader al : areas) {
-			if (al.getArea() == area) {
+			if (al.getArea().contains(area)) {
 				return true;
 			}
 		}

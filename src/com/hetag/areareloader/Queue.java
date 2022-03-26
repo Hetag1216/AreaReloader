@@ -63,12 +63,21 @@ public class Queue {
 		get().remove(area);
 		return;
 	}
+	
+	public String getElements() {
+		for (String i : get().keySet()) {
+			return i;
+		}
+		return null;
+	}
 
 	/**
 	 * Returns the task id number associated with the area's name.
 	 * 
 	 * @param area
 	 * @return taskID if != null
+	 * <p>
+	 * 0 if == null
 	 */
 
 	public int getTaskByName(String area) {
