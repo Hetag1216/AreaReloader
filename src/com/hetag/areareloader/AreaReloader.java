@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.hetag.areareloader.commands.Executor;
 import com.hetag.areareloader.configuration.Manager;
 import com.hetag.areareloader.reflection.AreaProtocol;
+import com.hetag.areareloader.reflection.Metrics;
 import com.hetag.areareloader.reflection.UpdateChecker;
 import com.hetag.areareloader.reflection.V1_13.Protocol_1_13;
 import com.hetag.areareloader.reflection.V1_14.Protocol_1_14;
@@ -28,6 +29,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	public static boolean debug, checker;
 	private Queue queue;
 	private boolean updater;
+	private boolean useMetrics;
 
 	public void onEnable() {
 		PluginManager pm = Bukkit.getPluginManager();
@@ -78,7 +80,14 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		if (updater) {
 			checkForUpdates();
 		}
-		
+		useMetrics = Manager.getConfig().getBoolean("Settings.Metrics.Enabled");
+		if (useMetrics) {
+	        int pluginId = 14758;
+	        new Metrics(this, pluginId);
+	        log.info("Metrics has been enabled, thank you!");
+		} else {
+			log.info("Metrics will be disabled.");
+		}
 		log.info("Succesfully enabled AreaReloader!");
 		log.info("-=-=-=-= -=- =-=-=-=-");
 	}
@@ -179,10 +188,14 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			getInstance().getServer().getScheduler().getPendingTasks().clear();
 		}
 		if (!getInstance().getServer().getScheduler().getActiveWorkers().isEmpty()) {
-			getInstance().getServer().getScheduler().getActiveWorkers().clear();;
+			getInstance().getServer().getScheduler().cancelTasks(getInstance());
+			getInstance().getServer().getScheduler().getActiveWorkers().clear();
 		}
 		if (!getQueue().get().isEmpty()) {
 			getQueue().get().clear();
+		}
+		if (!AreaLoader.areas.isEmpty()) {
+			AreaLoader.areas.clear();
 		}
 	}
 }

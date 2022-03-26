@@ -29,6 +29,8 @@ public class AreaLoader {
 	public static double percentage;
 	public long time;
 	public static BukkitRunnable executer;
+	private boolean sent = false;
+	private float curr_perc;
 
 	public AreaLoader(String area, int x, int z, int size, Location location, CommandSender sender) {
 		if (AreaReloader.getInstance().getQueue().isQueued(area) || areas.contains(this)) {
@@ -67,16 +69,24 @@ public class AreaLoader {
 	private void progress() throws FileNotFoundException, WorldEditException, IOException {
 		if (!AreaMethods.loadSchematicArea(sender, getArea(), AreaMethods.getFileName(getArea(), x, z), location.getWorld(), location.clone().add(x * size, 0.0D, z * size))) {
 			AreaReloader.log.warning("Failed to reset section '" + AreaMethods.getFileName(getArea(), x, z) + "'!");
+			Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- Area Loading -=-=-=-=-=-=-=-=-=-=-");
+			Manager.printDebug("Failed to reset section '" + AreaMethods.getFileName(getArea(), x, z) + "'!");
+			Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- -=- -=-=-=-=-=-=-=-=-=-=-");
 			if (sender instanceof Player) {
 				Player player = (Player) sender;
 				player.getWorld().playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 1F, 0.5F);
 			}
 			return;
 		} else {
-			if (System.currentTimeMillis() >= time + interval) {	
-			chunks += 1;
-			z += 1;
-			time = System.currentTimeMillis();
+			if (AreaMethods.fastMode) {
+				chunks += 1;
+				z += 1;
+			} else {
+				if (System.currentTimeMillis() >= time + interval) {
+					chunks += 1;
+					z += 1;
+					time = System.currentTimeMillis();
+				}
 			}
 		}
 		if (z > this.maxZ) {
@@ -123,14 +133,26 @@ public class AreaLoader {
 				try {
 					al.progress();
 				} catch (WorldEditException | IOException e) {
+					Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- Area Loading -=-=-=-=-=-=-=-=-=-=-");
+					Manager.printDebug("An error has occurred while loading area: " + al.getArea());
+					Manager.printDebug("");
+					Manager.printDebug(e.getMessage());
+					Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- -=- -=-=-=-=-=-=-=-=-=-=-");
 					e.printStackTrace();
 				}
 				int perc = (int) (al.chunks * 100.0D / al.maxChunks);
+				al.curr_perc = (float) (al.chunks * 100.0D / al.maxChunks);
 					if ((Math.round(perc) % percentage == 0L) && (Math.round(perc) % 100L != 0L) && (al.sender != null)) {
-						al.sender.sendMessage(prefix() + "Loading area '" + ChatColor.AQUA + al.getArea() + ChatColor.DARK_AQUA + "' " + ChatColor.AQUA + perc + "%" + ChatColor.DARK_AQUA + ".");
+						if (!al.sent && Math.round(perc) % percentage == 0L) {
+							al.sender.sendMessage(prefix() + "Loading area '" + ChatColor.AQUA + al.getArea() + ChatColor.DARK_AQUA + "' " + ChatColor.AQUA + perc + "%" + ChatColor.DARK_AQUA + ".");
+							al.sent = true;
+						}
+					}
+					if (al.sent && Math.round(perc) % percentage != 0L) {
+						al.sent = false;
+					}
 				}
 			}
-		}
 		for (Iterator<Integer> iterator = completed.iterator(); iterator.hasNext();) {
 			int id = ((Integer) iterator.next()).intValue();
 			areas.remove(id);
@@ -248,5 +270,9 @@ public class AreaLoader {
 
 	public void setArea(String area) {
 		this.area = area;
+	}
+	
+	public float getPerc() {
+		return curr_perc;
 	}
 }

@@ -6,7 +6,6 @@ import org.bukkit.Particle.DustOptions;
 import org.bukkit.inventory.ItemStack;
 
 public enum ParticleEffect {
-	BARRIER (Particle.BARRIER),
 	
 	/**
 	 * Applicable data: {@link BlockData}

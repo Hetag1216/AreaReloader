@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
-import org.bukkit.entity.Player;
+import org.bukkit.World;
 
 import com.hetag.areareloader.reflection.AreaProtocol;
 
@@ -16,7 +16,7 @@ public class Protocol_1_16 implements AreaProtocol {
     private static Constructor<?> dustConstructor;
 
     @Override
-    public void playRedstoneParticle(Player player, Location location, Color color) {
+    public void playRedstoneParticle(World world, Location location, Color color) {
         if(dustConstructor == null) {
             try {
                 getClassesAndMethods();
@@ -32,7 +32,7 @@ public class Protocol_1_16 implements AreaProtocol {
         try {
             Object dust = dustConstructor.newInstance(dustParam);
 
-            player.spawnParticle(Particle.REDSTONE, location, 0, color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1, dust);
+            world.spawnParticle(Particle.REDSTONE, location, 0, color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1, dust);
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {

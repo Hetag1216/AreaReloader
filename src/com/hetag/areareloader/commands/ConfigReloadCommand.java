@@ -39,7 +39,7 @@ public class ConfigReloadCommand extends ARCommand {
 			sendMessage(sender, onReload(), true);
 		} catch (Exception e) {
 			sendMessage(sender, onFail(), true);
-			e.printStackTrace();
+			Manager.printDebug(this.getName(), e, sender);
 		}
 
 	}

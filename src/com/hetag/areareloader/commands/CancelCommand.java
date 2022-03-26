@@ -27,7 +27,6 @@ public class CancelCommand extends ARCommand {
 			if (input.equalsIgnoreCase("all")) {
 				if (!AreaReloader.getInstance().getQueue().get().isEmpty()) {
 					AreaReloader.getInstance().getServer().getScheduler().cancelTasks(AreaReloader.getInstance());
-					//AreaLoader.executer.cancel();
 					AreaLoader.areas.clear();
 					AreaReloader.getInstance().getQueue().get().clear();
 				}
@@ -44,7 +43,7 @@ public class CancelCommand extends ARCommand {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Manager.printDebug(this.getName(), e, sender);
 		}
 	}
 

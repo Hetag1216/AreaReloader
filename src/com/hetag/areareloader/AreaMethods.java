@@ -43,7 +43,6 @@ public class AreaMethods {
 	public static boolean ignoreAirBlocks = Manager.getConfig().getBoolean("Settings.AreaLoading.IgnoreAirBlocks");
 	public static boolean fastMode = Manager.getConfig().getBoolean("Settings.AreaLoading.FastMode");
 	public static HashMap<String, EditSession> active_sessions = new HashMap<String, EditSession>();
-	public static int blocks = 0;
 	
 	public static void performSetup() {
 		File areas = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas");
@@ -87,19 +86,25 @@ public class AreaMethods {
 		final long seconds = time % TimeUnit.MINUTES.toMillis(1) / TimeUnit.SECONDS.toMillis(1);
 		final long millis = time / TimeUnit.MILLISECONDS.toMillis(1);
 		String format = "";
+		String t = "";
 		if (days > 0) {
-			format += String.valueOf(days) + " days";
+			format += String.valueOf(days) + ":";
+			t = "days";
 		}
 		if (hours > 0) {
-			format += String.valueOf(hours) + " hours";
+			format += String.valueOf(hours) + ":";
+			t = "hours";
 		}
 		if (minutes > 0) {
-			format += String.valueOf(minutes) + " minutes";
+			format += String.valueOf(minutes) + ":";
+			t = "minutes";
 		}
 		if (seconds >= 0) {
-			format += String.valueOf(seconds) + "." + String.valueOf(Math.round(millis)).substring(0, 2) +  " seconds";
+			t = "seconds";
+			format += String.valueOf(seconds) + "." + String.valueOf(Math.round(millis)).substring(0, 2) +  "";
 		}
-		return format;
+		
+		return format + " " + t;
 	}
 
 	public static boolean isInteger(String s, int radix) {
@@ -166,21 +171,26 @@ public class AreaMethods {
 					Manager.printDebug("The chunk for " + file.getName() + " has been built correctly!");
 				} catch (Exception e) {
 					e.printStackTrace();
-					Manager.printDebug(e.toString());
+					Manager.printDebug("An error has occurred when building area: " + file.getName());
+					Manager.printDebug(e.getMessage());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				Manager.printDebug(e.toString());
+				Manager.printDebug("An error has occurred during the edit session for: " + file.getName());
+				Manager.printDebug(e.getMessage());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			Manager.printDebug(e.toString());
+			Manager.printDebug("An error has occurred when reading the clipboard for: " + file.getName());
+			Manager.printDebug(e.getMessage());
 		}
 		Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- -=- -=-=-=-=-=-=-=-=-=-=-");
+		Manager.printDebug("");
 		return true;
 	}
 	
 	public static int finalCount() {
+		int blocks = 0;
 		for (EditSession entry : active_sessions.values()) {
 			blocks =+ entry.getBlockChangeCount();
 			return blocks;
@@ -250,7 +260,8 @@ public class AreaMethods {
 						Manager.printDebug("Succesfully copied the selected clipboard to system.");
 					} catch (Exception e) {
 						e.printStackTrace();
-						Manager.printDebug(e.toString());
+						Manager.printDebug("An error has occurred when coping the selected clipboard!");
+						Manager.printDebug(e.getMessage());
 					}
 					File file = new File(AreaReloader.plugin.getDataFolder() + File.separator + "Areas" + File.separator + area + File.separator + getFileName(area, curX, curZ) + ".schematic");
 					if (file.exists()) {
@@ -266,7 +277,8 @@ public class AreaMethods {
 							Manager.printDebug("Saving to file the selected clipboard.");
 						} catch (IOException e) {
 							e.printStackTrace();
-							Manager.printDebug(e.toString());
+							Manager.printDebug("An error has occurred when saving to clipboard area: " + file.getName());
+							Manager.printDebug(e.getMessage());
 						}
 					}
 					try (ClipboardWriter writer = BuiltInClipboardFormat.SPONGE_SCHEMATIC.getWriter(new FileOutputStream(file))) {
@@ -274,9 +286,11 @@ public class AreaMethods {
 						Manager.printDebug("The clipboard was succesfully saved to file.");
 					} catch (IOException e) {
 						e.printStackTrace();
-						Manager.printDebug(e.toString());
+						Manager.printDebug("An error has occurred when saving the clipboard to file for: " + file.getName());
+						Manager.printDebug(e.getMessage());
 					}
 					Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- -=- -=-=-=-=-=-=-=-=-=-=-");
+					Manager.printDebug("");
 					curZ++;
 					maxZ = curZ;
 				}
@@ -309,6 +323,7 @@ public class AreaMethods {
 		Manager.printDebug("Removed " + area + " from the automatic loading instances.");
 		
 		Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- -=- -=-=-=-=-=-=-=-=-=-=-");
+		Manager.printDebug("");
 	}
 	
 	public static String getXCoord(String area) {

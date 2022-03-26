@@ -50,7 +50,7 @@ public class CreateCommand extends ARCommand {
 					sendMessage(sender, onCreateFail().replaceAll("%area%", area), true);
 				}
 			} catch (WorldEditException e) {
-				e.printStackTrace();
+				Manager.printDebug(this.getName(), e, sender);
 			}
 		}
 	}

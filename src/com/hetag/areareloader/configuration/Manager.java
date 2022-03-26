@@ -7,15 +7,17 @@ import java.io.PrintWriter;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import com.hetag.areareloader.AreaMethods;
 import com.hetag.areareloader.AreaReloader;
 import com.hetag.areareloader.commands.Executor;
 
 public class Manager {
 	public static Config defaultConfig;
 	public static Config areas;
-	
+
 	public Manager() {
 		initConfigs();
 		loadConfig(defaultConfig);
@@ -41,6 +43,8 @@ public class Manager {
 		config.addDefault("Settings.Debug.Prefix", "&8[&bAR&7-&bDebug&8]&b ");
 		
 		config.addDefault("Settings.Updater.Enabled", true);
+		
+		config.addDefault("Settings.Metrics.Enabled", true);
 		
 		config.addDefault("Settings.AreaLoading.Interval", 1500);
 		config.addDefault("Settings.AreaLoading.IgnoreAirBlocks", false);
@@ -72,6 +76,7 @@ public class Manager {
 		config.addDefault("Commands.Display.OnDisplay", "Displaying area: &b%area%&3.");
 		config.addDefault("Commands.Display.OnDisplayRemove", "Removed display for area: &b%area%&3.");
 		config.addDefault("Commands.Display.UseParticles", false);
+		config.addDefault("Commands.Display.ParticleEffect", "FLAME");
 		config.addDefault("Commands.Display.Block.Material", "PRISMARINE");
 		config.addDefault("Commands.Display.Block.RestrictVision", true);
 		config.addDefault("Commands.Display.ParticleDelay", 3000);
@@ -138,12 +143,15 @@ public class Manager {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * Prints the given string to debug.
+	 * @param string
+	 */
 	public static void printDebug(String string) {
 		if (AreaReloader.debug) {
 			try {
-				final FileWriter fw = new FileWriter(new File(AreaReloader.getInstance().getDataFolder(), "debug.txt"),
-						true);
+				final FileWriter fw = new FileWriter(new File(AreaReloader.getInstance().getDataFolder(), "debug.txt"), true);
 				final PrintWriter pw = new PrintWriter(fw);
 				pw.println(LocalTime.now() + " " + string);
 				pw.flush();
@@ -154,11 +162,41 @@ public class Manager {
 		}
 	}
 	
+	/**
+	 * Prints the given params to debug
+	 * <p>
+	 * Mainly used for Commands debugging
+	 * @param cmd
+	 * @param e
+	 * @param sender
+	 */
+	public static void printDebug(String cmd, Exception e, CommandSender sender) {
+		if (AreaReloader.debug) {
+			printDebug("-=-=-=-=-=-=-=-=-=-=- Area Commands -=-=-=-=-=-=-=-=-=-=-");
+			printDebug("An issue when running the command " + cmd + " has occurred!");
+			printDebug("Writing debug's trace...");
+			printDebug("");
+			printDebug("" + e.getMessage());
+			printDebug("-=-=-=-=-=-=-=-=-=-=- -=- -=-=-=-=-=-=-=-=-=-=-");
+			if (sender != null)
+				AreaMethods.sendDebugMessage(sender, "An error has been generated and registered to the debug's file.");
+			else
+				AreaReloader.log.warning("An error has been generated and registered to the debug's file.");
+		}
+	}
+	
 	public static void resetDebug() {
 		File file = new File(AreaReloader.getInstance().getDataFolder(), "debug.txt");
 		if (file.exists()) {
 			file.delete();
+		} else {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		return;
 	}
+	
 }
