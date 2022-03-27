@@ -46,7 +46,7 @@ public class Manager {
 		
 		config.addDefault("Settings.Metrics.Enabled", true);
 		
-		config.addDefault("Settings.AreaLoading.Interval", 1500);
+		config.addDefault("Settings.AreaLoading.Interval", 500);
 		config.addDefault("Settings.AreaLoading.IgnoreAirBlocks", false);
 		config.addDefault("Settings.AreaLoading.FastMode", true);
 		config.addDefault("Settings.AreaLoading.Percentage", 15);
