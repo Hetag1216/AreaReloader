@@ -101,7 +101,7 @@ public class AreaMethods {
 		}
 		if (seconds >= 0) {
 			t = "seconds";
-			format += String.valueOf(seconds) + "." + String.valueOf(Math.round(millis)).substring(0, 2) +  "";
+			format += String.valueOf(seconds) + "." + String.valueOf(Math.round(millis)).substring(0, 2);
 		}
 		
 		return format + " " + t;

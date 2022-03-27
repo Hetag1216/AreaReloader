@@ -114,7 +114,7 @@ public class AreaLoader {
 			if (al.completed) {
 				if ((al.sender != null)) {
 					final long time = System.currentTimeMillis() - fakeTime;
-					al.sender.sendMessage(prefix() + onLoadSuccess().replaceAll("%area%", al.getArea()).replaceAll("%time%", AreaMethods.formatTime(time)).replaceAll("%count%", String.valueOf(AreaMethods.finalCount())));
+					al.sender.sendMessage(prefix() + onLoadSuccess().replace("%area%", al.getArea()).replace("%time%", AreaMethods.formatTime(time)).replace("%count%", String.valueOf(AreaMethods.finalCount())));
 				}
 				completed.add(areas.indexOf(al));
 				// remove the area from the queue and cancel its running task.

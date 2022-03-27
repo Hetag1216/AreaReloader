@@ -69,9 +69,11 @@ public class DisplayCommand extends ARCommand {
 				Location corner2 = new Location(Bukkit.getWorld(AreaMethods.getAreaInWorld(area)), AreaMethods.getAreaMaxX(area), AreaMethods.getAreaMaxY(area), AreaMethods.getAreaMaxZ(area));
 				for (Location finalLoc : getHollowCube(corner1, corner2, 0.25)) {
 					if (useParticles()) {
-						ParticleEffect effect = ParticleEffect.valueOf(ef);
-						if (effect == null || ef.equalsIgnoreCase("BARRIER")) {
+						ParticleEffect effect = null;
+						if (ef.equalsIgnoreCase("BARRIER")) { // Removed due to conflicts in multiple versions.
 							effect = ParticleEffect.FLAME;
+						} else {
+							effect = ParticleEffect.valueOf(ef);
 						}
 						if (effect == ParticleEffect.REDSTONE) {
 							DustManager.display(Bukkit.getWorld(AreaMethods.getAreaInWorld(area)), finalLoc, Color.fromBGR(0xCC0000));
