@@ -21,17 +21,13 @@ public class LoadCommand extends ARCommand {
 
 	@Override
 	public void execute(CommandSender sender, List<String> args) {
-		if (!hasPermission(sender) || !correctLength(sender, 0, 0, 1)) {
-			return;
-		}
-		if (args.size() <= 0) {
-			sender.sendMessage(this.getProperUsage());
+		if (!hasPermission(sender) || !correctLength(sender, args.size(), 1, 1)) {
 			return;
 		}
 		String area = args.get(0);
 		if (Manager.areas.getConfig().contains("Areas." + args.get(0))) {
 			if (!AreaReloader.getInstance().getQueue().isQueued(area)) {
-			World world = Bukkit.getWorld(Manager.areas.getConfig().getString("Areas." + args.get(0) + ".World"));
+			World world = Bukkit.getWorld(Manager.areas.getConfig().getString("Areas." + area + ".World"));
 			int x = Manager.areas.getConfig().getInt("Areas." + args.get(0) + ".X");
 			int z = Manager.areas.getConfig().getInt("Areas." + args.get(0) + ".Z");
 			Location location = new Location(world, x, AreaMethods.getAreaY(area), z);

@@ -32,16 +32,14 @@ public class HelpCommand extends ARCommand {
 		if (args.size() == 0) {
 			List<String> strings = new ArrayList<>();
 			for (ARCommand command : instances.values()) {
-				if ((!command.getName().equalsIgnoreCase("help"))
-						&& (sender.hasPermission("areareloader.command." + command.getName()))) {
+				if ((!command.getName().equalsIgnoreCase("help")) && (sender.hasPermission("areareloader.command." + command.getName()))) {
 					strings.add(command.getProperUse());
 				}
 			}
 			Collections.sort(strings);
 			Collections.reverse(strings);
 			Collections.reverse(strings);
-			for (String s : getPage(strings,
-					ChatColor.GRAY + "Commands: <" + this.required + "> [" + this.optional + "]", 1, false)) {
+			for (String s : getPage(strings, ChatColor.GRAY + "Commands: <" + this.required + "> [" + this.optional + "]", 1, false)) {
 				sender.sendMessage(ChatColor.GREEN + s);
 			}
 			return;
@@ -53,8 +51,7 @@ public class HelpCommand extends ARCommand {
 				strings.add(command.getProperUse());
 			}
 			for (String s : getPage(strings,
-					ChatColor.GRAY + "Commands: <" + this.required + "> [" + this.optional + "]",
-					Integer.valueOf(arg).intValue(), true)) {
+				ChatColor.GRAY + "Commands: <" + this.required + "> [" + this.optional + "]", Integer.valueOf(arg).intValue(), true)) {
 				sender.sendMessage(ChatColor.GREEN + s);
 			}
 		} else if (instances.keySet().contains(arg)) {

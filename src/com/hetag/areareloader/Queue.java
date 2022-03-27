@@ -5,57 +5,117 @@ import java.util.Map.Entry;
 
 public class Queue {
 	private HashMap<String, Integer> QUEUE;
-	AreaReloader plugin;
-	
+	private AreaReloader plugin;
+
 	public Queue(AreaReloader plugin) {
 		this.plugin = plugin;
 		QUEUE = new HashMap<>();
 	}
-	
+
 	/**
-	 * Stores all areas queued for reloading.
-	 * <p>
-	 * This does not store instances but the areas themselves.
-	 * <p>
-	 * Every time the server is reloaded, restarted, the
-	 * queue gets cleared.
-	 * <p>
-	 * If {@link #useQueue} returns true
+	 * Returns the queue instance.
+	 * 
 	 * @return QUEUE
 	 */
-	protected HashMap<String, Integer> queue() {
-		if (QUEUE != null) return QUEUE;
+	public HashMap<String, Integer> get() {
+		if (QUEUE != null)
+			return QUEUE;
 		return null;
 	}
-	
-	
+
 	/**
-	 * Checks if the specified area is already inside the queue.
-	 * <p>
-	 * This should never be used to check whether or not an area can be reloaded.
-	 * @param area
-	 * @return queued area
-	 */
-	public boolean isAreaQueued(String area) {
-		if (queue().containsKey(area)) return true;
-		return false;
-	}
-	
-	/**
-	 * Checks if the specified area is queued by also checking its count.
-	 * <p>
-	 * This method should be used when checking if an area is already being reloaded
-	 * to prevent its over loading.
-	 * <p>
-	 * If the count > 1 -> run action
+	 * Adds an area to the queue with its given task ID.
 	 * 
 	 * @param area
-	 * @return queued area
+	 * @param ID
+	 * @return
 	 */
+	public void add(String area, int ID) {
+		get().put(area, ID);
+		return;
+	}
+
+	/**
+	 * Removes an area from the queue.
+	 * 
+	 * @param area
+	 */
+
+	public void remove(String area) {
+		get().remove(area);
+		return;
+	}
+
+	/**
+	 * Removes an area from the queue and cancels its running task.
+	 * <p>
+	 * This method assumes by default that the task is still running.
+	 * Throws an error if the task cannot be cancelled succesfully.
+	 * @param area
+	 * @param taskID
+	 */
+	public void remove(String area, int taskID) {
+		try {
+			plugin.getServer().getScheduler().cancelTask(taskID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		get().remove(area);
+		return;
+	}
 	
+	public String getElements() {
+		for (String i : get().keySet()) {
+			return i;
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the task id number associated with the area's name.
+	 * 
+	 * @param area
+	 * @return taskID if != null
+	 * <p>
+	 * 0 if == null
+	 */
+
+	public int getTaskByName(String area) {
+		for (Entry<String, Integer> IDs : get().entrySet()) {
+			if (IDs.getKey().equals(area)) {
+				return IDs.getValue() != null ? IDs.getValue() : 0;
+			}
+		}
+		return 0;
+	}
+
+	/**
+	 * Check if the specified area is queued.
+	 * <p>
+	 * Looks for the area's name.
+	 * 
+	 * @param area
+	 * @return true/false
+	 */
 	public boolean isQueued(String area) {
-		for (Entry<String, Integer> IDs : queue().entrySet()) {
-			if (IDs.getKey().equals(area) && IDs.getValue() > 1) {
+		if (get().containsKey(area))
+			return true;
+		return false;
+	}
+
+	/**
+	 * Check if the specified area is queued.
+	 * <p>
+	 * Looks for the area's name and task id. This method is mainly used to deeply
+	 * check whether an area is queued with its unique task ID or not.
+	 * 
+	 * @param area
+	 * @param ID
+	 * @return true/false
+	 */
+	public boolean isQueued(String area, int ID) {
+		for (Entry<String, Integer> IDs : get().entrySet()) {
+			if (IDs.getKey().equals(area) && IDs.getValue() == ID) {
 				return true;
 			}
 		}

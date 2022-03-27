@@ -36,7 +36,7 @@ public class Executor {
 		new DisplayCommand();
 		new ConfigReloadCommand();
 		new DisplayCommand();
-		new TPSMonitorCommand();
+		new CancelCommand();
 		help = Manager.getConfig().getStringList("Commands.HelpLines");
 
 		CommandExecutor exe = new CommandExecutor() {
@@ -50,7 +50,11 @@ public class Executor {
 				List<String> sendingArgs = Arrays.asList(args).subList(1, args.length);
 				for (ARCommand command : ARCommand.instances.values()) {
 					if (Arrays.asList(command.getAliases()).contains(args[0].toLowerCase())) {
+						try {
 						command.execute(s, sendingArgs);
+						} catch (Exception e) {
+							Manager.printDebug(command.getName(), e, s);
+						}
 						return true;
 					}
 				}

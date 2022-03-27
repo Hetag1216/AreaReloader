@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.bukkit.command.CommandSender;
 
-import com.hetag.areareloader.AreaLoader;
 import com.hetag.areareloader.AreaMethods;
 import com.hetag.areareloader.AreaReloader;
 import com.hetag.areareloader.AreaScheduler;
@@ -19,20 +18,20 @@ public class ConfigReloadCommand extends ARCommand {
 
 	@Override
 	public void execute(CommandSender sender, List<String> args) {
-		if (!hasPermission(sender) || !correctLength(sender, 1, 1, 1)) {
+		if (!hasPermission(sender) || !correctLength(sender, args.size(), 0, 1)) {
 			return;
 		}
 		try {
+			Manager.resetDebug();
 			DisplayCommand.removeAllDisplays();
 			AreaMethods.performSetup();
 			Manager.reloadAllInstances();
 			if (!AreaReloader.getInstance().getServer().getScheduler().getPendingTasks().isEmpty()) {
 			AreaReloader.getInstance().getServer().getScheduler().getPendingTasks().clear();
 			}
-			AreaLoader.manage();
 			if (AreaReloader.checker) {
 				AreaScheduler.checkForAreas();
-				AreaScheduler.manageReloading();
+				AreaScheduler.manageTimings();
 				if (AreaScheduler.getAreas() != null) {
 				AreaScheduler.updateDelay(AreaScheduler.getAreas(), AreaScheduler.getAreasResetTime());
 				}
@@ -40,7 +39,7 @@ public class ConfigReloadCommand extends ARCommand {
 			sendMessage(sender, onReload(), true);
 		} catch (Exception e) {
 			sendMessage(sender, onFail(), true);
-			e.printStackTrace();
+			Manager.printDebug(this.getName(), e, sender);
 		}
 
 	}

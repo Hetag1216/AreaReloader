@@ -1,6 +1,5 @@
 package com.hetag.areareloader;
 
-import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -9,15 +8,17 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.hetag.areareloader.commands.DisplayCommand;
 import com.hetag.areareloader.commands.Executor;
-import com.hetag.areareloader.commands.TPSMonitorCommand;
 import com.hetag.areareloader.configuration.Manager;
 import com.hetag.areareloader.reflection.AreaProtocol;
+import com.hetag.areareloader.reflection.Metrics;
+import com.hetag.areareloader.reflection.UpdateChecker;
 import com.hetag.areareloader.reflection.V1_13.Protocol_1_13;
 import com.hetag.areareloader.reflection.V1_14.Protocol_1_14;
 import com.hetag.areareloader.reflection.V1_15.Protocol_1_15;
 import com.hetag.areareloader.reflection.V1_16.Protocol_1_16;
+import com.hetag.areareloader.reflection.V1_17.Protocol_1_17;
+import com.hetag.areareloader.reflection.V1_18.Protocol_1_18;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 public class AreaReloader extends JavaPlugin implements Listener {
@@ -26,37 +27,47 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	public static WorldEditPlugin wep;
 	public static AreaProtocol ap;
 	public static boolean debug, checker;
-	public static ArrayList<String> isDeleted = new ArrayList<>();
 	private Queue queue;
+	private boolean updater;
+	private boolean useMetrics;
 
 	public void onEnable() {
+		PluginManager pm = Bukkit.getPluginManager();
+		if ((WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit") == null) {
+			getLogger().warning("Worldedit hook was not found, the plugin cannot be enabled without this dependency.");
+			pm.disablePlugin(this);
+		} else {
+			getLogger().info("Plugin's dependency has been found!");
+			wep = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
+		}
+		
 		plugin = this;
 		log = getLogger();
 
 		log.info("-=-=-=-= AreaReloader " + plugin.getDescription().getVersion() + " =-=-=-=-");
+		
 		checkProtocol();
-		PluginManager pm = Bukkit.getPluginManager();
-		wep = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
-		if (wep == null) {
-			log.warning("Worldedit hook was not found, the plugin cannot be enabled without this dependency.");
-			pm.disablePlugin(this);
-		} else {
-			log.info("Plugin's dependency has been found!");
+		
+		try {
+			new Manager();
+			log.info("Configurations succesfully registered!");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		if (TPSMonitorCommand.enabled) {
-			Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(plugin, new TPS(), 0L, 1L);
-		}
-		new Manager();
+		
 		AreaMethods.performSetup();
-		// General setup
+		// Instantiate queue
 		queue = new Queue(this);
+		
+		// Instantiate settings
 		debug = Manager.getConfig().getBoolean("Settings.Debug.Enabled");
+		updater = Manager.getConfig().getBoolean("Settings.Updater.Enabled");
+		
 		// AreaLoader setup
 		AreaLoader.init();
+		
 		// AreaScheduler setup
 		AreaScheduler.init();
-
-		log.info("Configurations succesfully registered!");
 
 		try {
 			new Executor(this);
@@ -65,9 +76,18 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			e.printStackTrace();
 		}
 		
-
-		
 		getServer().getPluginManager().registerEvents(new AreaListener(this), this);
+		if (updater) {
+			checkForUpdates();
+		}
+		useMetrics = Manager.getConfig().getBoolean("Settings.Metrics.Enabled");
+		if (useMetrics) {
+	        int pluginId = 14758;
+	        new Metrics(this, pluginId);
+	        log.info("Metrics has been enabled, thank you!");
+		} else {
+			log.info("Metrics will be disabled.");
+		}
 		log.info("Succesfully enabled AreaReloader!");
 		log.info("-=-=-=-= -=- =-=-=-=-");
 	}
@@ -79,42 +99,25 @@ public class AreaReloader extends JavaPlugin implements Listener {
 
 	public void checkProtocol() {
 		String version = Bukkit.getServer().getClass().getPackage().getName();
-		String formmatedVersion = version.substring(version.lastIndexOf(".") + 1);
-
-		switch (formmatedVersion) {
-		default:
-			ap = new Protocol_1_13();
-			break;
-		case "v1_13_R2":
-		case "v1_13_R1":
-			ap = new Protocol_1_13();
-			break;
-		case "v1_14_R1":
-		case "v1_14_R2":
+		final String formattedVersion = version.substring(version.lastIndexOf(".") + 1);
+		if (formattedVersion.contains("1_14")) {
 			ap = new Protocol_1_14();
-			break;
-		case "v1_15_R1":
-		case "v1_15_R2":
-			ap = new Protocol_1_15();
-			break;
-		case "v1_16_R1":
-		case "v1_16_R2":
-		case "v1_16_R3":
-		case "v1_16_R4":
-		case "v1_16_R5":
-		case "v1_16_R6":
-		case "v1_16_R7":
-			ap = new Protocol_1_16();
-			break;
-		}
-		if (ap.equals(new Protocol_1_13())) {
-			log.info("Using default protocol versions compatibility!");
-		} else if (ap.equals(new Protocol_1_14())) {
 			log.info("Using protocol for 1.14 versions compatibility!");
-		} else if (ap.equals(new Protocol_1_15())) {
+		} else if (formattedVersion.contains("1_15")) {
+			ap = new Protocol_1_15();
 			log.info("Using protocol for 1.15 versions compatibility!");
-		} else if (ap.equals(new Protocol_1_16())) {
+		} else if (formattedVersion.contains("1_16")) {
+			ap = new Protocol_1_16();
 			log.info("Using protocol for 1.16 versions compatibility!");
+		} else if (formattedVersion.contains("1_17")) {
+			ap = new Protocol_1_17();
+			log.info("Using protocol for 1.17 versions compatibility!");
+		} else if (formattedVersion.contains("1_18")) {
+			ap = new Protocol_1_18();
+			log.info("Using protocol for 1.18 versions compatibility!");
+		} else {
+			ap = new Protocol_1_13();
+			log.info("Using default protocol (1.13) for versions compatibility!");
 		}
 	}
 	
@@ -154,28 +157,45 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		String enabled = ChatColor.GREEN + "Enabled";
 		String disabled = ChatColor.RED + "Disabled";
 		String status = ChatColor.DARK_AQUA + "Status: ";
-		if (wep != null) {
+		if (wep != null && wep.isEnabled()) {
 			return status + enabled;
 		} else {
 			return status + disabled;
 		}
 	}
+	/**
+	 * Checks for plugin's update from the official spigot page.
+	 */
+	private void checkForUpdates() {
+		new UpdateChecker(this, 70655).getVersion(version -> {
+			log.info("-=-=-=-= AreaReloader Updater =-=-=-=-");
+			if (this.getDescription().getVersion().equals(version)) {
+				log.info("You're running the latest version of the plugin!");
+			} else {
+				log.info("AreaReloader " + version + " is now available!");
+				log.info("You're running AreaReloader " + this.getDescription().getVersion());
+				log.info("DOWNLOAD IT AT: https://www.spigotmc.org/resources/areareloader.70655/");
+			}
+			log.info("-=-=-=-= -=- =-=-=-=-");
+		});
+	}
 	
 	/**
 	 * Shut down all active tasks.
 	 */
-	public void ShutDown() {
+	private void ShutDown() {
 		if (!getInstance().getServer().getScheduler().getPendingTasks().isEmpty()) {
 			getInstance().getServer().getScheduler().getPendingTasks().clear();
 		}
 		if (!getInstance().getServer().getScheduler().getActiveWorkers().isEmpty()) {
-			getInstance().getServer().getScheduler().getActiveWorkers().clear();;
+			getInstance().getServer().getScheduler().cancelTasks(getInstance());
+			getInstance().getServer().getScheduler().getActiveWorkers().clear();
 		}
-		
-		AreaMethods.updateAreas();
-		
-		if (!getQueue().queue().isEmpty()) {
-			getQueue().queue().clear();
+		if (!getQueue().get().isEmpty()) {
+			getQueue().get().clear();
+		}
+		if (!AreaLoader.areas.isEmpty()) {
+			AreaLoader.areas.clear();
 		}
 	}
 }

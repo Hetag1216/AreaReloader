@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -19,6 +20,7 @@ import com.hetag.areareloader.AreaMethods;
 import com.hetag.areareloader.AreaReloader;
 import com.hetag.areareloader.configuration.Manager;
 import com.hetag.areareloader.effects.ParticleEffect;
+import com.hetag.areareloader.reflection.AreaProtocol.DustManager;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -29,15 +31,17 @@ public class DisplayCommand extends ARCommand {
 	static String path = "Commands.Display.Description";
 	public static ArrayList<Block> blocks = new ArrayList<Block>();
 	public static HashMap<String, Integer> entries = new HashMap<String, Integer>();
+	public String ef;
 
 	public DisplayCommand() {
 		super("display", "/ar display <area>", ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString(path)), new String[] { "display", "d" });
 		pDelay = Manager.getConfig().getLong("Commands.Display.ParticleDelay");
+		ef = Manager.getConfig().getString("Commands.Display.ParticleEffect");
 	}
 
 	@Override
 	public void execute(CommandSender sender, List<String> args) {
-		if (!hasPermission(sender) || !correctLength(sender, 0, 0, 1) && isPlayer(sender)) {
+		if (!hasPermission(sender) || !correctLength(sender, args.size(), 1, 1) && !isPlayer(sender)) {
 			return;
 		}
 
@@ -65,8 +69,18 @@ public class DisplayCommand extends ARCommand {
 				Location corner2 = new Location(Bukkit.getWorld(AreaMethods.getAreaInWorld(area)), AreaMethods.getAreaMaxX(area), AreaMethods.getAreaMaxY(area), AreaMethods.getAreaMaxZ(area));
 				for (Location finalLoc : getHollowCube(corner1, corner2, 0.25)) {
 					if (useParticles()) {
-						ParticleEffect.FLAME.display(finalLoc, 1, 0.05F, 0.05F, 0.05F, 0.05F);
-						ParticleEffect.FLAME.display(finalLoc, 1);
+						ParticleEffect effect = null;
+						if (ef.equalsIgnoreCase("BARRIER")) { // Removed due to conflicts in multiple versions.
+							effect = ParticleEffect.FLAME;
+						} else {
+							effect = ParticleEffect.valueOf(ef);
+						}
+						if (effect == ParticleEffect.REDSTONE) {
+							DustManager.display(Bukkit.getWorld(AreaMethods.getAreaInWorld(area)), finalLoc, Color.fromBGR(0xCC0000));
+						} else {
+						effect.display(finalLoc, 1, 0.03F, 0.03F, 0.03F, 0.03F, Material.valueOf(match()).createBlockData());
+						effect.display(finalLoc, 1, 0, 0, 0, 0, Material.valueOf(match()).createBlockData());
+						}
 					} else {
 						Player player = null;
 						if (restrictVision()) {
@@ -88,7 +102,6 @@ public class DisplayCommand extends ARCommand {
 	}
 
 	public void removeTask(String area, CommandSender sender) {
-		if (!blocks.isEmpty()) {
 			BukkitRunnable runner = new BukkitRunnable() {
 				public void run() {
 					for (Block block : blocks) {
@@ -105,7 +118,6 @@ public class DisplayCommand extends ARCommand {
 				}
 			};
 			runner.runTaskLater(AreaReloader.getInstance(), 1);
-		}
 
 		for (Entry<String, Integer> task : entries.entrySet()) {
 			if (task.getKey().equals(area)) {
@@ -113,8 +125,14 @@ public class DisplayCommand extends ARCommand {
 			}
 		}
 		entries.remove(area);
-		// force clear all blocks, the list will be refilled by active displays.
-		blocks.clear();
+		BukkitRunnable clear = new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (!blocks.isEmpty())
+					blocks.clear();
+			}
+		};
+		clear.runTaskLater(AreaReloader.getInstance(), 20);
 	}
 
 	public static void removeAllDisplays() {
@@ -134,6 +152,14 @@ public class DisplayCommand extends ARCommand {
 		};
 		run.runTaskLater(AreaReloader.getInstance(), 1);
 		entries.clear();
+		BukkitRunnable clear = new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (!blocks.isEmpty())
+					blocks.clear();
+			}
+		};
+		clear.runTaskLater(AreaReloader.getInstance(), 20);
 	}
 	
 	private void blockChange(Player player, Block block) {
