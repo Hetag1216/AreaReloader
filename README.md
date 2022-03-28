@@ -27,7 +27,7 @@ An easy to use Spigot plugin to roll back areas at the stage they were saved!
 
 /ar display <AreaName> - Displays particles around an area
 
-/ar tps <time in milliseconds> - Starts a TPS monitoring task
+/ar cancel <AreaName, ALL> - Cancels the loading of one or all areas.
 
 ![Core Icon](https://cdn.discordapp.com/attachments/595194807932944385/614124189229514772/ARPermissions.png)
 
@@ -49,7 +49,7 @@ areareloader.command.info - Gives access to the /ar info command
 
 areareloader.command.reload - Gives access to the /ar reload command
 
-areareloader.command.tps - Gives access to the /ar tps command
+areareloader.command.cancel - Gives access to /ar cancel command
 
 areareloader.command.admin - Gives access to all commands
 
@@ -58,31 +58,40 @@ areareloader.command.admin - Gives access to all commands
 The main configuration file where you will be able to edit your own language settings is named as "config.yml".
 The config is very easy to understand as it is composed by regular language strings, however, the plugin brings some variables and new configuration settings that affect the plugin.
 
-~~------------------------------------------------------------------------------------------------------------------------------------~~
+~~---------------------------------------------------------------------------------------------------------------------------------~~
 
 *Guide to debugging*: 
 Open a new issue in the [Issues category](https://github.com/Hetag1216/AreaReloader/issues)
-When opening a new issue please specify:
-- Spigot's version - /version;
-- WorldEdit's version;
-- Where/when you met the issue by specifying the command which threw an error and specify where the operations stop, debugging will show every operation ran when executing commands.
-- Paste console's error logs (if there are any)
+When opening a new issue please add and specify:
+  - Debug's file (located at AreaReloader\debug.txt).
+  - Spigot's version - /version;
+  - AreaReloader's version - /ar version;
+  - WorldEdit's version;
+  - Where/when you met the issue, as in what action had been fired at the time (command, auto reloading, etc.).
+  - Console's logs (specifically error's stack trace if not available in debug.txt).
 
 The debug logs will be printed to the command sender.
 Default value: false (turn 'false' to true and then restart the server to enable the debugging or any config changes)
 
-~~------------------------------------------------------------------------------------------------------------------------------------~~
+~~---------------------------------------------------------------------------------------------------------------------------------~~
 
-Area Interval: This is the amount of time set in milliseconds that decides the delay between each section loading whenever an area is being loaded.
-I recommend keeping this value as the default one as a higher or lower value could affect your server's performance in bad or good, depending on the server's resources and tasks that are currently running at the moment of the area's load, so choose a wise value whenever changing this value.
-Default value: 200
-(0.2 seconds)
+Area Interval: This represents the interval between each area's section being loaded.
+The interval must be specified in milliseconds.
+Depending on your server's resources and performance you may lower or raise this.
+Smaller interval values may affect your server's performance negatively.
+Default value: 500 (0.5 seconds)
 
-~~------------------------------------------------------------------------------------------------------------------------------------~~
+~~---------------------------------------------------------------------------------------------------------------------------------~~
 
-AreaScheduler: This function has been implemented in version 1.3.
-With this brand new function, you will be able to automatically reload areas after x amount of time which can be set for each existing area in the areas.yml config.
-In order to use this function the global checker must be true (set true by default) and the AutoReload function under "Areas" in the areas.yml configuration file must be enabled for each area that has to automatically restore.
+AreaScheduler: This function allows you to automatically reload your areas after a given interval, experessed in milliseconds.
+To enable an area to automatically reload navigate through your areas' configuration file (path: AreaReloader\areas.yml), under the AutoReload section of your area of interest change the Enabled status from "false" to "true", reload your plugin/server and enjoy your areas get loaded and built just like magic.
+
+~~---------------------------------------------------------------------------------------------------------------------------------~~
+
+Metrics: this functionality provides data which helps me keep track of the plugin's usage.
+I invite you to keep this setting on as it contributes to boosting my dedication and work towards my projects!
+Provided by: bStats.
+
 
 Join now the discord for live support and live updates on the projects!
 ![Core Icon](https://cdn.discordapp.com/attachments/595364073147728025/687819024457007140/discord_header.png)
