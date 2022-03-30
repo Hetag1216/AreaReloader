@@ -11,7 +11,9 @@ An easy to use Spigot plugin to roll back areas at the stage they were saved!
 
 /ar version - Shows the current plugin's version
 
-/ar create <AreaName> - Creates a new copy of the selected area
+/ar create <AreaName> <CopyEntities> - Creates a new copy of the selected area.
+The copy entities parameter will accept a true or false value, which will decide whether or not to copy entities inside the selected area at the moment of creation.
+If set to true, whenever the area gets loaded, saved entities will be respawned.
 
 /ar load <AreaName> - Loads an existing area
 
