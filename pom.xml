@@ -1,13 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.hedario.areareloader.fawe</groupId>
-	<artifactId>AreaReloader-FAWE</artifactId>
-	<version>1.0</version>
+	<groupId>com.hetag.areareloader</groupId>
+	<artifactId>AreaReloader</artifactId>
+	<version>2.0.0</version>
 	<packaging>jar</packaging>
-	<name>AreaReloader-FAWE</name>
+	<name>AreaReloader</name>
 
 	<repositories>
+		<!-- WorldGuard and WorldEdit Repo -->
+		<repository>
+			<id>sk89q-repo</id>
+			<url>http://maven.sk89q.com/repo/</url>
+		</repository>
 		<!-- Spigot Repo -->
 		<repository>
 			<id>spigot-repo</id>
@@ -19,18 +24,6 @@
 			<url>https://papermc.io/repo/repository/maven-public/</url>
 		</repository>
 	</repositories>
-	<!-- DEPENDENCIES MANAGEMENT -->
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.intellectualsites.bom</groupId>
-				<artifactId>bom-1.18.x</artifactId>
-				<version>1.19</version>
-				<scope>import</scope>
-				<type>pom</type>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 
 	<!-- DEPENDENCIES -->
 	<dependencies>
@@ -38,32 +31,27 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.18.2-R0.1-SNAPSHOT</version>
+			<version>1.13.2-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
-
-		<!-- FAWE -->
+		<!-- WorldEdit -->
 		<dependency>
-			<groupId>com.fastasyncworldedit</groupId>
-			<artifactId>FastAsyncWorldEdit-Core</artifactId>
+			<groupId>com.sk89q.worldedit</groupId>
+			<artifactId>worldedit-core</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
-			<groupId>com.fastasyncworldedit</groupId>
-			<artifactId>FastAsyncWorldEdit-Bukkit</artifactId>
+			<groupId>com.sk89q.worldedit</groupId>
+			<artifactId>worldedit-bukkit</artifactId>
+			<version>7.0.0-SNAPSHOT</version>
 			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>FastAsyncWorldEdit-Core</artifactId>
-					<groupId>*</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<!-- PaperLib -->
 		<dependency>
 			<groupId>io.papermc</groupId>
 			<artifactId>paperlib</artifactId>
+			<version>1.0.1</version>
 		</dependency>
 	</dependencies>
 

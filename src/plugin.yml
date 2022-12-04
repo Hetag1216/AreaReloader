@@ -1,9 +1,9 @@
-name: AreaReloader-FAWE
-main: com.hetag.areareloader.fawe.AreaReloader
+name: AreaReloader
+main: com.hetag.areareloader.AreaReloader
 version: ${project.version}
-api-version: 1.18
-authors: ['Hedario']
-depend: ['FastAsyncWorldEdit']
+api-version: 1.13
+authors: ['_Hetag1216_']
+depend: ['WorldEdit']
 commands:
   ar:
     usage: /<command>
