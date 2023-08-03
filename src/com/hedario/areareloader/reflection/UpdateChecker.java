@@ -1,4 +1,4 @@
-package com.hetag.areareloader.reflection;
+package com.hedario.areareloader.reflection;
 
 import java.io.IOException;
 import java.io.InputStream;
