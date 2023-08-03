@@ -1,4 +1,4 @@
-package com.hetag.areareloader.reflection.V1_13;
+package com.hedario.areareloader.reflection.V1_13;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -8,8 +8,16 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 
-import com.hetag.areareloader.reflection.AreaProtocol;
+import com.hedario.areareloader.reflection.AreaProtocol;
 
+/**
+ * Unsupported dependency version. Any server should use the plugin with the
+ * right version of Java (16+) and the supported versions of FAWE.
+ * 
+ * @author Hedario
+ *
+ */
+@Deprecated
 public class Protocol_1_13 implements AreaProtocol {
 
 	private static Class<?> dustOptions;
@@ -32,7 +40,8 @@ public class Protocol_1_13 implements AreaProtocol {
 		try {
 			Object dust = dustConstructor.newInstance(dustParam);
 
-			world.spawnParticle(Particle.REDSTONE, location, 0, color.getRed() / 255, color.getGreen() / 255, color.getBlue() / 255, 1, dust);
+			world.spawnParticle(Particle.REDSTONE, location, 0, color.getRed() / 255, color.getGreen() / 255,
+					color.getBlue() / 255, 1, dust);
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {

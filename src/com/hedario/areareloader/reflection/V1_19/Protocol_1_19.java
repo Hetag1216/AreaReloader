@@ -1,4 +1,4 @@
-package com.hetag.areareloader.reflection.V1_17;
+package com.hedario.areareloader.reflection.V1_19;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -8,9 +8,9 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
 
-import com.hetag.areareloader.reflection.AreaProtocol;
+import com.hedario.areareloader.reflection.AreaProtocol;
 
-public class Protocol_1_17 implements AreaProtocol {
+public class Protocol_1_19 implements AreaProtocol {
 
     private static Class<?> dustOptions;
     private static Constructor<?> dustConstructor;
