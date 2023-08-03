@@ -1,35 +1,37 @@
-package com.hetag.areareloader;
+package com.hedario.areareloader;
 
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.hetag.areareloader.commands.Executor;
-import com.hetag.areareloader.configuration.Manager;
-import com.hetag.areareloader.reflection.AreaProtocol;
-import com.hetag.areareloader.reflection.Metrics;
-import com.hetag.areareloader.reflection.UpdateChecker;
-import com.hetag.areareloader.reflection.V1_13.Protocol_1_13;
-import com.hetag.areareloader.reflection.V1_14.Protocol_1_14;
-import com.hetag.areareloader.reflection.V1_15.Protocol_1_15;
-import com.hetag.areareloader.reflection.V1_16.Protocol_1_16;
-import com.hetag.areareloader.reflection.V1_17.Protocol_1_17;
-import com.hetag.areareloader.reflection.V1_18.Protocol_1_18;
+import com.hedario.areareloader.commands.Executor;
+import com.hedario.areareloader.configuration.Manager;
+import com.hedario.areareloader.reflection.AreaProtocol;
+import com.hedario.areareloader.reflection.Metrics;
+import com.hedario.areareloader.reflection.UpdateChecker;
+import com.hedario.areareloader.reflection.V1_13.Protocol_1_13;
+import com.hedario.areareloader.reflection.V1_14.Protocol_1_14;
+import com.hedario.areareloader.reflection.V1_15.Protocol_1_15;
+import com.hedario.areareloader.reflection.V1_16.Protocol_1_16;
+import com.hedario.areareloader.reflection.V1_17.Protocol_1_17;
+import com.hedario.areareloader.reflection.V1_18.Protocol_1_18;
+import com.hedario.areareloader.reflection.V1_19.Protocol_1_19;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 public class AreaReloader extends JavaPlugin implements Listener {
+
+	public static WorldEditPlugin wep;
 	public static AreaReloader plugin;
 	public static Logger log;
-	public static WorldEditPlugin wep;
 	public static AreaProtocol ap;
 	public static boolean debug, checker;
-	private Queue queue;
-	private boolean updater;
-	private boolean useMetrics;
+	private static Queue queue;
+	private boolean updater, useMetrics, announcer;
 
 	public void onEnable() {
 		PluginManager pm = Bukkit.getPluginManager();
@@ -62,12 +64,17 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		// Instantiate settings
 		debug = Manager.getConfig().getBoolean("Settings.Debug.Enabled");
 		updater = Manager.getConfig().getBoolean("Settings.Updater.Enabled");
+		announcer = Manager.getConfig().getBoolean("Settings.Announcer.Enabled");
 		
 		// AreaLoader setup
 		AreaLoader.init();
 		
 		// AreaScheduler setup
 		AreaScheduler.init();
+		
+		// Instantiate events
+		getServer().getPluginManager().registerEvents(new AreaListener(this), this);
+		new AreaListener(this);
 
 		try {
 			new Executor(this);
@@ -76,7 +83,6 @@ public class AreaReloader extends JavaPlugin implements Listener {
 			e.printStackTrace();
 		}
 		
-		getServer().getPluginManager().registerEvents(new AreaListener(this), this);
 		if (updater) {
 			checkForUpdates();
 		}
@@ -90,6 +96,20 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		}
 		log.info("Succesfully enabled AreaReloader!");
 		log.info("-=-=-=-= -=- =-=-=-=-");
+		
+		if (announcer) {
+			Runnable announcer = new Runnable() {
+				@Override
+				public void run() {
+					for (Player players : getServer().getOnlinePlayers()) {
+						if (players.hasPermission("areareloader.*") || players.isOp()) {
+							players.sendMessage(AreaMethods.getPrefix() + "AreaReloader is brought to you freely, if you wish to support the project, please consider making a donation!");
+						}
+					}
+				}
+			};
+			getInstance().getServer().getScheduler().runTaskTimerAsynchronously(plugin, announcer, 200L, 36000L);
+		}
 	}
 
 	public void onDisable() {
@@ -100,7 +120,10 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	public void checkProtocol() {
 		String version = Bukkit.getServer().getClass().getPackage().getName();
 		final String formattedVersion = version.substring(version.lastIndexOf(".") + 1);
-		if (formattedVersion.contains("1_14")) {
+		if (formattedVersion.contains("1_13")) {
+			ap = new Protocol_1_13();
+			log.info("Using protocol for 1.13 versions compatibility!");
+		} else if (formattedVersion.contains("1_14")) {
 			ap = new Protocol_1_14();
 			log.info("Using protocol for 1.14 versions compatibility!");
 		} else if (formattedVersion.contains("1_15")) {
@@ -112,12 +135,12 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		} else if (formattedVersion.contains("1_17")) {
 			ap = new Protocol_1_17();
 			log.info("Using protocol for 1.17 versions compatibility!");
-		} else if (formattedVersion.contains("1_18")) {
-			ap = new Protocol_1_18();
-			log.info("Using protocol for 1.18 versions compatibility!");
+		} else if (formattedVersion.contains("1_19")) {
+			ap = new Protocol_1_19();
+			log.info("Using protocol for 1.19 versions compatibility!");
 		} else {
-			ap = new Protocol_1_13();
-			log.info("Using default protocol (1.13) for versions compatibility!");
+			ap = new Protocol_1_18();
+			log.info("Using default protocol (1.18) for versions compatibility!");
 		}
 	}
 	
@@ -141,7 +164,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	 * Returns class utility instance.
 	 * @return queue.class
 	 */
-	public Queue getQueue() {
+	public static Queue getQueue() {
 		return queue;
 	}
 	
