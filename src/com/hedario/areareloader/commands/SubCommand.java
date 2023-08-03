@@ -1,4 +1,4 @@
-package com.hetag.areareloader.commands;
+package com.hedario.areareloader.commands;
 
 import java.util.List;
 

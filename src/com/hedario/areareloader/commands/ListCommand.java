@@ -1,4 +1,4 @@
-package com.hetag.areareloader.commands;
+package com.hedario.areareloader.commands;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,15 +7,14 @@ import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 
-import com.hetag.areareloader.configuration.Manager;
+import com.hedario.areareloader.AreaReloader;
+import com.hedario.areareloader.configuration.Manager;
 
 import net.md_5.bungee.api.ChatColor;
 
 public class ListCommand extends ARCommand {
-	static String path = "Commands.List.Description";
-
 	public ListCommand() {
-		super("list", "/ar list", ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString(path)), new String[] { "list" });
+		super("list", "/ar list", Manager.getConfig().getString("Commands.List.Description"), new String[] { "list" });
 	}
 
 	@Override
@@ -36,9 +35,11 @@ public class ListCommand extends ARCommand {
 			}
 			Collections.sort(strings);
 			Collections.reverse(strings);
-			for (String formatted : getPage(strings, ChatColor.BOLD + "- " + ChatColor.AQUA + "Existing Areas" + ChatColor.BOLD + " -" , 1, true)) {
-				sendMessage(sender, "&b" + formatted, false);
-				
+			for (String formatted : getPage(strings, 1, true)) {
+				if (AreaReloader.getQueue().isQueued(formatted)) {
+					formatted = formatted + " (Being loaded)";
+				}
+				sendMessage(sender, "&b " + formatted, false);
 			}
 			return;
 		} else if (args.size() == 1) {
@@ -54,7 +55,10 @@ public class ListCommand extends ARCommand {
 					sendMessage(sender, notFound(), true);
 					return;
 				}
-				for (String formatted : getPage(strings, ChatColor.BOLD + "- " + ChatColor.AQUA + "Existing Areas" + ChatColor.BOLD + " -" , Integer.valueOf(arg), true)) {
+				for (String formatted : getPage(strings, Integer.valueOf(arg), true)) {
+					if (AreaReloader.getQueue().isQueued(formatted)) {
+						formatted = formatted + " (Being loaded)";
+					}
 					sendMessage(sender, "&b" + formatted, false);
 				}
 			} else {

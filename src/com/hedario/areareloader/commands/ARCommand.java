@@ -1,4 +1,4 @@
-package com.hetag.areareloader.commands;
+package com.hedario.areareloader.commands;
 
 import java.text.NumberFormat;
 import java.text.ParsePosition;
@@ -12,7 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.hetag.areareloader.configuration.Manager;
+import com.hedario.areareloader.configuration.Manager;
 
 public abstract class ARCommand implements SubCommand {
 	protected String noPermissionMessage;
@@ -31,12 +31,16 @@ public abstract class ARCommand implements SubCommand {
 		this.aliases = aliases;
 		this.noPermissionMessage = ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Settings.Language.NoPermission"));
 		this.mustBePlayerMessage = ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Settings.Language.MustBePlayer"));
-		this.prefix = ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Settings.Language.ChatPrefix"));
+		prefix = ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Settings.Language.ChatPrefix"));
 		instances.put(name, this);
 	}
 
 	public String getName() {
 		return ChatColor.GREEN + this.name;
+	}
+	
+	public String getPrefix() {
+		return prefix;
 	}
 
 	public String getProperUse() {
@@ -52,29 +56,30 @@ public abstract class ARCommand implements SubCommand {
 	}
 
 	public void help(CommandSender sender, boolean description) {
-		sender.sendMessage(getProperUsage());
+		sendMessage(sender, getProperUsage(), false);
 		if (description) {
-			sender.sendMessage(ChatColor.GRAY + this.description);
+			sendMessage(sender, this.getDescription(), false);
 		}
 	}
-	protected static String formatColors(String string) {
+	public static String formatColors(String string) {
 		return ChatColor.translateAlternateColorCodes('&', string);
 	}
 	
 	protected void sendMessage(CommandSender sender, String message, boolean prefix) {
 		if (prefix) {
-			sender.sendMessage(formatColors(this.prefix + message));
+			sender.sendMessage(formatColors(getPrefix() + message));
 		} else {
 			sender.sendMessage(formatColors(message));
 		}
 		return;
 	}
+	
 
 	protected boolean hasPermission(CommandSender sender) {
 		if (sender.hasPermission("areareloader.command." + this.name)) {
 			return true;
 		}
-		sender.sendMessage(prefix + this.noPermissionMessage);
+		sendMessage(sender, this.noPermissionMessage, true);
 		return false;
 	}
 
@@ -82,7 +87,7 @@ public abstract class ARCommand implements SubCommand {
 		if (sender.hasPermission("areareloader.command." + this.name + "." + extra)) {
 			return true;
 		}
-		sender.sendMessage(prefix + this.noPermissionMessage);
+		sendMessage(sender, this.noPermissionMessage, true);
 		return false;
 	}
 
@@ -98,7 +103,7 @@ public abstract class ARCommand implements SubCommand {
 		if ((sender instanceof Player)) {
 			return true;
 		}
-		sender.sendMessage(prefix + this.mustBePlayerMessage);
+		sendMessage(sender, this.mustBePlayerMessage, true);
 		return false;
 	}
 
@@ -137,10 +142,10 @@ public abstract class ARCommand implements SubCommand {
 	 * @return the proper usage of the command
 	 */
 	protected String getProperUsage() {
-		return prefix + ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Commands.Help.ProperUsage")) + getProperUse();
+		return prefix + Manager.getConfig().getString("Commands.Help.ProperUsage") + getProperUse();
 	}
 
-	protected List<String> getPage(List<String> entries, String title, int page, boolean sort) {
+	protected List<String> getPage(List<String> entries, int page, boolean sort) {
 		List<String> strings = new ArrayList<>();
 		if (sort) {
 			Collections.sort(entries);
@@ -154,12 +159,11 @@ public abstract class ARCommand implements SubCommand {
 				page = 1;
 			}
 		}
-		strings.add(ChatColor.DARK_AQUA + "Area Reloader " + ChatColor.DARK_GRAY + "- [" + ChatColor.GRAY + page + "/" + (int) Math.ceil((entries.size() + 0.0D) / 8.0D) + ChatColor.DARK_GRAY + "]");
-		strings.add(title);
+		strings.add(formatColors("&8&m-----&r " + prefix + " &7- &8[&7" + page + "&8/" + "&7" + (int) Math.ceil((entries.size() + 0.0D) / 8.0D) + "&8] &m-----&r"));
 		if (entries.size() > page * 8 - 8) {
 			for (int i = page * 8 - 8; i < entries.size(); i++) {
 				if (entries.get(i) != null) {
-					strings.add(((String) entries.get(i)).toString());
+					strings.add(entries.get(i));
 				}
 				if (i >= page * 8 - 1) {
 					break;
@@ -167,5 +171,9 @@ public abstract class ARCommand implements SubCommand {
 			}
 		}
 		return strings;
+	}
+	
+	protected List<String> getTabCompletion(final CommandSender sender, final List<String> args) {
+		return new ArrayList<String>();
 	}
 }

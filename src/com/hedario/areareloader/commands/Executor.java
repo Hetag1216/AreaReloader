@@ -1,4 +1,4 @@
-package com.hetag.areareloader.commands;
+package com.hedario.areareloader.commands;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,8 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
 
-import com.hetag.areareloader.AreaReloader;
-import com.hetag.areareloader.configuration.Manager;
+import com.hedario.areareloader.AreaReloader;
+import com.hedario.areareloader.configuration.Manager;
 
 public class Executor {
 	private AreaReloader plugin;
@@ -34,9 +34,10 @@ public class Executor {
 		new HookCommand();
 		new InfoCommand();
 		new DisplayCommand();
-		new ConfigReloadCommand();
+		new ReloadCommand();
 		new DisplayCommand();
 		new CancelCommand();
+		new LocationCommand();
 		help = Manager.getConfig().getStringList("Commands.HelpLines");
 
 		CommandExecutor exe = new CommandExecutor() {
@@ -62,5 +63,6 @@ public class Executor {
 			}
 		};
 		ar.setExecutor(exe);
+		ar.setTabCompleter(new TabCompletion());
 	}
 }
