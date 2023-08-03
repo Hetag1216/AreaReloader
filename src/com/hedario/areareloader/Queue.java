@@ -1,4 +1,4 @@
-package com.hetag.areareloader;
+package com.hedario.areareloader;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
