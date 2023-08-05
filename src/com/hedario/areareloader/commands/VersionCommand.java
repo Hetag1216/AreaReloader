@@ -22,8 +22,8 @@ public class VersionCommand extends ARCommand {
 		sendMessage(sender, "&3API version &7» &b" + AreaReloader.plugin.getDescription().getAPIVersion(), false);
 		sendMessage(sender, "&3Author &7» &b" + AreaReloader.plugin.getDescription().getAuthors().toString().replace("[", "").toString().replace("]", ""), false);
 		sendMessage(sender, "&3Compatible Minecraft Version(s) &7» &b1.16.x, 1.17.x, 1.18.x, 1.19.x, 1.20.x", false);
-		sendMessage(sender, "&3AreaRelaoders dependency &7» &b" + AreaReloader.plugin.getDescription().getDepend().toString().replace("[", "").toString().replace("]", ""), false);
-		sendMessage(sender, "&3AreaReloaders Java requirements &7» &b Java 16+", false);
+		sendMessage(sender, "&3AreaReloader's dependency &7» &b" + AreaReloader.plugin.getDescription().getDepend().toString().replace("[", "").toString().replace("]", ""), false);
+		sendMessage(sender, "&3AreaReloader's Java requirements &7» &b Java 16+", false);
 		sendMessage(sender, "&3System Java version &7» &b" + System.getProperty("java.version"), false);
 		sendMessage(sender, "", false);
 		sendMessage(sender, "&3Page &7» &bwww.spigotmc.org/resources/areareloader.70655/", false);
