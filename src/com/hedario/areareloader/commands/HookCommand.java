@@ -18,8 +18,8 @@ public class HookCommand extends ARCommand {
 			return;
 		}
 		sendMessage(sender, "&3-=-=-=-= &7« &3 Hooks &7» &3=-=-=-=-", false);
-		sendMessage(sender, "&7- &bFastAsyncWorldEdit &7(&bFAWE&7)", false);
-		sendMessage(sender, AreaReloader.plugin.getStatus(), false);
+		sendMessage(sender, "&7- &bWorldEdit &7(&bWE&7)", false);
+		sendMessage(sender, AreaReloader.getInstance().getStatus(), false);
 		if (AreaReloader.getWEInstance() != null) {
 			sendMessage(sender, "&3Version &7» &b" + AreaReloader.getWEInstance().getDescription().getVersion(), false);
 		}
