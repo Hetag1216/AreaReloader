@@ -195,7 +195,7 @@ public class AreaLoader {
 		return Manager.getConfig().getString("Commands.Load.Fail");
 	}
 	
-	private static String stillCreating() {
+	public static String stillCreating() {
 		return Manager.getConfig().getString("Commands.Load.StillCreating");
 	}
 
