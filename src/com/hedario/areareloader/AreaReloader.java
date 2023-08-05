@@ -11,16 +11,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.hedario.areareloader.commands.Executor;
 import com.hedario.areareloader.configuration.Manager;
-import com.hedario.areareloader.reflection.AreaProtocol;
 import com.hedario.areareloader.reflection.Metrics;
 import com.hedario.areareloader.reflection.UpdateChecker;
-import com.hedario.areareloader.reflection.V1_13.Protocol_1_13;
-import com.hedario.areareloader.reflection.V1_14.Protocol_1_14;
-import com.hedario.areareloader.reflection.V1_15.Protocol_1_15;
-import com.hedario.areareloader.reflection.V1_16.Protocol_1_16;
-import com.hedario.areareloader.reflection.V1_17.Protocol_1_17;
-import com.hedario.areareloader.reflection.V1_18.Protocol_1_18;
-import com.hedario.areareloader.reflection.V1_19.Protocol_1_19;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 
 public class AreaReloader extends JavaPlugin implements Listener {
@@ -28,7 +20,6 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	public static WorldEditPlugin wep;
 	public static AreaReloader plugin;
 	public static Logger log;
-	public static AreaProtocol ap;
 	public static boolean debug, checker;
 	private static Queue queue;
 	private boolean updater, useMetrics, announcer;
@@ -48,7 +39,6 @@ public class AreaReloader extends JavaPlugin implements Listener {
 
 		log.info("-=-=-=-= AreaReloader " + plugin.getDescription().getVersion() + " =-=-=-=-");
 		
-		checkProtocol();
 		
 		try {
 			new Manager();
@@ -116,41 +106,6 @@ public class AreaReloader extends JavaPlugin implements Listener {
 		ShutDown();
 		log.info("Succesfully disabled AreaReloader!");
 	}
-
-	public void checkProtocol() {
-		String version = Bukkit.getServer().getClass().getPackage().getName();
-		final String formattedVersion = version.substring(version.lastIndexOf(".") + 1);
-		if (formattedVersion.contains("1_13")) {
-			ap = new Protocol_1_13();
-			log.info("Using protocol for 1.13 versions compatibility!");
-		} else if (formattedVersion.contains("1_14")) {
-			ap = new Protocol_1_14();
-			log.info("Using protocol for 1.14 versions compatibility!");
-		} else if (formattedVersion.contains("1_15")) {
-			ap = new Protocol_1_15();
-			log.info("Using protocol for 1.15 versions compatibility!");
-		} else if (formattedVersion.contains("1_16")) {
-			ap = new Protocol_1_16();
-			log.info("Using protocol for 1.16 versions compatibility!");
-		} else if (formattedVersion.contains("1_17")) {
-			ap = new Protocol_1_17();
-			log.info("Using protocol for 1.17 versions compatibility!");
-		} else if (formattedVersion.contains("1_19")) {
-			ap = new Protocol_1_19();
-			log.info("Using protocol for 1.19 versions compatibility!");
-		} else {
-			ap = new Protocol_1_18();
-			log.info("Using default protocol (1.18) for versions compatibility!");
-		}
-	}
-	
-	/**
-	 * Returns the protocol version to allow graceful fall back for different spigot's versions.
-	 * @return ap
-	 */
-	public static AreaProtocol getProtocol() {
-		return ap;
-	}
 	
 	/**
 	 * Gets the plugin's instance.
@@ -179,7 +134,7 @@ public class AreaReloader extends JavaPlugin implements Listener {
 	public String getStatus() {
 		String enabled = ChatColor.GREEN + "Enabled";
 		String disabled = ChatColor.RED + "Disabled";
-		String status = ChatColor.DARK_AQUA + "Status: ";
+		String status = ChatColor.DARK_AQUA + "Status " + ChatColor.GRAY + "» ";
 		if (wep != null && wep.isEnabled()) {
 			return status + enabled;
 		} else {
