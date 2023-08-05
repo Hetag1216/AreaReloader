@@ -64,7 +64,7 @@ public class Manager {
 		Executor.help = helpLines;
 		helpLines.add("&8/&3ar &bhelp &7Display commands help.");
 		config.addDefault("Commands.HelpLines", helpLines);
-		config.addDefault("Commands.Help.Description", "Shows information about a command.");
+		config.addDefault("Commands.Help.Description", "&7Shows information about a command.");
 		config.addDefault("Commands.Help.InvalidTopic", "&7Please specify a valid topic.");
 		config.addDefault("Commands.Help.ProperUsage", "&3Proper usage: &b&o");
 
