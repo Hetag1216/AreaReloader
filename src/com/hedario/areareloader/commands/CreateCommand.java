@@ -18,6 +18,8 @@ public class CreateCommand extends ARCommand {
 
 	public CreateCommand() {
 		super("create", "/ar create <name> <copyEntities: true|false> <copyBiomes: true|false>", Manager.getConfig().getString("Commands.Create.Description"), new String[] { "create" });
+		skipE = false;
+		skipB = false;
 	}
 
 	@Override
@@ -71,8 +73,12 @@ public class CreateCommand extends ARCommand {
 			}
 		};
 		if (isAsync()) {
-			br.runTaskAsynchronously(AreaReloader.getInstance());
-			AreaMethods.creations.add(area);
+			if (!skipE) {
+				br.runTaskAsynchronously(AreaReloader.getInstance());
+				AreaMethods.creations.add(area);
+			} else {
+				br.runTask(AreaReloader.getInstance());
+			}
 		} else {
 			br.runTask(AreaReloader.getInstance());
 		}
