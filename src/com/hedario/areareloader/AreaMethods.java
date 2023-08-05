@@ -226,12 +226,11 @@ public class AreaMethods {
 					CuboidRegion region = new CuboidRegion(bvmin, bvmax);
 					BlockArrayClipboard clipboard = new BlockArrayClipboard(region);
 
-					ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(
-					    BukkitAdapter.adapt(world), region, clipboard, region.getMinimumPoint()
-					);
-					Operations.complete(forwardExtentCopy);
+					ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(BukkitAdapter.adapt(world), region, clipboard, region.getMinimumPoint());
 					forwardExtentCopy.setCopyingEntities(copyEntities);
 					forwardExtentCopy.setCopyingBiomes(copyBiomes);
+					Operations.complete(forwardExtentCopy);
+					
 					Manager.printDebug("-=-=-=-=-=-=-=-=-=-=- Area Creation -=-=-=-=-=-=-=-=-=-=-");					
 					try {
 						Operations.complete(forwardExtentCopy);
