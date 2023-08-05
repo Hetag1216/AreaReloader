@@ -1,8 +1,8 @@
 name: AreaReloader
-main: com.hetag.areareloader.AreaReloader
+main: com.hedario.areareloader.AreaReloader
 version: ${project.version}
-api-version: 1.13
-authors: ['_Hetag1216_']
+api-version: 1.18
+authors: ['Hedario']
 depend: ['WorldEdit']
 commands:
   ar:
@@ -24,3 +24,4 @@ permissions:
       areareloader.command.info: true
       areareloader.command.display: true
       areareloader.command.cancel: true
+      areareloader.command.location: true
