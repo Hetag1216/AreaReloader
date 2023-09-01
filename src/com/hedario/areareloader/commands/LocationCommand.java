@@ -13,12 +13,12 @@ import com.hedario.areareloader.configuration.Manager;
 
 public class LocationCommand extends ARCommand {
 	public LocationCommand() {
-		super("location", "/ar location <set|teleport>", Manager.getConfig().getString("Commands.Location.Description"), new String[] {"location", "loc"});
+		super("location", "/ar location <area> <set|teleport>", Manager.getConfig().getString("Commands.Location.Description"), new String[] {"location", "loc"});
 	}
 
 	@Override
 	public void execute(CommandSender sender, List<String> args) {
-		if (!hasPermission(sender) || !this.correctLength(sender, args.size(), 2, 2)) {
+		if (!hasPermission(sender) || !this.correctLength(sender, args.size(), 2, 2) || !isPlayer(sender)) {
 			return;
 		}
 		
