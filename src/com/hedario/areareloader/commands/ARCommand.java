@@ -66,12 +66,13 @@ public abstract class ARCommand implements SubCommand {
 	}
 	
 	protected void sendMessage(CommandSender sender, String message, boolean prefix) {
+		if (sender == null)
+			return;
 		if (prefix) {
 			sender.sendMessage(formatColors(getPrefix() + message));
 		} else {
 			sender.sendMessage(formatColors(message));
 		}
-		return;
 	}
 	
 

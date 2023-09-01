@@ -5,9 +5,9 @@
 
 	<groupId>com.hedario.areareloader</groupId>
 	<artifactId>AreaReloader</artifactId>
-	<version>2.1</version>
+	<version>2.2</version>
 	<packaging>jar</packaging>
-	<name>AreaReloader-FAWE</name>
+	<name>AreaReloader</name>
 
 	<repositories>
 		<!-- WorldGuard and WorldEdit Repo -->

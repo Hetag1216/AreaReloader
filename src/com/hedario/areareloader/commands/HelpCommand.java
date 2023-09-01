@@ -47,7 +47,7 @@ public class HelpCommand extends ARCommand {
 			for (ARCommand command : instances.values()) {
 				strings.add(command.getProperUse());
 			}
-			for (String s : getPage(strings, Integer.valueOf(arg).intValue(), true)) {
+			for (String s : getPage(strings, Integer.valueOf(arg), true)) {
 				if (!s.equalsIgnoreCase(getPage(strings, 1, false).get(0))) {
 					String start = s.substring(0, 3);
 					this.sendMessage(sender, "&3" + start + " &b" + s.substring(4, s.length()), false);

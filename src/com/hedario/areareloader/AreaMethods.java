@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -389,14 +388,16 @@ public class AreaMethods {
 	}
 	
 	public static void sendMessage(CommandSender sender, String message, boolean prefix) {
+		if (sender == null)
+			return;
 		if (prefix) {
 			sender.sendMessage(ARCommand.formatColors(getPrefix() + message));
 		} else {
 			sender.sendMessage(ARCommand.formatColors(message));
 		}
 	}
-	
+
 	public static String getPrefix() {
-		return ChatColor.translateAlternateColorCodes('&', Manager.getConfig().getString("Settings.Language.ChatPrefix"));
+		return Manager.getConfig().getString("Settings.Language.ChatPrefix");
 	}
 }
