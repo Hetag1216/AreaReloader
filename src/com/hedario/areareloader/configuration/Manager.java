@@ -197,6 +197,11 @@ public class Manager {
 			printDebug("Writing debugs trace...");
 			printDebug("");
 			printDebug("" + e.getMessage());
+			printDebug(e.getLocalizedMessage());
+			for (int i = 0; i < e.getStackTrace().length; i++) {
+				printDebug("" + e.getStackTrace()[i]);
+			}
+			
 			printDebug("-=-=-=-=-=-=-=-=-=-=- -=- -=-=-=-=-=-=-=-=-=-=-");
 			if (sender != null)
 				AreaMethods.sendMessage(sender, "An error has been generated and registered to the debugs file.", true);
